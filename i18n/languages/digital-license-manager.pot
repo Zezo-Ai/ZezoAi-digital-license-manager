@@ -295,7 +295,7 @@ msgid ""
 msgstr ""
 
 #: templates/woocommerce/dlm/my-account/licenses/partials/table-activations-row-actions.php:56
-msgid "Are you sure you want to do this? This action can not be reversed."
+msgid "Are you sure you want to do this? This action can not be reverted."
 msgstr ""
 
 #: includes/Boot.php:425
@@ -308,7 +308,7 @@ msgid ""
 msgstr ""
 
 #: includes/Boot.php:314
-msgid "Are you sure? This action can not be reversed."
+msgid "Are you sure? This action can not be reverted."
 msgstr ""
 
 #: includes/Integrations/WooCommerce/Settings.php:47
