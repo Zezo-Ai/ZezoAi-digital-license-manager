@@ -41,7 +41,7 @@
             <strong><?php echo esc_html( wp_strip_all_tags( $license_product_name ) ); ?></strong>
         </p>
         <p style="font-size: 16px; margin-bottom: 20px; margin-top:0;">
-			<?php esc_html_e( 'Details of the license can be accessed from your dashboard page.', 'digital-license-manger' ); ?>
+			<?php esc_html_e( 'Details of the license can be accessed from your dashboard page.', 'digital-license-manager' ); ?>
         </p>
 		<?php if ( ! empty( $license_details ) ): ?>
             <table style="margin-top:0; margin-bottom: 20px;font-size: 16px; border-spacing: 15px; border: 1px solid #aaaaaa; border-collapse: collapse; width: 100%;">
