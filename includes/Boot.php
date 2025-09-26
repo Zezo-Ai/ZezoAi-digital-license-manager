@@ -311,7 +311,7 @@ class Boot {
 					'dropdownSearch' => wp_create_nonce( 'dlm_dropdown_search' )
 				),
 				'i18n'              => array(
-					'confirm_dialog'         => __( 'Are you sure? This action can not be reverted.', 'digital-license-manager' ),
+					'confirm_dialog'         => __( 'Are you sure? This action can not be reversed.', 'digital-license-manager' ),
 					'placeholderSearchUsers' => __( 'Search by user login, name or email', 'digital-license-manager' ),
 				)
 			)

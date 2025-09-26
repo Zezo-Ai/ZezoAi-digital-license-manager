@@ -176,9 +176,9 @@ To deactivate a license through the REST API, please follow this <a href="http:/
 
 To validate a license through the REST API, please follow this <a href="http://docs.codeverve.com/digital-license-manager/rest-api/licenses/validate/" target="_blank">guide</a>.
 
-= Can I assign license keys to past WooCommerce orders that were placed before i installed Digital Licnese Manager?
+= Can I assign license keys to past WooCommerce orders that were placed before i installed Digital License Manager?
 
-Yes, you can do this by going to Settings > Tools > "Generate Licneses For Past Orders". You must select a Generator that will be used to generate keys for the orders.
+Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past Orders". You must select a Generator that will be used to generate keys for the orders.
 
 == Screenshots ==
 
