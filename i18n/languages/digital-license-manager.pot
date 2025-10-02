@@ -2246,6 +2246,10 @@ msgstr ""
 msgid "This document certifies the purchase of license key for: "
 msgstr ""
 
+#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:44
+msgid "Details of the license can be accessed from your dashboard page."
+msgstr ""
+
 #: templates/admin/generators/page-edit.php:43
 msgid "This generator is assigned to the following product(s)"
 msgstr ""
