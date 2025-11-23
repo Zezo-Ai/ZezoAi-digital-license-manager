@@ -242,7 +242,7 @@ class Licenses {
 				if ( 'data_error' === $license->get_error_code() ) {
 					NoticeFlasher::error( $license->get_error_message() );
 				} else {
-					NoticeFlasher::error( __( sprintf( 'There was a problem updating the license key. (%s)', $license->get_error_message() ), 'digital-license-manager' ) );
+					NoticeFlasher::error( sprintf( __( 'There was a problem updating the license key. (%s)', 'digital-license-manager' ), $license->get_error_message() ) );
 				}
 			} else {
 				NoticeFlasher::success( __( 'Your license key has been updated successfully.', 'digital-license-manager' ) );
