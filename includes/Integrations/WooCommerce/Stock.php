@@ -251,9 +251,9 @@ class Stock {
 		}
 
 		$productId     = (int) $license->getProductId();
-		$licneseStatus = (int) $license->getStatus();
+		$licenseStatus = (int) $license->getStatus();
 
-		if ( ! empty( $productId ) && $licneseStatus === LicensePrivateStatus::ACTIVE ) {
+		if ( ! empty( $productId ) && $licenseStatus === LicensePrivateStatus::ACTIVE ) {
 			self::syncrhonizeProductStock( $productId );
 		}
 	}

@@ -28,7 +28,7 @@
  * @note - DEVELOPER NOTE:
  *
  *     This file contains public functions that you can use in your code
- *     to interact with the Digital Licnese Manager database.
+ *     to interact with the Digital License Manager database.
  *
  *     The functions are mostly (with small changes) backwards compatible
  *     with "License Manager for WooCommerce".

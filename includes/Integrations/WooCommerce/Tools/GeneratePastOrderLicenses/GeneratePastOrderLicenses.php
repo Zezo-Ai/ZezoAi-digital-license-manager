@@ -44,7 +44,7 @@ class GeneratePastOrderLicenses extends AbstractTool {
 	 * The description
 	 * @var string
 	 */
-	protected $description = 'Generate Licneses For Past Orders';
+	protected $description = 'Generate Licenses For Past Orders';
 
 	/**
 	 * Returns the view

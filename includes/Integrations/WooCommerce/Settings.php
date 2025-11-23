@@ -88,7 +88,7 @@ class Settings {
 								'explain' => __( "Select what happens to the License once the line item that generated the License is refunded.", 'digital-license-manager' ),
 								'options' => [
 									'skip'    => __( 'Do Nothing', 'digital-license-manager' ),
-									'disable' => __( 'Disable Licnese', 'digital-license-manager' ),
+									'disable' => __( 'Disable License', 'digital-license-manager' ),
 									'delete'  => __( 'Delete License', 'digital-license-manager' ),
 								]
 							)
