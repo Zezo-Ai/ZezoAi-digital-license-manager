@@ -51,7 +51,7 @@ $url_migration = trailingslashit(DLM_DOCUMENTATION_URL) . 'migration/migrate-fro
                     <div class="dgv-instructions-extra">
                         <h4 class="navy"><?php esc_html_e( 'Looking to migrate from License Manager for WooCommerce?', 'digital-license-manager' ); ?></h4>
                         <p style="margin-bottom: 0;">
-							<?php echo wp_kses( __( sprintf( 'We <u>noticed</u> that you used <strong>License Manager for WooCommerce</strong> previously. If you want to migrate you data, <a target="_blank" href="%s">read more</a>.', $url_migration ), 'digital-license-manager' ), \IdeoLogix\DigitalLicenseManager\Utils\SanitizeHelper::ksesAllowedHtmlTags() ); ?>
+							<?php echo wp_kses( sprintf( __( 'We <u>noticed</u> that you used <strong>License Manager for WooCommerce</strong> previously. If you want to migrate you data, <a target="_blank" href="%s">read more</a>.', 'digital-license-manager' ), esc_url( $url_migration) ), \IdeoLogix\DigitalLicenseManager\Utils\SanitizeHelper::ksesAllowedHtmlTags() ); ?>
                         </p>
                     </div>
                 </div>
@@ -60,7 +60,7 @@ $url_migration = trailingslashit(DLM_DOCUMENTATION_URL) . 'migration/migrate-fro
                 <div class="dgv-instructions-extra">
                     <h4 class="navy"><?php esc_html_e( 'Found problem? Report it!', 'digital-license-manager' ); ?></h4>
                     <p style="margin-bottom: 0;">
-						<?php echo wp_kses( __( sprintf( 'If you found a bug or you want to report a problem please open a support ticket <a target="_blank" href="%s">here</a> or on <a target="_blank" href="%s">Github</a>.', $url_wordpress, $url_github ), 'digital-license-manager' ), \IdeoLogix\DigitalLicenseManager\Utils\SanitizeHelper::ksesAllowedHtmlTags() ); ?>
+						<?php echo wp_kses( sprintf( __( 'If you found a bug or you want to report a problem please open a support ticket <a target="_blank" href="%s">here</a> or on <a target="_blank" href="%s">Github</a>.', 'digital-license-manager' ), esc_url( $url_wordpress ), esc_url( $url_github ) ), \IdeoLogix\DigitalLicenseManager\Utils\SanitizeHelper::ksesAllowedHtmlTags() ); ?>
                     </p>
                 </div>
             </div>
@@ -68,7 +68,7 @@ $url_migration = trailingslashit(DLM_DOCUMENTATION_URL) . 'migration/migrate-fro
                 <div class="dgv-instructions-extra">
                     <h4 style="margin-top:0;" class="navy"><?php esc_html_e( 'Need more features? try the PRO version!', 'digital-license-manager' ); ?></h4>
                     <p>
-						<?php echo wp_kses( __( sprintf( 'If you need some additional functionality like WooCommerce Subscriptions integration, Software/Release management and distribution through the REST API and more, try the <a target="_blank" href="%s">PRO version.</a>', $url_purchase ), 'digital-license-manager' ), \IdeoLogix\DigitalLicenseManager\Utils\SanitizeHelper::ksesAllowedHtmlTags() ); ?>
+						<?php echo wp_kses( sprintf(  __( 'If you need some additional functionality like WooCommerce Subscriptions integration, Software/Release management and distribution through the REST API and more, try the <a target="_blank" href="%s">PRO version.</a>', 'digital-license-manager' ), esc_url( $url_purchase ) ), \IdeoLogix\DigitalLicenseManager\Utils\SanitizeHelper::ksesAllowedHtmlTags() ); ?>
                     </p>
                 </div>
             </div>
