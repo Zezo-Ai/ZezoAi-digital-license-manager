@@ -9,12 +9,13 @@
 # Distribution
 .distignore
 .wordpress-org
-dist
+/dist
 
 # Development
 tests
 scripts
 bin
+node_modules
 
 # Blocks development files
 blocks/src
