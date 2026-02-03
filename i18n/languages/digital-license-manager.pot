@@ -105,7 +105,7 @@ msgid ""
 msgstr ""
 
 #: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:78
-msgid "[{site_title}]: Your digital licenses for order #{order_number}"
+msgid "[{site_title}]: Your licenses for order #{order_number}"
 msgstr ""
 
 #: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:48
@@ -2591,11 +2591,11 @@ msgstr ""
 #: includes/Integrations/WooCommerce/Emails.php:234
 #: includes/Integrations/WooCommerce/Emails.php:251
 #: includes/Integrations/WooCommerce/Orders.php:442
-msgid "Your digital license(s)"
+msgid "Your license(s)"
 msgstr ""
 
 #: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:68
-msgid "Your Digital License(s) - Order #{order_number}"
+msgid "Your License(s) - Order #{order_number}"
 msgstr ""
 
 #: includes/Controllers/Licenses.php:248

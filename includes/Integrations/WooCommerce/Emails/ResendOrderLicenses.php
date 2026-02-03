@@ -65,7 +65,7 @@ class ResendOrderLicenses extends WC_Email {
 	 * @since  1.0.0
 	 */
 	public function get_default_heading() {
-		return __( 'Your Digital License(s) - Order #{order_number}', 'digital-license-manager' );
+		return __( 'Your License(s) - Order #{order_number}', 'digital-license-manager' );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class ResendOrderLicenses extends WC_Email {
 	 * @since  1.0.0
 	 */
 	public function get_default_subject() {
-		return __( '[{site_title}]: Your digital licenses for order #{order_number}', 'digital-license-manager' );
+		return __( '[{site_title}]: Your licenses for order #{order_number}', 'digital-license-manager' );
 	}
 
 	/**
