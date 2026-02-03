@@ -19,19 +19,50 @@ Need help? Please consult our [documentation](https://docs.codeverve.com/digital
 
 ## Development
 
-### Creating release
+### Release Workflow
 
-To create a release file, run: 
+Releases are automated via GitHub Actions. When you push a version tag, the workflow:
 
+1. Validates version consistency (PHP header, constant, readme.txt)
+2. Builds all assets (composer, Gutenberg blocks via bun)
+3. Creates a distribution zip (using `.distignore`)
+4. Deploys to WordPress.org (unless `-test` tag)
+5. Creates a GitHub Release
+
+#### Creating a Release
+
+```bash
+# Stable release (deploys to WordPress.org)
+git tag v1.8.5
+git push origin v1.8.5
+
+# Pre-release versions (deploys to WordPress.org)
+git tag v1.8.5-beta.1
+git push origin v1.8.5-beta.1
+
+# Test release (GitHub only, skips WordPress.org)
+git tag v1.8.5-test
+git push origin v1.8.5-test
 ```
-bash scripts/release_prepare.sh
-```
 
-### Cleaning up
+#### Version Tag Patterns
 
-To reduce the vendors directory size, run:
+| Pattern | Example | WordPress.org | GitHub Release |
+|---------|---------|---------------|----------------|
+| `vX.Y.Z` | `v1.8.5` | Yes | Stable |
+| `vX.Y.Z-beta.N` | `v1.8.5-beta.1` | Yes | Pre-release |
+| `vX.Y.Z-alpha.N` | `v1.8.5-alpha.1` | Yes | Pre-release |
+| `vX.Y.Z-rc.N` | `v1.8.5-rc.1` | Yes | Pre-release |
+| `vX.Y.Z-test` | `v1.8.5-test` | **No** | Pre-release |
+| `vX.Y.Z-test.N` | `v1.8.5-test.1` | **No** | Pre-release |
 
-```
+### Scripts
+
+#### Cleaning up TCPDF fonts
+
+To reduce the vendors directory size (used by GitHub workflow):
+
+```bash
 bash scripts/clean_up.sh
 ```
 

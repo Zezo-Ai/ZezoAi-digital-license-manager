@@ -106,13 +106,17 @@ jobs:
           name: digital-license-manager-${{ steps.get_version.outputs.VERSION }}
           path: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
 
-      - name: Check SVN credentials
+      - name: Check SVN deployment eligibility
         id: check-svn
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
-          if [ -n "$SVN_USERNAME" ] && [ -n "$SVN_PASSWORD" ]; then
+          # Skip WordPress.org for -test tags (use for internal testing only)
+          if [[ "${{ github.ref_name }}" =~ -test ]]; then
+            echo "Skipping WordPress.org deployment for test release"
+            echo "available=false" >> $GITHUB_OUTPUT
+          elif [ -n "$SVN_USERNAME" ] && [ -n "$SVN_PASSWORD" ]; then
             echo "available=true" >> $GITHUB_OUTPUT
           else
             echo "available=false" >> $GITHUB_OUTPUT
