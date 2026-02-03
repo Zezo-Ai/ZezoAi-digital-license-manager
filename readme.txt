@@ -12,7 +12,7 @@ Efficiently sell and manage software license keys / codes on your WooCommerce we
 
 == Description ==
 
-The **[Digital License Manager](https://codeverve.com/product/digital-license-manager-pro/)** is licensing plugin that allows you to efficiently sell and manage license keys that also supports bulk import, export, stock synchronization, separate activations table and much more.
+The **[Digital License Manager](https://codeverve.com/product/digital-license-manager-pro/)** is a licensing plugin that allows you to efficiently sell and manage license keys that also supports bulk import, export, stock synchronization, separate activations table and much more.
 
 The plugin is actively maintained, secure, well documented and very extendable.
 
@@ -28,15 +28,15 @@ The plugin is actively maintained, secure, well documented and very extendable.
 * Deliver License key on product purchase based on the Generator ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/products/))
 * Synchronizes stock with licenses assigned to product ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/stock-synchronization/))
 * Configure the order status on which License is delivered ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/get-started/configuration/#WooCommerce))
-* Show purchased Licenses in WooCommerce > MyAccount ( ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/my-account/licenses/))
-* Singe License page in WooCommerce My Account page ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/my-account/single-license/))
+* Show purchased Licenses in WooCommerce > MyAccount ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/my-account/licenses/))
+* Single License page in WooCommerce My Account page ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/my-account/single-license/))
 * Activate License from WooCommerce MyAccount page ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/my-account/single-license/manual-activations/))
 * Allow/Disallow Customers to download PDF License Certificate ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/my-account/single-license/pdf-certificates/))
 * Adds purchased License Keys in the Order Confirmation email ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/emails/order-confirmation/))
 * Manually re-send License Key to customer via email ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/woocommerce/emails/manual-email/))
-* Rest API endpoints for working License. ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/licenses/))
-* Rest API endpoints for working Generators. ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/generators/))
-* Rest API endpoints for working Software. ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/software/))
+* Rest API endpoints for working with Licenses. ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/licenses/))
+* Rest API endpoints for working with Generators. ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/generators/))
+* Rest API endpoints for working with Software. ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/software/))
 * Rest API protected by API Key & Endpoint permissions ([Read more](https://docs.codeverve.com/digital-license-manager/rest-api/authentication/))
 * Option to Import Licenses ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/licenses/import-export/#import))
 * Option to Export Licenses ([Read more](https://docs.codeverve.com/digital-license-manager/handbook/licenses/import-export/#export))
@@ -125,7 +125,7 @@ Props to <a href="https://profiles.wordpress.org/pondermatic/">@pondermatic</a> 
 
 ### ⚠️ Important Note
 
-The plugin will create  `wp-content/uploads/dlm-files` directory which stores the cryptographic secrets that are required to decrypt the licenses. If you lose this file, you will lose your license keys as well. **Make sure you backup those files!**
+The plugin will create `wp-content/uploads/dlm-files` directory which stores the cryptographic secrets that are required to decrypt the licenses. If you lose this file, you will lose your license keys as well. **Make sure you backup those files!**
 
 == Installation ==
 
@@ -144,7 +144,7 @@ The plugin will create  `wp-content/uploads/dlm-files` directory which stores th
 
 ### Important
 
-The plugin will create  `wp-content/uploads/dlm-files` directory which stores the cryptographic secrets that are required to decrypt the licenses. If you lose this file, you will lose your license keys as well. **Make sure you backup those files!**
+The plugin will create `wp-content/uploads/dlm-files` directory which stores the cryptographic secrets that are required to decrypt the licenses. If you lose this file, you will lose your license keys as well. **Make sure you backup those files!**
 
 == Frequently Asked Questions ==
 
@@ -156,7 +156,7 @@ Yes it does.
 
 The License activations are stored as a separate database entries and not using a counter. This allows easier management of License Activation per device/installation/etc.
 
-= I am using "License Manager for WooCommerce", how to migrate to Digital License Manager?
+= I am using "License Manager for WooCommerce", how to migrate to Digital License Manager? =
 
 Looking to migrate from License Manager for WooCommerce? <a href="https://docs.codeverve.com/digital-license-manager/migration/migrate-from-license-manager-for-woocommerce/">Read more</a>!
 
@@ -176,7 +176,7 @@ To deactivate a license through the REST API, please follow this <a href="http:/
 
 To validate a license through the REST API, please follow this <a href="http://docs.codeverve.com/digital-license-manager/rest-api/licenses/validate/" target="_blank">guide</a>.
 
-= Can I assign license keys to past WooCommerce orders that were placed before i installed Digital License Manager?
+= Can I assign license keys to past WooCommerce orders that were placed before I installed Digital License Manager? =
 
 Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past Orders". You must select a Generator that will be used to generate keys for the orders.
 
@@ -225,7 +225,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 *Release date - 20 Jun 2025*
 
 * Fix PDF Certificate showing full product link and overflows the table, add "Click to View" link text instead
-* Fix PDF Certificate characters for other text scripts (Hebrew, Chinese, Arabic, Cyrilic, Greek, etc)
+* Fix PDF Certificate characters for other text scripts (Hebrew, Chinese, Arabic, Cyrillic, Greek, etc)
 * Fix PDF Certificate output error related to hosts
 * Resync .pot template
 
@@ -242,7 +242,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 * Improved My Account buttons and table row actions styling
 * Improved My Account templates for consistency (css classes and structure)
 * Improved My Account templates overall styling
-* Improved My Account templates mobile stying
+* Improved My Account templates mobile styling
 * Changed the way sort Priority is specified when registering menus, settings, row actions from array key to array property "priority"
 * Redirect requests to the MyAccount action handler to login page if user not logged in
 * Extend the MyAccount request handler to support methods and conditional nonces
@@ -252,7 +252,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 * Add new filter dlm_woocommerce_order_licenses_creation
 * Add new filter dlm_myaccount_order_licenses_row_actions
 * Deprecate filter dlm_myaccount_licenses_keys_row_actions in favor of dlm_myaccount_order_licenses_row_actions
-* Add handling to license single template when license is disabled disabled or expired
+* Add handling to license single template when license is disabled or expired
 * Add missing strings for i18n in Product edit area
 * Refactor stock sync and improve the code for reusability
 * Fix Function _load_textdomain_just_in_time was called incorrectly warnings (Issue #52)
@@ -306,7 +306,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 * Improved general code quality
 * Fix status display on the single license page in WC > My Account
 * Fix PDF export and missing font DejaVuSans
-* Fix Issues when using CloudFlare and HttpHelper::clinetIp()
+* Fix Issues when using CloudFlare and HttpHelper::clientIp()
 * Fix license status not centered in WC > My Account
 * Add low level database actions dlm_object_{created/updated/deleted}
 * Add database integrity maintenance (delete activations and other related data on license delete)
@@ -317,7 +317,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 
 *Release date - 05 Aug 2024*
 
-* Allow license key "copy to clipobard" on order-received confirmation page
+* Allow license key "copy to clipboard" on order-received confirmation page
 * Fix issue on MyAccount license single page when License order is not set
 
 = 1.6.5 =
@@ -411,7 +411,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 * Removed unused wp_ajax endpoint
 
 = 1.5.5 =
-*Release date - 27 Nov 2023
+*Release date - 27 Nov 2023*
 
 * Fix issue related to notice display
 
@@ -471,10 +471,10 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 = 1.4.3 =
 *Release Date - 03 May 2023*
 
-* Do not enforce expired license validation when deactivting token through the REST API
+* Do not enforce expired license validation when deactivating token through the REST API
 * Add option in Settings > WooCommerce to enable masking the license keys on the public facing pages like Order Received" page
 * Show My Account licenses status as Expired when license is expired
-* Fix issue when clearing Generator valeus in edit page
+* Fix issue when clearing Generator values in edit page
 * Move "Max Activations" at the bottom before expiresIn in Generator edit
 * Add support on the dropdown search endpoint for generators
 * Add "Past Orders License Generator" tool in Settings > Tools that allows users to generate licenses for past orders by selectting Generator.
@@ -550,7 +550,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 *Release Date - 14 Nov 2022*
 
 * Add support for assinging product variations to Licenses when selling from stock
-* Rewrite stock syncrhonization functionality
+* Rewrite stock synchronization functionality
 * Test with the latest WooCommerce version
 * Test with the latest WordPress version
 
@@ -613,7 +613,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 *Release Date - 23 Mar 2022*
 
 * Fix various notices found
-* Fix license/validate endpoint. It was returning error response when activation token is deactivated. It should return the activation object with the populated deactivated_at prperty.
+* Fix license/validate endpoint. It was returning error response when activation token is deactivated. It should return the activation object with the populated deactivated_at property.
 * Re-write the license generation in WooCommerce
 * Improve code, add various hooks for better extendibility.
 
@@ -636,7 +636,7 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 * Fix API key last access date/time display
 * Fix a problem that skipped the creation of the product_downloads table
 * Fix activations limit calculations
-* Imrpoved REST API validation and handling
+* Improved REST API validation and handling
 * Improved the license expiration display in license table
 * Updated the product fields. Instead of use stock and use generator this is now a single dropdown.
 * Code style improvements
