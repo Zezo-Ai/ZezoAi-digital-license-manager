@@ -21,6 +21,7 @@ blocks/src
 blocks/node_modules
 blocks/package.json
 blocks/package-lock.json
+blocks/bun.lock
 
 # Composer development
 vendor/bin
