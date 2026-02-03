@@ -102,8 +102,20 @@ jobs:
           name: digital-license-manager-${{ steps.get_version.outputs.VERSION }}
           path: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
 
+      - name: Check SVN credentials
+        id: check-svn
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          if [ -n "$SVN_USERNAME" ] && [ -n "$SVN_PASSWORD" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy to WordPress.org
-        if: ${{ secrets.SVN_USERNAME != '' && secrets.SVN_PASSWORD != '' }}
+        if: steps.check-svn.outputs.available == 'true'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
           generate-zip: false
