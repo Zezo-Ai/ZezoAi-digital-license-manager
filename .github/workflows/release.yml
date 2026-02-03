@@ -19,6 +19,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Validate version consistency
+        id: validate_version
         run: |
           TAG_VERSION="${{ steps.get_version.outputs.VERSION }}"
 
@@ -40,9 +41,12 @@ jobs:
           echo "PHP constant version: $PHP_CONSTANT_VERSION"
           echo "Readme version: $README_VERSION"
 
-          # Check if this is a pre-release
+          # Check if this is a pre-release and output for later steps
           if [ "$TAG_VERSION" != "$BASE_VERSION" ]; then
             echo "ℹ️ Pre-release detected, validating base version"
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
           fi
 
           # Validate all versions match
@@ -130,5 +134,6 @@ jobs:
         with:
           files: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
           generate_release_notes: true
+          prerelease: ${{ steps.validate_version.outputs.is_prerelease == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
