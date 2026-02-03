@@ -103,6 +103,7 @@ jobs:
           path: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
 
       - name: Deploy to WordPress.org
+        if: ${{ secrets.SVN_USERNAME != '' && secrets.SVN_PASSWORD != '' }}
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
           generate-zip: false
