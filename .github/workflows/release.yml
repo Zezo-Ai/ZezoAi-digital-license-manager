@@ -22,6 +22,9 @@ jobs:
         run: |
           TAG_VERSION="${{ steps.get_version.outputs.VERSION }}"
 
+          # Strip pre-release suffix (-test, -alpha, -beta, -rc*) for comparison
+          BASE_VERSION=$(echo "$TAG_VERSION" | sed -E 's/-(test|alpha|beta|rc[0-9]*)$//')
+
           # Extract version from PHP header
           PHP_HEADER_VERSION=$(grep -Po "Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+" digital-license-manager.php | head -1)
 
@@ -32,27 +35,33 @@ jobs:
           README_VERSION=$(grep -Po "Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+" readme.txt)
 
           echo "Tag version: $TAG_VERSION"
+          echo "Base version (for comparison): $BASE_VERSION"
           echo "PHP header version: $PHP_HEADER_VERSION"
           echo "PHP constant version: $PHP_CONSTANT_VERSION"
           echo "Readme version: $README_VERSION"
 
+          # Check if this is a pre-release
+          if [ "$TAG_VERSION" != "$BASE_VERSION" ]; then
+            echo "ℹ️ Pre-release detected, validating base version"
+          fi
+
           # Validate all versions match
-          if [ "$TAG_VERSION" != "$PHP_HEADER_VERSION" ]; then
-            echo "::error::Version mismatch: Tag ($TAG_VERSION) != PHP header ($PHP_HEADER_VERSION)"
+          if [ "$BASE_VERSION" != "$PHP_HEADER_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($BASE_VERSION) != PHP header ($PHP_HEADER_VERSION)"
             exit 1
           fi
 
-          if [ "$TAG_VERSION" != "$PHP_CONSTANT_VERSION" ]; then
-            echo "::error::Version mismatch: Tag ($TAG_VERSION) != DLM_PLUGIN_VERSION ($PHP_CONSTANT_VERSION)"
+          if [ "$BASE_VERSION" != "$PHP_CONSTANT_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($BASE_VERSION) != DLM_PLUGIN_VERSION ($PHP_CONSTANT_VERSION)"
             exit 1
           fi
 
-          if [ "$TAG_VERSION" != "$README_VERSION" ]; then
-            echo "::error::Version mismatch: Tag ($TAG_VERSION) != readme.txt ($README_VERSION)"
+          if [ "$BASE_VERSION" != "$README_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($BASE_VERSION) != readme.txt ($README_VERSION)"
             exit 1
           fi
 
-          echo "✅ All versions match: $TAG_VERSION"
+          echo "✅ All versions match: $BASE_VERSION"
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
