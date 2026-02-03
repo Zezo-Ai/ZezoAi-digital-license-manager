@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# GitHub
+.github
+
+# Distribution
+.distignore
+.wordpress-org
+dist
+
+# Development
+tests
+scripts
+bin
+
+# Blocks development files
+blocks/src
+blocks/node_modules
+blocks/package.json
+blocks/package-lock.json
+
+# Composer development
+vendor/bin
+composer.json
+composer.lock
+
+# CI/Testing
+phpcs.xml
+phpcs.xml.dist
+phpunit.xml
+phpunit.xml.dist
+.phpunit.result.cache
+.travis.yml
+codecov.yml
+
+# Documentation
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+
+# IDE
+.idea
+.vscode
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+_tmp
+*.log

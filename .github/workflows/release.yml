@@ -1,0 +1,114 @@
+name: Deploy to WordPress.org
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Validate version consistency
+        run: |
+          TAG_VERSION="${{ steps.get_version.outputs.VERSION }}"
+
+          # Extract version from PHP header
+          PHP_HEADER_VERSION=$(grep -Po "Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+" digital-license-manager.php | head -1)
+
+          # Extract version from DLM_PLUGIN_VERSION constant
+          PHP_CONSTANT_VERSION=$(grep -Po "DLM_PLUGIN_VERSION',\s*'\K[0-9]+\.[0-9]+\.[0-9]+" digital-license-manager.php)
+
+          # Extract version from readme.txt
+          README_VERSION=$(grep -Po "Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+" readme.txt)
+
+          echo "Tag version: $TAG_VERSION"
+          echo "PHP header version: $PHP_HEADER_VERSION"
+          echo "PHP constant version: $PHP_CONSTANT_VERSION"
+          echo "Readme version: $README_VERSION"
+
+          # Validate all versions match
+          if [ "$TAG_VERSION" != "$PHP_HEADER_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($TAG_VERSION) != PHP header ($PHP_HEADER_VERSION)"
+            exit 1
+          fi
+
+          if [ "$TAG_VERSION" != "$PHP_CONSTANT_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($TAG_VERSION) != DLM_PLUGIN_VERSION ($PHP_CONSTANT_VERSION)"
+            exit 1
+          fi
+
+          if [ "$TAG_VERSION" != "$README_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($TAG_VERSION) != readme.txt ($README_VERSION)"
+            exit 1
+          fi
+
+          echo "✅ All versions match: $TAG_VERSION"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --prefer-dist
+
+      - name: Clean up TCPDF fonts
+        run: bash scripts/clean_up.sh
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: blocks/package-lock.json
+
+      - name: Build Gutenberg blocks
+        run: |
+          cd blocks
+          npm ci
+          npm run build
+
+      - name: Create distribution directory
+        run: |
+          mkdir -p dist/digital-license-manager
+          rsync -av --exclude-from='.distignore' ./ dist/digital-license-manager/
+
+      - name: Create ZIP artifact
+        run: |
+          cd dist
+          zip -r digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip digital-license-manager
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: digital-license-manager-${{ steps.get_version.outputs.VERSION }}
+          path: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
+
+      - name: Deploy to WordPress.org
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: false
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: digital-license-manager
+          BUILD_DIR: dist/digital-license-manager
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

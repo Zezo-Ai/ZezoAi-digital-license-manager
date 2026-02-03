@@ -3,7 +3,7 @@ Contributors: darkog, codeverve
 Tags: license key, license manager, software license, serial key, woocommerce
 Requires at least: 4.7
 Requires PHP: 7.0
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 1.8.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -97,13 +97,13 @@ The complete documentation can be found on the link below:
 
 The following client libraries and integrations are available:
 
-* <a href="https://github.com/ideologix/dlm-php" target="_blank">PHP Library</a>
-* <a href="https://github.com/ideologix/dlm-cpp" target="_blank">C++ Client (Libcurl)</a> / <a href="https://github.com/ideologix/dlm-cpp-example" target="_blank">C++ Example</a>
-* <a href="https://github.com/ideologix/DLM-NET" target="_blank">C# Library</a>
-* <a href="https://github.com/ideologix/dlm-python" target="_blank">Python Library</a>
-* <a href="https://github.com/ideologix/dlm-plugin-pro" target="_blank">Premium WordPress Updater (Requires PRO)</a>
-* <a href="https://github.com/ideologix/dlm-plugin-pro" target="_blank">Premium Plugin Example (Requires PRO)</a>
-* <a href="https://github.com/ideologix/dlm-theme-pro" target="_blank">Premium Theme Example (Requires PRO)</a>
+* <a href="https://github.com/digital-license-manager/dlm-php" target="_blank">PHP Library</a>
+* <a href="https://github.com/digital-license-manager/dlm-cpp" target="_blank">C++ Client (Libcurl)</a> / <a href="https://github.com/digital-license-manager/dlm-cpp-example" target="_blank">C++ Example</a>
+* <a href="https://github.com/digital-license-manager/DLM-NET" target="_blank">C# Library</a>
+* <a href="https://github.com/digital-license-manager/dlm-python" target="_blank">Python Library</a>
+* <a href="https://github.com/digital-license-manager/dlm-plugin-pro" target="_blank">Premium WordPress Updater (Requires PRO)</a>
+* <a href="https://github.com/digital-license-manager/dlm-plugin-pro" target="_blank">Premium Plugin Example (Requires PRO)</a>
+* <a href="https://github.com/digital-license-manager/dlm-theme-pro" target="_blank">Premium Theme Example (Requires PRO)</a>
 
 ### ➕ Issues / Feature Requests
 
