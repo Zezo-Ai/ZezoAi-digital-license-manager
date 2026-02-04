@@ -86,6 +86,10 @@ class Notices {
 			return; // Do not show on the tools page.
 		}
 
+		if ( ! LMFW::isUsed() ) {
+			return; // Do not show if LMFWC was never used
+		}
+
 		if ( LMFW::alreadyMigrated() ) {
 			// Do not nag, when all of those met.
 			return;
