@@ -57,6 +57,14 @@ class Migration extends AbstractTool {
 	}
 
 	/**
+	 * Returns the available migration plugins
+	 * @return array
+	 */
+	public function getPlugins() {
+		return $this->plugins;
+	}
+
+	/**
 	 * Returns the view
 	 * @return string
 	 */

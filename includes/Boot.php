@@ -587,6 +587,9 @@ class Boot {
 
 		$this->commands   = new CommandsController();
 		$this->admin      = new AdminController();
+
+		// Initialize Vue3 Admin interface
+		Admin\Boot::instance();
 		$this->dropdowns  = new DropdownsController();
 		$this->licenses   = new LicenseController();
 		$this->generators = new GeneratorController();

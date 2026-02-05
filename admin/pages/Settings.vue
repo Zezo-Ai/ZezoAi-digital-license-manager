@@ -1,0 +1,1341 @@
+<template>
+    <Page :title="trans('settings.title')">
+        <div class="dlm-settings-layout">
+            <!-- Vertical Nav Sidebar -->
+            <nav class="dlm-settings-nav">
+                <ul class="dlm-settings-nav-list">
+                    <li v-for="tab in computedTabs" :key="tab.id">
+                        <button
+                            :class="['dlm-settings-nav-item', { 'dlm-settings-nav-item--active': activeTab === tab.id }]"
+                            @click="changeTab(tab.id)"
+                        >
+                            <span class="dlm-settings-nav-icon" v-html="tabIcon(tab.id)"></span>
+                            <span>{{ tab.label }}</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Content Panel -->
+            <div class="dlm-settings-content">
+                <div class="dlm-settings-panel-header">
+                    <h2>{{ currentTabLabel }}</h2>
+                </div>
+
+                <div class="dlm-card">
+                    <div class="dlm-card-body">
+                        <!-- Dynamic settings tabs (any tab that has sections/fields from PHP) -->
+                        <div v-show="isSettingsTab(activeTab)">
+                            <form class="dlm-settings-form" @submit.prevent="saveSettings">
+                                <template v-if="activeTabData">
+                                    <div
+                                        v-for="(section, sectionKey) in activeTabData.sections"
+                                        :key="sectionKey"
+                                        class="dlm-settings-section"
+                                    >
+                                        <h3 v-if="section.name && sectionCount(activeTabData) > 1">
+                                            {{ section.name }}
+                                        </h3>
+
+                                        <div
+                                            v-for="field in section.fields"
+                                            :key="field.id"
+                                            class="dlm-form-group"
+                                        >
+                                            <!-- Checkbox -->
+                                            <template v-if="field.type === 'checkbox'">
+                                                <label>
+                                                    <input
+                                                        v-model="settingsValues[field.id]"
+                                                        type="checkbox"
+                                                        class="dlm-checkbox"
+                                                        true-value="1"
+                                                        false-value=""
+                                                    />
+                                                    {{ field.label || field.title }}
+                                                </label>
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
+                                            <!-- Text -->
+                                            <template v-else-if="field.type === 'text'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <input
+                                                    :id="field.id"
+                                                    v-model="settingsValues[field.id]"
+                                                    type="text"
+                                                    class="dlm-input"
+                                                    :size="field.size || 20"
+                                                />
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
+                                            <!-- Select -->
+                                            <template v-else-if="field.type === 'select'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <select
+                                                    :id="field.id"
+                                                    v-model="settingsValues[field.id]"
+                                                    class="dlm-input"
+                                                >
+                                                    <option
+                                                        v-for="(optLabel, optVal) in field.options"
+                                                        :key="optVal"
+                                                        :value="optVal"
+                                                    >{{ optLabel }}</option>
+                                                </select>
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
+                                            <!-- Image upload -->
+                                            <template v-else-if="field.type === 'image'">
+                                                <ImageUpload
+                                                    :id="field.id"
+                                                    v-model="settingsValues[field.id]"
+                                                    :label="field.title"
+                                                    :hint="field.explain"
+                                                    :image-url="field.image_url"
+                                                    :placeholder="pluginUrl + 'assets/img/logo-placeholder.jpg'"
+                                                />
+                                            </template>
+
+                                            <!-- Order statuses (multi-checkbox table) -->
+                                            <template v-else-if="field.type === 'order_statuses'">
+                                                <label>{{ field.title }}</label>
+                                                <table class="dlm-order-statuses-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>{{ trans('global.labels.status') }}</th>
+                                                            <th>{{ trans('global.labels.send') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(statusLabel, statusSlug) in field.options" :key="statusSlug">
+                                                            <td>{{ statusLabel }}</td>
+                                                            <td>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    class="dlm-checkbox"
+                                                                    :checked="isOrderStatusChecked(field.id, statusSlug)"
+                                                                    @change="toggleOrderStatus(field.id, statusSlug, $event)"
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <div class="dlm-settings-footer">
+                                    <button type="submit" class="dlm-btn dlm-btn-primary" :disabled="saving">
+                                        {{ saving ? trans('global.buttons.saving') : trans('global.buttons.save_changes') }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- REST API tab -->
+                        <div v-show="activeTab === 'rest_api'">
+                            <!-- API Keys Management -->
+                            <div class="dlm-api-keys-section">
+                                <div class="dlm-flex dlm-items-center dlm-justify-between dlm-mb-4">
+                                    <h3>{{ trans('settings.rest_api.api_keys_title') }}</h3>
+                                    <button
+                                        class="dlm-btn dlm-btn-primary dlm-btn-sm"
+                                        @click="showApiKeyForm = true; editingApiKey = null; resetApiKeyForm()"
+                                    >
+                                        {{ trans('global.buttons.add_new') }}
+                                    </button>
+                                </div>
+
+                                <!-- Newly created key credentials -->
+                                <div v-if="newCredentials" class="dlm-credentials-box dlm-mb-4">
+                                    <p class="dlm-text-sm dlm-font-medium dlm-mb-2">{{ trans('settings.rest_api.credentials_notice') }}</p>
+                                    <div class="dlm-form-group">
+                                        <label>{{ trans('settings.rest_api.consumer_key') }}</label>
+                                        <code class="dlm-credential">{{ newCredentials.consumer_key }}</code>
+                                    </div>
+                                    <div class="dlm-form-group">
+                                        <label>{{ trans('settings.rest_api.consumer_secret') }}</label>
+                                        <code class="dlm-credential">{{ newCredentials.consumer_secret }}</code>
+                                    </div>
+                                    <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="newCredentials = null">
+                                        {{ trans('settings.rest_api.dismiss_credentials') }}
+                                    </button>
+                                </div>
+
+                                <!-- API Key Form (create/edit) -->
+                                <div v-if="showApiKeyForm" class="dlm-card dlm-mb-4">
+                                    <div class="dlm-card-body">
+                                        <h4 class="dlm-mb-4">
+                                            {{ editingApiKey ? trans('settings.rest_api.edit_key') : trans('settings.rest_api.add_key') }}
+                                        </h4>
+                                        <form @submit.prevent="saveApiKey">
+                                            <div class="dlm-grid dlm-grid-cols-2 dlm-gap-4">
+                                                <div class="dlm-form-group">
+                                                    <label for="api_key_description">{{ trans('settings.rest_api.fields.description') }} *</label>
+                                                    <input
+                                                        id="api_key_description"
+                                                        v-model="apiKeyForm.description"
+                                                        type="text"
+                                                        class="dlm-input"
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div class="dlm-form-group">
+                                                    <label for="api_key_user">{{ trans('settings.rest_api.fields.user') }} *</label>
+                                                    <AsyncSelect
+                                                        id="api_key_user"
+                                                        v-model="apiKeyForm.user_id"
+                                                        search-type="user"
+                                                        :placeholder="trans('settings.rest_api.fields.user_placeholder')"
+                                                        :initial-label="editingApiKey?.user_label"
+                                                    />
+                                                </div>
+
+                                                <div class="dlm-form-group">
+                                                    <label for="api_key_permissions">{{ trans('settings.rest_api.fields.permissions') }}</label>
+                                                    <Dropdown
+                                                        id="api_key_permissions"
+                                                        v-model="apiKeyForm.permissions"
+                                                        :options="permissionOptions"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div class="dlm-form-group dlm-mt-4">
+                                                <label>{{ trans('settings.rest_api.fields.endpoints') }} *</label>
+                                                <div class="dlm-endpoints-grid">
+                                                    <label
+                                                        v-for="ep in availableEndpoints"
+                                                        :key="ep.id"
+                                                        class="dlm-endpoint-item"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            :value="ep.id"
+                                                            v-model="apiKeyForm.endpoints"
+                                                            class="dlm-checkbox"
+                                                        />
+                                                        <span class="dlm-endpoint-method" :class="'dlm-method-' + ep.method.toLowerCase()">{{ ep.method }}</span>
+                                                        <span>{{ ep.name }}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="dlm-mt-4 dlm-flex dlm-gap-2">
+                                                <button type="submit" class="dlm-btn dlm-btn-primary" :disabled="savingApiKey">
+                                                    {{ savingApiKey ? trans('global.buttons.saving') : trans('global.buttons.save') }}
+                                                </button>
+                                                <button type="button" class="dlm-btn dlm-btn-secondary" @click="showApiKeyForm = false">
+                                                    {{ trans('global.buttons.cancel') }}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- API Keys Table -->
+                                <table v-if="apiKeys.length > 0" class="dlm-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ trans('settings.rest_api.columns.description') }}</th>
+                                            <th>{{ trans('settings.rest_api.columns.user') }}</th>
+                                            <th>{{ trans('settings.rest_api.columns.permissions') }}</th>
+                                            <th>{{ trans('settings.rest_api.columns.truncated_key') }}</th>
+                                            <th>{{ trans('settings.rest_api.columns.last_access') }}</th>
+                                            <th>{{ trans('global.labels.actions') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="key in apiKeys" :key="key.id">
+                                            <td>{{ key.description }}</td>
+                                            <td>{{ key.user_label }}</td>
+                                            <td>
+                                                <span class="dlm-badge">{{ key.permissions }}</span>
+                                            </td>
+                                            <td><code>...{{ key.truncated_key }}</code></td>
+                                            <td>{{ key.last_access || trans('settings.rest_api.never') }}</td>
+                                            <td>
+                                                <div class="dlm-flex dlm-gap-2">
+                                                    <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="editApiKey(key)">
+                                                        {{ trans('global.actions.edit') }}
+                                                    </button>
+                                                    <button class="dlm-btn dlm-btn-danger dlm-btn-sm" @click="deleteApiKey(key.id)">
+                                                        {{ trans('global.actions.delete') }}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p v-else-if="!loadingApiKeys" class="dlm-text-gray-500">
+                                    {{ trans('global.messages.no_records') }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Tools -->
+                        <div v-show="activeTab === 'tools'">
+                            <!-- Export Data (static) -->
+                            <div class="dlm-tools-card">
+                                <div class="dlm-tools-card-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                                </div>
+                                <div class="dlm-tools-card-content">
+                                    <h3>{{ trans('settings.tools.export.title') }}</h3>
+                                    <p>{{ trans('settings.tools.export.description') }}</p>
+                                    <button class="dlm-btn dlm-btn-secondary" @click="exportData">
+                                        {{ trans('settings.tools.export.button') }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Rebuild Database (static) -->
+                            <div class="dlm-tools-card">
+                                <div class="dlm-tools-card-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>
+                                </div>
+                                <div class="dlm-tools-card-content">
+                                    <h3>{{ trans('settings.tools.database.title') }}</h3>
+                                    <p>{{ trans('settings.tools.database.description') }}</p>
+                                    <button class="dlm-btn dlm-btn-secondary" @click="rebuildDatabase">
+                                        {{ trans('settings.tools.database.button') }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic tools -->
+                            <template v-for="tool in tools" :key="tool.slug">
+                                <!-- Migration type tool -->
+                                <div v-if="tool.type === 'migration'" class="dlm-tools-card">
+                                    <div class="dlm-tools-card-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+                                    </div>
+                                    <div class="dlm-tools-card-content">
+                                        <h3>{{ trans('settings.tools.dynamic.migration_title') }}</h3>
+                                        <p>{{ tool.description }}</p>
+
+                                        <!-- Plugin select -->
+                                        <div class="dlm-form-group dlm-mb-3">
+                                            <label>{{ trans('settings.tools.dynamic.select_plugin_label') }}</label>
+                                            <select
+                                                v-model="migrationForm.identifier"
+                                                class="dlm-input"
+                                                @change="loadMigrationStatus"
+                                            >
+                                                <option value="none">{{ trans('settings.tools.dynamic.select_plugin') }}</option>
+                                                <option
+                                                    v-for="plugin in tool.plugins"
+                                                    :key="plugin.id"
+                                                    :value="plugin.id"
+                                                >{{ plugin.name }}</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Preserve IDs checkbox -->
+                                        <div class="dlm-form-group dlm-mb-3">
+                                            <label>
+                                                <input
+                                                    v-model="migrationForm.preserve_ids"
+                                                    type="checkbox"
+                                                    class="dlm-checkbox"
+                                                />
+                                                {{ trans('settings.tools.dynamic.preserve_ids_warning') }}
+                                            </label>
+                                        </div>
+
+                                        <!-- Progress bar -->
+                                        <div v-if="toolProgress[tool.slug]?.running || toolProgress[tool.slug]?.finished" class="dlm-tool-progress">
+                                            <div class="dlm-tool-progress-bar">
+                                                <div
+                                                    class="dlm-tool-progress-bar-inner"
+                                                    :style="{ width: (toolProgress[tool.slug]?.percent || 0) + '%' }"
+                                                ></div>
+                                            </div>
+                                            <div class="dlm-tool-progress-info">
+                                                {{ toolProgress[tool.slug]?.message || '' }}
+                                                <template v-if="toolProgress[tool.slug]?.finished">
+                                                    {{ trans('settings.tools.dynamic.finished') }}
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <!-- Migration status + undo -->
+                                        <div v-if="migrationStatus" class="dlm-tool-status">
+                                            <span>{{ migrationStatus }}</span>
+                                            <a @click.prevent="undoMigration">{{ trans('settings.tools.dynamic.undo') }}</a>
+                                        </div>
+
+                                        <!-- Migrate button -->
+                                        <button
+                                            class="dlm-btn dlm-btn-secondary"
+                                            :disabled="toolProgress[tool.slug]?.running || migrationForm.identifier === 'none' || (!!migrationStatus && !toolProgress[tool.slug]?.finished)"
+                                            @click="runTool(tool)"
+                                        >
+                                            {{ trans('settings.tools.dynamic.migrate_button') }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Standard type tool -->
+                                <div v-else class="dlm-tools-card">
+                                    <div class="dlm-tools-card-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.193-.14 1.743" /></svg>
+                                    </div>
+                                    <div class="dlm-tools-card-content">
+                                        <h3>{{ tool.description }}</h3>
+
+                                        <!-- Dynamic form fields -->
+                                        <template v-if="tool.form_fields && tool.form_fields.length">
+                                            <div
+                                                v-for="field in tool.form_fields"
+                                                :key="field.name"
+                                                class="dlm-form-group dlm-mb-3"
+                                            >
+                                                <template v-if="field.type === 'ajax_select' || field.type === 'ajax_multiselect'">
+                                                    <AsyncSelect
+                                                        v-model="toolForms[tool.slug][field.name]"
+                                                        :search-type="field.search_type"
+                                                        :placeholder="field.placeholder || ''"
+                                                        :label="field.label || ''"
+                                                        :required="field.required || false"
+                                                        :multiple="field.type === 'ajax_multiselect'"
+                                                    />
+                                                </template>
+                                                <template v-else-if="field.type === 'select'">
+                                                    <label v-if="field.label" :for="field.name">{{ field.label }}</label>
+                                                    <select
+                                                        v-model="toolForms[tool.slug][field.name]"
+                                                        :id="field.name"
+                                                        class="dlm-input"
+                                                    >
+                                                        <option v-if="field.placeholder" value="">{{ field.placeholder }}</option>
+                                                        <option
+                                                            v-for="(optLabel, optVal) in field.options"
+                                                            :key="optVal"
+                                                            :value="optVal"
+                                                        >{{ optLabel }}</option>
+                                                    </select>
+                                                </template>
+                                                <template v-else-if="field.type === 'checkbox'">
+                                                    <label>
+                                                        <input
+                                                            v-model="toolForms[tool.slug][field.name]"
+                                                            type="checkbox"
+                                                            class="dlm-checkbox"
+                                                        />
+                                                        {{ field.label }}
+                                                    </label>
+                                                </template>
+                                            </div>
+                                        </template>
+
+                                        <!-- Progress bar -->
+                                        <div v-if="toolProgress[tool.slug]?.running || toolProgress[tool.slug]?.finished" class="dlm-tool-progress">
+                                            <div class="dlm-tool-progress-bar">
+                                                <div
+                                                    class="dlm-tool-progress-bar-inner"
+                                                    :style="{ width: (toolProgress[tool.slug]?.percent || 0) + '%' }"
+                                                ></div>
+                                            </div>
+                                            <div class="dlm-tool-progress-info">
+                                                {{ toolProgress[tool.slug]?.message || '' }}
+                                                <template v-if="toolProgress[tool.slug]?.finished">
+                                                    {{ trans('settings.tools.dynamic.finished') }}
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <!-- Run button -->
+                                        <button
+                                            class="dlm-btn dlm-btn-secondary"
+                                            :disabled="toolProgress[tool.slug]?.running"
+                                            @click="runTool(tool)"
+                                        >
+                                            {{ trans('settings.tools.dynamic.run_button') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Help -->
+                        <div v-show="activeTab === 'help'">
+                            <div class="dlm-tools-card">
+                                <div class="dlm-tools-card-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+                                </div>
+                                <div class="dlm-tools-card-content">
+                                    <h3>{{ trans('settings.help.documentation.title') }}</h3>
+                                    <p>{{ trans('settings.help.documentation.description') }}</p>
+                                    <a
+                                        href="https://developer.ideologix.com/plugins/digital-license-manager/getting-started/"
+                                        target="_blank"
+                                        class="dlm-btn dlm-btn-secondary"
+                                    >
+                                        {{ trans('settings.help.documentation.button') }}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="dlm-tools-card">
+                                <div class="dlm-tools-card-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.712 4.33a9.027 9.027 0 0 1 1.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 0 0-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 0 1 0 9.424m-4.138-5.976a3.736 3.736 0 0 0-.88-1.388 3.737 3.737 0 0 0-1.388-.88m2.268 2.268a3.765 3.765 0 0 1 0 2.528m-2.268-4.796a3.765 3.765 0 0 0-2.528 0m4.796 2.268c-.181.506-.475.982-.88 1.388a3.736 3.736 0 0 1-1.388.88m2.268-2.268 4.138 3.448m0 0a9.027 9.027 0 0 1-1.306 1.652 9.027 9.027 0 0 1-1.652 1.306m2.958-2.958a9.014 9.014 0 0 1-9.424 0m5.976-4.138-3.448 4.138m0 0a3.765 3.765 0 0 1-2.528 0m2.528 0 3.448 4.138m-5.976-4.138-4.138 3.448m4.138-3.448a3.736 3.736 0 0 1-1.388.88 3.737 3.737 0 0 1-.88-.88m0 0-3.448 4.138m3.448-4.138a3.765 3.765 0 0 1 0-2.528m0 2.528-4.138-3.448m4.138 3.448a3.736 3.736 0 0 0 .88 1.388 3.737 3.737 0 0 0 1.388.88m-2.268-2.268L4.33 16.712m0 0a9.027 9.027 0 0 1-1.652-1.306 9.027 9.027 0 0 1-1.306-1.652m2.958 2.958a9.014 9.014 0 0 1 0-9.424m4.138 5.976-3.448-4.138m0 0a9.027 9.027 0 0 1 1.306-1.652A9.014 9.014 0 0 1 7.288 4.33m-2.958 2.958a9.014 9.014 0 0 1 9.424 0" /></svg>
+                                </div>
+                                <div class="dlm-tools-card-content">
+                                    <h3>{{ trans('settings.help.support.title') }}</h3>
+                                    <p>{{ trans('settings.help.support.description') }}</p>
+                                    <a
+                                        href="https://developer.ideologix.com/support/"
+                                        target="_blank"
+                                        class="dlm-btn dlm-btn-secondary"
+                                    >
+                                        {{ trans('settings.help.support.button') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Page>
+</template>
+
+<script setup>
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { trans } from '../utils/useLang'
+import { useAlertStore } from '../stores/alert'
+import * as settingsService from '../services/settings'
+import Page from '../components/Page.vue'
+import Dropdown from '../components/input/Dropdown.vue'
+import AsyncSelect from '../components/input/AsyncSelect.vue'
+import ImageUpload from '../components/input/ImageUpload.vue'
+
+const props = defineProps({
+    tab: {
+        type: String,
+        default: 'general',
+    },
+})
+
+const route = useRoute()
+const router = useRouter()
+const alertStore = useAlertStore()
+
+const activeTab = ref(props.tab || route.params.tab || 'general')
+const loading = ref(true)
+const saving = ref(false)
+const pluginUrl = window.DLMAdmin?.pluginUrl || ''
+
+// Settings data from PHP
+const tabData = ref({})
+const settingsValues = reactive({})
+
+// Dynamic tools state
+const tools = ref([])
+const loadingTools = ref(false)
+const toolProgress = reactive({})
+const toolForms = reactive({})
+const migrationForm = reactive({ identifier: 'none', preserve_ids: false })
+const migrationStatus = ref('')
+
+// Tab icons (Heroicons outline SVGs)
+const tabIcons = {
+    general: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>',
+    rest_api: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" /></svg>',
+    tools: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.193-.14 1.743" /></svg>',
+    help: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>',
+    woocommerce: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" /></svg>',
+}
+
+const defaultIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>'
+
+function tabIcon(tabId) {
+    return tabIcons[tabId] || defaultIcon
+}
+
+const currentTabLabel = computed(() => {
+    const tab = computedTabs.value.find(t => t.id === activeTab.value)
+    return tab ? tab.label : ''
+})
+
+// Compute tabs from PHP structure
+const computedTabs = computed(() => {
+    const tabs = []
+    for (const [key, tab] of Object.entries(tabData.value)) {
+        tabs.push({
+            id: tab.slug || key,
+            label: tab.name,
+            priority: tab.priority || 10,
+        })
+    }
+    tabs.sort((a, b) => a.priority - b.priority)
+    return tabs
+})
+
+// Custom tabs that have hardcoded UI (not dynamic settings fields)
+const customTabs = new Set(['rest_api', 'tools', 'help'])
+
+// Check if a tab is a dynamic settings tab (has sections/fields from PHP)
+function isSettingsTab(tabId) {
+    if (customTabs.has(tabId)) return false
+    const tab = tabData.value[tabId]
+    return tab && tab.sections && Object.keys(tab.sections).length > 0
+}
+
+// Get the active tab's data
+const activeTabData = computed(() => {
+    return tabData.value[activeTab.value] || null
+})
+
+// Count non-empty sections in a tab
+function sectionCount(tab) {
+    if (!tab || !tab.sections) return 0
+    return Object.keys(tab.sections).length
+}
+
+// Order statuses helpers
+function isOrderStatusChecked(fieldId, statusSlug) {
+    const val = settingsValues[fieldId]
+    if (!val || typeof val !== 'object') return false
+    return val[statusSlug] && val[statusSlug].send === '1'
+}
+
+function toggleOrderStatus(fieldId, statusSlug, event) {
+    if (!settingsValues[fieldId] || typeof settingsValues[fieldId] !== 'object') {
+        settingsValues[fieldId] = {}
+    }
+    if (event.target.checked) {
+        settingsValues[fieldId][statusSlug] = { send: '1' }
+    } else {
+        delete settingsValues[fieldId][statusSlug]
+    }
+}
+
+// API Keys state
+const apiKeys = ref([])
+const loadingApiKeys = ref(false)
+const showApiKeyForm = ref(false)
+const savingApiKey = ref(false)
+const editingApiKey = ref(null)
+const newCredentials = ref(null)
+const availableEndpoints = ref([])
+
+const apiKeyForm = reactive({
+    description: '',
+    user_id: null,
+    permissions: 'read',
+    endpoints: [],
+})
+
+const permissionOptions = [
+    { value: 'read', label: trans('settings.rest_api.permissions.read') },
+    { value: 'write', label: trans('settings.rest_api.permissions.write') },
+    { value: 'read_write', label: trans('settings.rest_api.permissions.read_write') },
+]
+
+function changeTab(tabId) {
+    activeTab.value = tabId
+    router.push(`/settings/${tabId}`)
+
+    if (tabId === 'rest_api') {
+        loadApiKeys()
+        loadEndpoints()
+    }
+    if (tabId === 'tools') {
+        loadTools()
+    }
+}
+
+async function loadSettings() {
+    loading.value = true
+
+    try {
+        const response = await settingsService.get()
+        const json = await response.json()
+
+        if (json.success) {
+            tabData.value = json.data.tabs
+
+            // Extract field values into settingsValues
+            for (const [, tab] of Object.entries(json.data.tabs)) {
+                if (tab.sections) {
+                    for (const [, section] of Object.entries(tab.sections)) {
+                        if (section.fields) {
+                            for (const field of section.fields) {
+                                const defaultVal = field.type === 'order_statuses' ? {} : ''
+                                settingsValues[field.id] = field.value != null ? field.value : defaultVal
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    } finally {
+        loading.value = false
+    }
+}
+
+async function saveSettings() {
+    saving.value = true
+
+    try {
+        // Collect only the field values for the active tab.
+        const tab = tabData.value[activeTab.value]
+        const tabValues = {}
+        if (tab && tab.sections) {
+            for (const section of Object.values(tab.sections)) {
+                if (section.fields) {
+                    for (const field of section.fields) {
+                        if (field.id in settingsValues) {
+                            tabValues[field.id] = settingsValues[field.id]
+                        }
+                    }
+                }
+            }
+        }
+
+        const response = await settingsService.save(activeTab.value, tabValues)
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    } finally {
+        saving.value = false
+    }
+}
+
+// API Keys
+async function loadApiKeys() {
+    loadingApiKeys.value = true
+    try {
+        const response = await settingsService.getApiKeys()
+        const json = await response.json()
+        if (json.success) {
+            apiKeys.value = json.data.records
+        }
+    } catch (error) {
+        console.error('Failed to load API keys:', error)
+    } finally {
+        loadingApiKeys.value = false
+    }
+}
+
+async function loadEndpoints() {
+    if (availableEndpoints.value.length > 0) return
+    try {
+        const response = await settingsService.getEndpoints()
+        const json = await response.json()
+        if (json.success) {
+            availableEndpoints.value = json.data.endpoints
+        }
+    } catch (error) {
+        console.error('Failed to load endpoints:', error)
+    }
+}
+
+function resetApiKeyForm() {
+    apiKeyForm.description = ''
+    apiKeyForm.user_id = null
+    apiKeyForm.permissions = 'read'
+    apiKeyForm.endpoints = []
+}
+
+function editApiKey(key) {
+    editingApiKey.value = key
+    apiKeyForm.description = key.description
+    apiKeyForm.user_id = key.user_id
+    apiKeyForm.permissions = key.permissions
+    apiKeyForm.endpoints = Array.isArray(key.endpoints) ? [...key.endpoints] : []
+    showApiKeyForm.value = true
+}
+
+async function saveApiKey() {
+    savingApiKey.value = true
+    try {
+        const data = { ...apiKeyForm }
+        let response
+
+        if (editingApiKey.value) {
+            response = await settingsService.updateApiKey(editingApiKey.value.id, data)
+        } else {
+            response = await settingsService.createApiKey(data)
+        }
+
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+            showApiKeyForm.value = false
+
+            // Show credentials for newly created keys
+            if (!editingApiKey.value && json.data.consumer_key) {
+                newCredentials.value = {
+                    consumer_key: json.data.consumer_key,
+                    consumer_secret: json.data.consumer_secret,
+                }
+            }
+
+            editingApiKey.value = null
+            await loadApiKeys()
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    } finally {
+        savingApiKey.value = false
+    }
+}
+
+async function deleteApiKey(id) {
+    if (!confirm(trans('global.messages.confirm'))) return
+
+    try {
+        const response = await settingsService.deleteApiKey(id)
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+            await loadApiKeys()
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+// Dynamic tools
+async function loadTools() {
+    loadingTools.value = true
+    try {
+        const response = await settingsService.getTools()
+        const json = await response.json()
+        if (json.success) {
+            // Initialize form data BEFORE setting tools to avoid template access errors
+            for (const tool of json.data.tools) {
+                if (tool.type === 'standard' && tool.form_fields && tool.form_fields.length) {
+                    if (!toolForms[tool.slug]) {
+                        toolForms[tool.slug] = {}
+                        for (const field of tool.form_fields) {
+                            toolForms[tool.slug][field.name] = field.type === 'checkbox' ? false : null
+                        }
+                    }
+                }
+            }
+            tools.value = json.data.tools
+        }
+    } catch (error) {
+        console.error('Failed to load tools:', error)
+    } finally {
+        loadingTools.value = false
+    }
+}
+
+async function loadMigrationStatus() {
+    if (migrationForm.identifier === 'none') {
+        migrationStatus.value = ''
+        return
+    }
+    try {
+        const response = await settingsService.getToolStatus(migrationForm.identifier)
+        const json = await response.json()
+        if (json.success) {
+            migrationStatus.value = json.data.status || ''
+        }
+    } catch (error) {
+        console.error('Failed to load migration status:', error)
+    }
+}
+
+async function runTool(tool) {
+    if (!confirm(trans('settings.tools.dynamic.confirm_warning'))) return
+
+    // Build payload
+    const payload = { tool: tool.slug, id: Date.now() }
+
+    if (tool.type === 'migration') {
+        payload.identifier = migrationForm.identifier
+        payload.preserve_ids = migrationForm.preserve_ids ? 1 : 0
+    } else if (toolForms[tool.slug]) {
+        Object.assign(payload, toolForms[tool.slug])
+    }
+
+    // Initialize progress
+    toolProgress[tool.slug] = { running: true, finished: false, percent: 0, message: '' }
+    window.onbeforeunload = () => ''
+
+    try {
+        // Init phase
+        const initResponse = await settingsService.initTool(payload)
+        const initJson = await initResponse.json()
+
+        if (!initJson.success) {
+            toolProgress[tool.slug] = { running: false, finished: false, percent: 0, message: '' }
+            window.onbeforeunload = null
+            alertStore.error(initJson.data?.message || trans('global.errors.network'))
+            return
+        }
+
+        // Handle warning from init
+        if (initJson.data?.warning) {
+            if (!confirm(initJson.data.warning)) {
+                toolProgress[tool.slug] = { running: false, finished: false, percent: 0, message: '' }
+                window.onbeforeunload = null
+                return
+            }
+        }
+
+        // Start step processing
+        await processToolStep(tool, payload, 1, 1)
+    } catch (error) {
+        toolProgress[tool.slug] = { running: false, finished: false, percent: 0, message: '' }
+        window.onbeforeunload = null
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+async function processToolStep(tool, payload, step, page) {
+    try {
+        const response = await settingsService.processTool({
+            ...payload,
+            step,
+            page,
+        })
+        const json = await response.json()
+
+        if (!json.success) {
+            toolProgress[tool.slug] = { running: false, finished: false, percent: toolProgress[tool.slug]?.percent || 0, message: json.data?.message || '' }
+            window.onbeforeunload = null
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+            return
+        }
+
+        const data = json.data
+        toolProgress[tool.slug] = {
+            running: data.next_step !== -1,
+            finished: data.next_step === -1,
+            percent: data.percent || 0,
+            message: data.message || '',
+        }
+
+        if (data.next_step !== -1) {
+            setTimeout(() => {
+                processToolStep(tool, payload, data.next_step, data.next_page)
+            }, 200)
+        } else {
+            window.onbeforeunload = null
+            if (tool.type === 'migration') {
+                loadMigrationStatus()
+            }
+        }
+    } catch (error) {
+        toolProgress[tool.slug] = { running: false, finished: false, percent: 0, message: '' }
+        window.onbeforeunload = null
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+async function undoMigration() {
+    if (!confirm(trans('settings.tools.dynamic.undo_confirm'))) return
+
+    try {
+        const response = await settingsService.undoTool(migrationForm.identifier)
+        const json = await response.json()
+
+        if (json.success) {
+            migrationStatus.value = ''
+            toolProgress['migration'] = { running: false, finished: false, percent: 0, message: '' }
+            alertStore.success(trans('settings.tools.dynamic.undo_success'))
+            await loadTools()
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+async function exportData() {
+    try {
+        const response = await settingsService.exportData()
+        const json = await response.json()
+
+        if (json.success) {
+            const blob = new Blob([JSON.stringify(json.data, null, 2)], { type: 'application/json' })
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `dlm-export-${Date.now()}.json`
+            link.click()
+            window.URL.revokeObjectURL(url)
+
+            alertStore.success(trans('settings.tools.export.success'))
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+async function rebuildDatabase() {
+    if (!confirm(trans('settings.tools.database.confirm'))) {
+        return
+    }
+
+    try {
+        const response = await settingsService.rebuildDatabase()
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+        } else {
+            alertStore.error(json.data?.message || trans('global.errors.network'))
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+watch(() => route.params.tab, (newTab) => {
+    if (newTab) {
+        activeTab.value = newTab
+        if (newTab === 'rest_api') {
+            loadApiKeys()
+            loadEndpoints()
+        }
+        if (newTab === 'tools') {
+            loadTools()
+        }
+    }
+})
+
+onMounted(() => {
+    loadSettings()
+    if (activeTab.value === 'rest_api') {
+        loadApiKeys()
+        loadEndpoints()
+    }
+    if (activeTab.value === 'tools') {
+        loadTools()
+    }
+})
+</script>
+
+<style lang="scss" scoped>
+// Layout: sidebar + content
+.dlm-settings-layout {
+    @apply dlm-flex dlm-gap-6;
+    min-height: 500px;
+}
+
+.dlm-settings-nav {
+    @apply dlm-flex-shrink-0;
+    width: 240px;
+}
+
+.dlm-settings-nav-list {
+    @apply dlm-list-none dlm-m-0 dlm-p-0;
+    position: sticky;
+    top: 46px;
+
+    li {
+        @apply dlm-m-0 dlm-p-0;
+    }
+}
+
+.dlm-settings-nav-item {
+    @apply dlm-flex dlm-items-center dlm-gap-3 dlm-w-full dlm-px-4 dlm-py-3;
+    @apply dlm-text-sm dlm-font-medium dlm-text-gray-600;
+    @apply dlm-bg-transparent dlm-border-0 dlm-rounded-lg dlm-cursor-pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+        @apply dlm-bg-gray-100 dlm-text-gray-900;
+    }
+
+    &--active {
+        @apply dlm-bg-primary-50 dlm-text-primary-700;
+
+        .dlm-settings-nav-icon {
+            @apply dlm-text-primary-600;
+        }
+    }
+}
+
+.dlm-settings-nav-icon {
+    @apply dlm-flex-shrink-0;
+    width: 20px;
+    height: 20px;
+
+    :deep(svg) {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.dlm-settings-content {
+    @apply dlm-flex-1;
+    min-width: 0;
+}
+
+.dlm-settings-panel-header {
+    @apply dlm-mb-6;
+
+    h2 {
+        @apply dlm-text-lg dlm-font-semibold dlm-text-gray-900 dlm-m-0;
+    }
+}
+
+// General tab form
+.dlm-settings-form {
+    max-width: 720px;
+}
+
+.dlm-settings-section {
+    @apply dlm-mb-6 dlm-p-5 dlm-bg-gray-50 dlm-rounded-lg;
+
+    h3 {
+        @apply dlm-text-base dlm-font-semibold dlm-mb-4 dlm-pb-0;
+        border-bottom: none;
+    }
+
+    .dlm-form-group {
+        @apply dlm-mb-3;
+
+        // Constrain text/select inputs
+        .dlm-input {
+            max-width: 480px;
+        }
+
+        // Checkbox rows: inline label alignment
+        label:has(.dlm-checkbox) {
+            @apply dlm-flex dlm-items-center dlm-gap-2 dlm-pl-0.5;
+        }
+    }
+
+    // Last form group doesn't need bottom margin
+    .dlm-form-group:last-child {
+        @apply dlm-mb-0;
+    }
+}
+
+// Order statuses table
+.dlm-order-statuses-table {
+    @apply dlm-w-full dlm-text-sm;
+    max-width: 480px;
+
+    th {
+        @apply dlm-text-left dlm-p-2 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
+    }
+
+    td {
+        @apply dlm-p-2 dlm-border-b dlm-border-gray-100;
+    }
+
+    tr:nth-child(even) {
+        @apply dlm-bg-gray-50;
+    }
+}
+
+// Footer for save button
+.dlm-settings-footer {
+    @apply dlm-mt-6 dlm-pt-4 dlm-border-t dlm-border-gray-200;
+}
+
+.dlm-mt-4 {
+    margin-top: 1rem;
+}
+
+.dlm-mb-4 {
+    margin-bottom: 1rem;
+}
+
+// Tools & Help cards
+.dlm-tools-card {
+    @apply dlm-flex dlm-gap-4 dlm-p-5 dlm-rounded-lg dlm-border dlm-border-gray-200;
+
+    & + & {
+        @apply dlm-mt-4;
+    }
+}
+
+.dlm-tools-card-icon {
+    @apply dlm-flex-shrink-0 dlm-rounded-lg dlm-bg-gray-100 dlm-flex dlm-items-center dlm-justify-center dlm-text-gray-500;
+    width: 40px;
+    height: 40px;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.dlm-tools-card-content {
+    @apply dlm-flex-1;
+
+    h3 {
+        @apply dlm-text-base dlm-font-semibold dlm-mb-1 dlm-mt-0;
+    }
+
+    p {
+        @apply dlm-text-sm dlm-text-gray-600 dlm-mb-3;
+    }
+}
+
+.dlm-grid {
+    display: grid;
+}
+
+.dlm-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dlm-gap-4 {
+    gap: 1rem;
+}
+
+.dlm-credentials-box {
+    @apply dlm-p-4 dlm-bg-yellow-50 dlm-border dlm-border-yellow-200 dlm-rounded;
+
+    code {
+        @apply dlm-block dlm-p-2 dlm-bg-white dlm-border dlm-border-gray-200 dlm-rounded dlm-text-sm dlm-font-mono;
+        word-break: break-all;
+    }
+}
+
+.dlm-credential {
+    @apply dlm-block dlm-mb-2;
+}
+
+.dlm-table {
+    @apply dlm-w-full dlm-text-sm;
+
+    th {
+        @apply dlm-text-left dlm-p-2 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
+    }
+
+    td {
+        @apply dlm-p-2 dlm-border-b dlm-border-gray-100;
+    }
+}
+
+.dlm-badge {
+    @apply dlm-inline-block dlm-px-2 dlm-py-0.5 dlm-text-xs dlm-font-medium dlm-rounded dlm-bg-gray-100 dlm-text-gray-700;
+}
+
+.dlm-endpoints-grid {
+    @apply dlm-grid dlm-gap-2;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.dlm-endpoint-item {
+    @apply dlm-flex dlm-items-center dlm-gap-2 dlm-text-sm dlm-p-2 dlm-rounded dlm-border dlm-border-gray-200;
+
+    &:hover {
+        @apply dlm-bg-gray-50;
+    }
+}
+
+.dlm-endpoint-method {
+    @apply dlm-inline-block dlm-px-1.5 dlm-py-0.5 dlm-text-xs dlm-font-bold dlm-rounded dlm-text-white;
+
+    &.dlm-method-get {
+        @apply dlm-bg-green-500;
+    }
+
+    &.dlm-method-post {
+        @apply dlm-bg-blue-500;
+    }
+
+    &.dlm-method-put {
+        @apply dlm-bg-yellow-500;
+    }
+
+    &.dlm-method-delete {
+        @apply dlm-bg-red-500;
+    }
+}
+
+.dlm-btn-danger {
+    @apply dlm-bg-red-600 dlm-text-white;
+
+    &:hover {
+        @apply dlm-bg-red-700;
+    }
+}
+
+// Tool progress bar
+.dlm-tool-progress {
+    @apply dlm-mt-3 dlm-mb-3;
+}
+
+.dlm-tool-progress-bar {
+    @apply dlm-w-full dlm-bg-gray-200 dlm-rounded-full dlm-overflow-hidden;
+    height: 8px;
+}
+
+.dlm-tool-progress-bar-inner {
+    @apply dlm-bg-primary-600 dlm-rounded-full;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.dlm-tool-progress-info {
+    @apply dlm-text-sm dlm-text-gray-600 dlm-mt-1;
+}
+
+.dlm-tool-status {
+    @apply dlm-mb-3;
+
+    a {
+        @apply dlm-text-primary-600 dlm-cursor-pointer dlm-ml-2;
+
+        &:hover {
+            @apply dlm-underline;
+        }
+    }
+}
+
+.dlm-mb-3 {
+    margin-bottom: 0.75rem;
+}
+
+// Responsive: stack vertically on narrow screens
+@media (max-width: 768px) {
+    .dlm-settings-layout {
+        @apply dlm-flex-col;
+    }
+
+    .dlm-settings-nav {
+        width: 100%;
+    }
+
+    .dlm-settings-nav-list {
+        @apply dlm-flex dlm-overflow-x-auto dlm-gap-1 dlm-pb-2;
+        position: static;
+
+        li {
+            @apply dlm-flex-shrink-0;
+        }
+    }
+}
+</style>

@@ -47,6 +47,28 @@ class GeneratePastOrderLicenses extends AbstractTool {
 	protected $description = 'Generate Licenses For Past Orders';
 
 	/**
+	 * Returns the form fields for this tool
+	 * @return array
+	 */
+	public function getFormFields() {
+		return [
+			[
+				'type'        => 'ajax_select',
+				'name'        => 'generator',
+				'label'       => __( 'Generator', 'digital-license-manager' ),
+				'required'    => true,
+				'search_type' => 'generator',
+				'placeholder' => __( 'Search by generator', 'digital-license-manager' ),
+			],
+			[
+				'type'  => 'checkbox',
+				'name'  => 'use_product_licensing_configuration',
+				'label' => __( 'Use product licensing configuration where possible. If checked, the tool will use the generator assigned to the product instead of the selected generator above.', 'digital-license-manager' ),
+			],
+		];
+	}
+
+	/**
 	 * Returns the view
 	 * @return string
 	 */

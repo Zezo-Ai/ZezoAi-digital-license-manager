@@ -230,6 +230,14 @@ abstract class AbstractTool {
 
 
 	/**
+	 * Returns the form fields for this tool
+	 * @return array
+	 */
+	public function getFormFields() {
+		return [];
+	}
+
+	/**
 	 * Mark as complete (Not all tools needs this)
 	 * @return void
 	 */
