@@ -2,7 +2,7 @@
     <Page :title="trans('generators.generate.title')">
         <form @submit.prevent="generateLicenses" class="dlm-card">
             <div class="dlm-card-body">
-                <div class="dlm-grid dlm-grid-cols-2 dlm-gap-6">
+                <div class="dlm-form-grid">
                     <!-- Generator -->
                     <div class="dlm-form-group">
                         <label for="generator_id">{{ trans('generators.generate.fields.generator') }} *</label>
@@ -226,22 +226,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.dlm-grid {
-    display: grid;
-}
-
-.dlm-grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dlm-gap-6 {
-    gap: 1.5rem;
-}
-
-.dlm-mt-6 {
-    margin-top: 1.5rem;
-}
-
 .dlm-font-mono {
     font-family: monospace;
 }

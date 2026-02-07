@@ -267,8 +267,12 @@ class Ajax {
 			'activations_limit' => isset( $_POST['activations_limit'] ) && $_POST['activations_limit'] !== '' ? absint( $_POST['activations_limit'] ) : null,
 			'expires_at'        => isset( $_POST['expires_at'] ) && ! empty( $_POST['expires_at'] ) ? sanitize_text_field( wp_unslash( $_POST['expires_at'] ) ) : null,
 			'valid_for'         => isset( $_POST['valid_for'] ) && $_POST['valid_for'] !== '' ? absint( $_POST['valid_for'] ) : null,
-			'source'            => LicenseSource::API,
 		];
+
+		// Only set source on create, not on update — preserve the original source (generator, import, etc.)
+		if ( ! $id ) {
+			$data['source'] = LicenseSource::API;
+		}
 
 		// Convert status slug to value
 		$status_value = $this->status_from_slug( $data['status'] );
@@ -563,7 +567,7 @@ class Ajax {
 			'separator'           => isset( $_POST['separator'] ) ? sanitize_text_field( wp_unslash( $_POST['separator'] ) ) : '-',
 			'prefix'              => isset( $_POST['prefix'] ) ? sanitize_text_field( wp_unslash( $_POST['prefix'] ) ) : '',
 			'suffix'              => isset( $_POST['suffix'] ) ? sanitize_text_field( wp_unslash( $_POST['suffix'] ) ) : '',
-			'times_activated_max' => isset( $_POST['times_activated_max'] ) && $_POST['times_activated_max'] !== '' ? absint( $_POST['times_activated_max'] ) : null,
+			'activations_limit'   => isset( $_POST['times_activated_max'] ) && $_POST['times_activated_max'] !== '' ? absint( $_POST['times_activated_max'] ) : null,
 			'expires_in'          => isset( $_POST['expires_in'] ) && $_POST['expires_in'] !== '' ? absint( $_POST['expires_in'] ) : null,
 		];
 
@@ -590,11 +594,9 @@ class Ajax {
 				wp_send_json_error( [ 'message' => __( 'Failed to save generator.', 'digital-license-manager' ) ] );
 			}
 
-			$generator = $generators_repo->find( $id ?: $result );
-
 			wp_send_json_success( [
 				'message' => $message,
-				'record'  => $this->format_generator( $generator ),
+				'record'  => $this->format_generator( $result ),
 			] );
 		} catch ( \Exception $e ) {
 			wp_send_json_error( [ 'message' => $e->getMessage() ] );

@@ -1,5 +1,5 @@
 <template>
-    <Teleport to="body">
+    <Teleport to="#dlm-admin">
         <transition name="modal">
             <div v-if="show" class="dlm-modal" @click.self="closeOnOverlay && close()">
                 <div class="dlm-modal-overlay" @click="closeOnOverlay && close()"></div>

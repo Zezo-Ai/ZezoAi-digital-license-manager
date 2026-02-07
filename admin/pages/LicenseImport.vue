@@ -2,19 +2,17 @@
     <Page :title="trans('licenses.titles.import')">
         <form @submit.prevent="importLicenses" class="dlm-card">
             <div class="dlm-card-body">
-                <div class="dlm-form-group">
-                    <label for="license_keys">{{ trans('licenses.import.fields.license_keys') }}</label>
-                    <textarea
+                <div class="dlm-form-grid">
+                    <!-- License Keys -->
+                    <TextArea
                         id="license_keys"
                         v-model="form.license_keys"
-                        class="dlm-textarea"
-                        rows="10"
+                        class="dlm-col-span-2"
+                        :label="trans('licenses.import.fields.license_keys')"
                         :placeholder="trans('licenses.import.placeholders.license_keys')"
-                    ></textarea>
-                    <p class="dlm-form-hint">{{ trans('licenses.import.hints.license_keys') }}</p>
-                </div>
-
-                <div class="dlm-grid dlm-grid-cols-2 dlm-gap-6 dlm-mt-6">
+                        :hint="trans('licenses.import.hints.license_keys')"
+                        :rows="10"
+                    />
                     <!-- Product -->
                     <div class="dlm-form-group">
                         <label for="product_id">{{ trans('licenses.fields.product') }}</label>
@@ -39,20 +37,14 @@
                     <!-- Valid For -->
                     <div class="dlm-form-group">
                         <label for="valid_for">{{ trans('licenses.fields.valid_for') }}</label>
-                        <div class="dlm-flex dlm-gap-2">
-                            <input
-                                id="valid_for"
-                                v-model="form.valid_for"
-                                type="number"
-                                min="0"
-                                class="dlm-input"
-                            />
-                            <Dropdown
-                                v-model="form.valid_for_unit"
-                                :options="validForUnits"
-                                class="dlm-w-32"
-                            />
-                        </div>
+                        <input
+                            id="valid_for"
+                            v-model="form.valid_for"
+                            type="number"
+                            min="0"
+                            class="dlm-input"
+                            :placeholder="trans('licenses.placeholders.valid_for_days')"
+                        />
                     </div>
 
                     <!-- Activations Limit -->
@@ -121,6 +113,7 @@ import * as licensesService from '../services/licenses'
 import Page from '../components/Page.vue'
 import AsyncSelect from '../components/input/AsyncSelect.vue'
 import Dropdown from '../components/input/Dropdown.vue'
+import TextArea from '../components/input/TextArea.vue'
 
 const alertStore = useAlertStore()
 
@@ -132,7 +125,6 @@ const form = reactive({
     product_id: null,
     status: 'inactive',
     valid_for: null,
-    valid_for_unit: 'days',
     activations_limit: null,
 })
 
@@ -142,13 +134,6 @@ const statusOptions = [
     { value: 'sold', label: trans('licenses.statuses.sold') },
     { value: 'delivered', label: trans('licenses.statuses.delivered') },
     { value: 'disabled', label: trans('licenses.statuses.disabled') },
-]
-
-const validForUnits = [
-    { value: 'days', label: trans('licenses.units.days') },
-    { value: 'weeks', label: trans('licenses.units.weeks') },
-    { value: 'months', label: trans('licenses.units.months') },
-    { value: 'years', label: trans('licenses.units.years') },
 ]
 
 async function importLicenses() {
@@ -180,22 +165,6 @@ async function importLicenses() {
 </script>
 
 <style lang="scss" scoped>
-.dlm-grid {
-    display: grid;
-}
-
-.dlm-grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dlm-gap-6 {
-    gap: 1.5rem;
-}
-
-.dlm-mt-6 {
-    margin-top: 1.5rem;
-}
-
 .dlm-import-stats {
     @apply dlm-flex dlm-gap-8;
 }

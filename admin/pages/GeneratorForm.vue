@@ -2,7 +2,7 @@
     <Page :title="isEditing ? trans('generators.titles.edit') : trans('generators.titles.add')">
         <form @submit.prevent="saveGenerator" class="dlm-card">
             <div class="dlm-card-body">
-                <div class="dlm-grid dlm-grid-cols-2 dlm-gap-6">
+                <div class="dlm-form-grid">
                     <!-- Name -->
                     <div class="dlm-form-group dlm-col-span-2">
                         <label for="name">{{ trans('generators.fields.name') }} *</label>
@@ -294,22 +294,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.dlm-grid {
-    display: grid;
-}
-
-.dlm-grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dlm-col-span-2 {
-    grid-column: span 2 / span 2;
-}
-
-.dlm-gap-6 {
-    gap: 1.5rem;
-}
-
 .dlm-license-preview {
     @apply dlm-p-4 dlm-bg-gray-100 dlm-rounded-md dlm-font-mono dlm-text-lg dlm-text-center;
 }

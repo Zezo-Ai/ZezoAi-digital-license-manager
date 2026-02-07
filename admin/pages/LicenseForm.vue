@@ -1,8 +1,8 @@
 <template>
-    <Page :title="isEditing ? trans('licenses.titles.edit') : trans('licenses.titles.add')">
+    <Page :title="isEditing ? `${trans('licenses.titles.edit')} #${licenseId}` : trans('licenses.titles.add')">
         <form @submit.prevent="saveLicense" class="dlm-card">
             <div class="dlm-card-body">
-                <div class="dlm-grid dlm-grid-cols-2 dlm-gap-6">
+                <div class="dlm-form-grid">
                     <!-- License Key -->
                     <div class="dlm-form-group dlm-col-span-2">
                         <label for="license_key">{{ trans('licenses.fields.license_key') }}</label>
@@ -25,6 +25,17 @@
                         <p class="dlm-form-hint">{{ trans('licenses.hints.license_key') }}</p>
                     </div>
 
+                    <!-- Status -->
+                    <div class="dlm-form-group">
+                        <label for="status">{{ trans('licenses.fields.status') }}</label>
+                        <Dropdown
+                            id="status"
+                            v-model="form.status"
+                            :options="statusOptions"
+                        />
+                        <p class="dlm-form-hint">{{ trans('licenses.hints.status') }}</p>
+                    </div>
+
                     <!-- Product -->
                     <div class="dlm-form-group">
                         <label for="product_id">{{ trans('licenses.fields.product') }}</label>
@@ -35,6 +46,7 @@
                             :placeholder="trans('licenses.placeholders.product')"
                             :initial-option="initialProduct"
                         />
+                        <p class="dlm-form-hint">{{ trans('licenses.hints.product') }}</p>
                     </div>
 
                     <!-- Order -->
@@ -47,6 +59,7 @@
                             :placeholder="trans('licenses.placeholders.order')"
                             :initial-option="initialOrder"
                         />
+                        <p class="dlm-form-hint">{{ trans('licenses.hints.order') }}</p>
                     </div>
 
                     <!-- User -->
@@ -59,46 +72,32 @@
                             :placeholder="trans('licenses.placeholders.user')"
                             :initial-option="initialUser"
                         />
-                    </div>
-
-                    <!-- Status -->
-                    <div class="dlm-form-group">
-                        <label for="status">{{ trans('licenses.fields.status') }}</label>
-                        <Dropdown
-                            id="status"
-                            v-model="form.status"
-                            :options="statusOptions"
-                        />
+                        <p class="dlm-form-hint">{{ trans('licenses.hints.user') }}</p>
                     </div>
 
                     <!-- Valid For -->
-                    <div class="dlm-form-group">
+                    <div v-if="isStockLicense" class="dlm-form-group">
                         <label for="valid_for">{{ trans('licenses.fields.valid_for') }}</label>
-                        <div class="dlm-flex dlm-gap-2">
-                            <input
-                                id="valid_for"
-                                v-model="form.valid_for"
-                                type="number"
-                                min="0"
-                                class="dlm-input"
-                            />
-                            <Dropdown
-                                v-model="form.valid_for_unit"
-                                :options="validForUnits"
-                                class="dlm-w-32"
-                            />
-                        </div>
+                        <input
+                            id="valid_for"
+                            v-model="form.valid_for"
+                            type="number"
+                            min="0"
+                            class="dlm-input"
+                            :placeholder="trans('licenses.placeholders.valid_for_days')"
+                        />
                         <p class="dlm-form-hint">{{ trans('licenses.hints.valid_for') }}</p>
                     </div>
 
                     <!-- Expires At -->
-                    <div class="dlm-form-group">
+                    <div v-if="!isStockLicense" class="dlm-form-group">
                         <label for="expires_at">{{ trans('licenses.fields.expires_at') }}</label>
                         <DateTimePicker
                             id="expires_at"
                             v-model="form.expires_at"
                             :placeholder="trans('licenses.placeholders.expires_at')"
                         />
+                        <p class="dlm-form-hint">{{ trans('licenses.hints.expires_at') }}</p>
                     </div>
 
                     <!-- Activations Limit -->
@@ -113,16 +112,6 @@
                             :placeholder="trans('licenses.placeholders.activations_limit')"
                         />
                         <p class="dlm-form-hint">{{ trans('licenses.hints.activations_limit') }}</p>
-                    </div>
-
-                    <!-- Source -->
-                    <div class="dlm-form-group">
-                        <label for="source">{{ trans('licenses.fields.source') }}</label>
-                        <Dropdown
-                            id="source"
-                            v-model="form.source"
-                            :options="sourceOptions"
-                        />
                     </div>
                 </div>
             </div>
@@ -141,7 +130,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { trans } from '../utils/useLang'
 import { useAlertStore } from '../stores/alert'
@@ -164,6 +153,7 @@ const alertStore = useAlertStore()
 
 const isEditing = computed(() => !!props.id || !!route.params.id)
 const licenseId = computed(() => props.id || route.params.id)
+const isStockLicense = computed(() => form.status === 'active')
 
 const loading = ref(false)
 const saving = ref(false)
@@ -175,10 +165,8 @@ const form = reactive({
     user_id: null,
     status: 'inactive',
     valid_for: null,
-    valid_for_unit: 'days',
     expires_at: null,
     activations_limit: null,
-    source: 'api',
 })
 
 const initialProduct = ref(null)
@@ -193,19 +181,19 @@ const statusOptions = [
     { value: 'disabled', label: trans('licenses.statuses.disabled') },
 ]
 
-const validForUnits = [
-    { value: 'days', label: trans('licenses.units.days') },
-    { value: 'weeks', label: trans('licenses.units.weeks') },
-    { value: 'months', label: trans('licenses.units.months') },
-    { value: 'years', label: trans('licenses.units.years') },
-]
+const skipStatusWatch = ref(false)
 
-const sourceOptions = [
-    { value: 'api', label: 'API' },
-    { value: 'import', label: trans('licenses.sources.import') },
-    { value: 'generator', label: trans('licenses.sources.generator') },
-    { value: 'migration', label: trans('licenses.sources.migration') },
-]
+watch(() => form.status, (newStatus) => {
+    if (skipStatusWatch.value) {
+        skipStatusWatch.value = false
+        return
+    }
+    if (newStatus === 'active') {
+        form.expires_at = null
+    } else {
+        form.valid_for = null
+    }
+})
 
 async function loadLicense() {
     if (!licenseId.value) return
@@ -223,12 +211,11 @@ async function loadLicense() {
             form.product_id = license.product_id
             form.order_id = license.order_id
             form.user_id = license.user_id
+            skipStatusWatch.value = true
             form.status = license.status
             form.valid_for = license.valid_for
-            form.valid_for_unit = license.valid_for_unit || 'days'
             form.expires_at = license.expires_at
             form.activations_limit = license.activations_limit
-            form.source = license.source || 'api'
 
             // Set initial options for async selects
             if (license.product_name) {
@@ -299,20 +286,3 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-.dlm-grid {
-    display: grid;
-}
-
-.dlm-grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dlm-col-span-2 {
-    grid-column: span 2 / span 2;
-}
-
-.dlm-gap-6 {
-    gap: 1.5rem;
-}
-</style>

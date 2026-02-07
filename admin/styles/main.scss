@@ -60,7 +60,7 @@
 
     // Form elements
     .dlm-form-group {
-        @apply dlm-mb-4;
+        @apply dlm-mb-0;
 
         label {
             @apply dlm-block dlm-text-sm dlm-font-medium dlm-text-gray-700 dlm-mb-1;
@@ -105,13 +105,15 @@
 
     // Input fields
     .dlm-input {
-        @apply dlm-block dlm-w-full dlm-px-3 dlm-py-2 dlm-text-sm dlm-border dlm-border-gray-300 dlm-rounded-md;
+        @apply dlm-block dlm-w-full dlm-px-3 dlm-py-2 dlm-text-sm dlm-border dlm-border-solid dlm-border-gray-300 dlm-rounded-md;
         @apply focus:dlm-outline-none focus:dlm-ring-2 focus:dlm-ring-primary-500 focus:dlm-border-primary-500;
         @apply disabled:dlm-bg-gray-100 disabled:dlm-cursor-not-allowed;
     }
 
-    .dlm-textarea {
-        @apply dlm-input;
+    textarea.dlm-textarea {
+        @apply dlm-block dlm-w-full dlm-px-3 dlm-py-2 dlm-text-sm dlm-border dlm-border-solid dlm-border-gray-300 dlm-rounded-md;
+        @apply focus:dlm-outline-none focus:dlm-ring-2 focus:dlm-ring-primary-500 focus:dlm-border-primary-500;
+        @apply disabled:dlm-bg-gray-100 disabled:dlm-cursor-not-allowed;
         min-height: 100px;
         resize: vertical;
     }
@@ -233,14 +235,14 @@
 
     // Modal overlay
     .dlm-modal-overlay {
-        @apply dlm-fixed dlm-inset-0 dlm-bg-gray-500 dlm-bg-opacity-75 dlm-transition-opacity dlm-z-50;
+        @apply dlm-fixed dlm-inset-0 dlm-bg-gray-500 dlm-bg-opacity-75 dlm-transition-opacity;
     }
 
     .dlm-modal {
         @apply dlm-fixed dlm-inset-0 dlm-z-50 dlm-overflow-y-auto;
 
         &-container {
-            @apply dlm-flex dlm-min-h-full dlm-items-center dlm-justify-center dlm-p-4;
+            @apply dlm-relative dlm-z-10 dlm-flex dlm-min-h-full dlm-items-center dlm-justify-center dlm-p-4;
         }
 
         &-content {
@@ -270,6 +272,23 @@
         @apply dlm-text-primary-600 hover:dlm-text-primary-700;
     }
 
+    // Responsive form grid — single column on mobile, two columns on desktop
+    .dlm-form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        @media (min-width: 783px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .dlm-col-span-2 {
+        @media (min-width: 783px) {
+            grid-column: span 2 / span 2;
+        }
+    }
+
     // License key display
     .dlm-license-key {
         @apply dlm-font-mono dlm-text-sm dlm-bg-gray-100 dlm-px-2 dlm-py-1 dlm-rounded;
@@ -279,13 +298,4 @@
         }
     }
 
-    // Tom Select overrides
-    .ts-wrapper {
-        @apply dlm-w-full;
-
-        .ts-control {
-            @apply dlm-border dlm-border-gray-300 dlm-rounded-md dlm-px-3 dlm-py-2;
-            @apply focus:dlm-ring-2 focus:dlm-ring-primary-500 focus:dlm-border-primary-500;
-        }
-    }
 }

@@ -4,21 +4,8 @@
     "name": "main",
     "src": "admin/main.js",
     "isEntry": true,
-    "dynamicImports": [
-      "node_modules/flatpickr/dist/esm/index.js"
-    ],
     "css": [
       "styles.css"
     ]
-  },
-  "node_modules/flatpickr/dist/esm/index.js": {
-    "file": "chunks/index-CvSmM0LG.js",
-    "name": "index",
-    "src": "node_modules/flatpickr/dist/esm/index.js",
-    "isDynamicEntry": true
-  },
-  "node_modules/flatpickr/dist/flatpickr.min.css": {
-    "file": "styles2.css",
-    "src": "node_modules/flatpickr/dist/flatpickr.min.css"
   }
 }

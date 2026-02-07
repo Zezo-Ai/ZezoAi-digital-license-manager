@@ -173,37 +173,32 @@
                                             {{ editingApiKey ? trans('settings.rest_api.edit_key') : trans('settings.rest_api.add_key') }}
                                         </h4>
                                         <form @submit.prevent="saveApiKey">
-                                            <div class="dlm-grid dlm-grid-cols-2 dlm-gap-4">
-                                                <div class="dlm-form-group">
-                                                    <label for="api_key_description">{{ trans('settings.rest_api.fields.description') }} *</label>
-                                                    <input
-                                                        id="api_key_description"
-                                                        v-model="apiKeyForm.description"
-                                                        type="text"
-                                                        class="dlm-input"
-                                                        required
-                                                    />
-                                                </div>
+                                            <div class="dlm-api-key-form-fields">
+                                                <TextInput
+                                                    id="api_key_description"
+                                                    v-model="apiKeyForm.description"
+                                                    :label="trans('settings.rest_api.fields.description')"
+                                                    :required="true"
+                                                />
 
                                                 <div class="dlm-form-group">
-                                                    <label for="api_key_user">{{ trans('settings.rest_api.fields.user') }} *</label>
                                                     <AsyncSelect
                                                         id="api_key_user"
                                                         v-model="apiKeyForm.user_id"
                                                         search-type="user"
+                                                        :label="trans('settings.rest_api.fields.user')"
+                                                        :required="true"
                                                         :placeholder="trans('settings.rest_api.fields.user_placeholder')"
-                                                        :initial-label="editingApiKey?.user_label"
+                                                        :initial-option="editingApiKeyUserOption"
                                                     />
                                                 </div>
 
-                                                <div class="dlm-form-group">
-                                                    <label for="api_key_permissions">{{ trans('settings.rest_api.fields.permissions') }}</label>
-                                                    <Dropdown
-                                                        id="api_key_permissions"
-                                                        v-model="apiKeyForm.permissions"
-                                                        :options="permissionOptions"
-                                                    />
-                                                </div>
+                                                <Dropdown
+                                                    id="api_key_permissions"
+                                                    v-model="apiKeyForm.permissions"
+                                                    :label="trans('settings.rest_api.fields.permissions')"
+                                                    :options="permissionOptions"
+                                                />
                                             </div>
 
                                             <div class="dlm-form-group dlm-mt-4">
@@ -226,7 +221,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="dlm-mt-4 dlm-flex dlm-gap-2">
+                                            <div class="dlm-api-key-form-actions">
                                                 <button type="submit" class="dlm-btn dlm-btn-primary" :disabled="savingApiKey">
                                                     {{ savingApiKey ? trans('global.buttons.saving') : trans('global.buttons.save') }}
                                                 </button>
@@ -516,6 +511,7 @@ import Page from '../components/Page.vue'
 import Dropdown from '../components/input/Dropdown.vue'
 import AsyncSelect from '../components/input/AsyncSelect.vue'
 import ImageUpload from '../components/input/ImageUpload.vue'
+import TextInput from '../components/input/TextInput.vue'
 
 const props = defineProps({
     tab: {
@@ -638,6 +634,16 @@ const permissionOptions = [
     { value: 'write', label: trans('settings.rest_api.permissions.write') },
     { value: 'read_write', label: trans('settings.rest_api.permissions.read_write') },
 ]
+
+const editingApiKeyUserOption = computed(() => {
+    if (editingApiKey.value && apiKeyForm.user_id) {
+        return {
+            id: editingApiKey.value.user_id,
+            text: editingApiKey.value.user_label,
+        }
+    }
+    return null
+})
 
 function changeTab(tabId) {
     activeTab.value = tabId
@@ -1093,6 +1099,19 @@ onMounted(() => {
 .dlm-settings-content {
     @apply dlm-flex-1;
     min-width: 0;
+
+    // Neutralize the outer .dlm-card wrapper so sections render against page background
+    // Use child combinator to protect nested .dlm-card (e.g. REST API key form)
+    > .dlm-card {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
+    > .dlm-card > .dlm-card-body {
+        padding: 0 !important;
+    }
 }
 
 .dlm-settings-panel-header {
@@ -1105,41 +1124,75 @@ onMounted(() => {
 
 // General tab form
 .dlm-settings-form {
-    max-width: 720px;
+    max-width: none;
 }
 
 .dlm-settings-section {
-    @apply dlm-mb-6 dlm-p-5 dlm-bg-gray-50 dlm-rounded-lg;
+    @apply dlm-mb-5 dlm-bg-white dlm-rounded-lg dlm-border dlm-border-gray-200;
+    padding: 24px 28px;
 
     h3 {
-        @apply dlm-text-base dlm-font-semibold dlm-mb-4 dlm-pb-0;
-        border-bottom: none;
+        @apply dlm-font-semibold dlm-text-gray-900 dlm-uppercase dlm-tracking-wide dlm-mb-5 dlm-pb-3;
+        font-size: 0.65rem;
+        border-bottom: 1px solid #e5e7eb;
     }
 
     .dlm-form-group {
-        @apply dlm-mb-3;
-
-        // Constrain text/select inputs
-        .dlm-input {
-            max-width: 480px;
-        }
-
-        // Checkbox rows: inline label alignment
-        label:has(.dlm-checkbox) {
-            @apply dlm-flex dlm-items-center dlm-gap-2 dlm-pl-0.5;
-        }
-    }
-
-    // Last form group doesn't need bottom margin
-    .dlm-form-group:last-child {
         @apply dlm-mb-0;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+
+        // Horizontal grid for text/select inputs: label left, input right
+        &:has(.dlm-input), &:has(.dlm-image-upload-field) {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0 24px;
+            align-items: start;
+
+            > label {
+                padding-top: 7px; // vertical-align with input
+            }
+
+            .dlm-input {
+                max-width: 560px;
+            }
+
+            .dlm-form-hint {
+                grid-column: 2;
+            }
+        }
+
+        // Image upload: label aligns to top, no extra padding
+        &:has(.dlm-image-upload-field) > :deep(label) {
+            padding-top: 0;
+        }
+
+        // Checkbox rows: simple inline
+        label:has(.dlm-checkbox) {
+            @apply dlm-flex dlm-items-center dlm-gap-2.5;
+        }
     }
+
+    .dlm-form-group:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    h3 + .dlm-form-group {
+        padding-top: 0;
+    }
+}
+
+// REST API tab card
+.dlm-api-keys-section {
+    @apply dlm-bg-white dlm-rounded-lg dlm-border dlm-border-gray-200;
+    padding: 24px 28px;
 }
 
 // Order statuses table
 .dlm-order-statuses-table {
     @apply dlm-w-full dlm-text-sm;
-    max-width: 480px;
+    max-width: 560px;
 
     th {
         @apply dlm-text-left dlm-p-2 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
@@ -1156,7 +1209,7 @@ onMounted(() => {
 
 // Footer for save button
 .dlm-settings-footer {
-    @apply dlm-mt-6 dlm-pt-4 dlm-border-t dlm-border-gray-200;
+    @apply dlm-mt-6 dlm-pt-4;
 }
 
 .dlm-mt-4 {
@@ -1169,7 +1222,7 @@ onMounted(() => {
 
 // Tools & Help cards
 .dlm-tools-card {
-    @apply dlm-flex dlm-gap-4 dlm-p-5 dlm-rounded-lg dlm-border dlm-border-gray-200;
+    @apply dlm-flex dlm-gap-4 dlm-p-5 dlm-rounded-lg dlm-border dlm-border-gray-200 dlm-bg-white;
 
     & + & {
         @apply dlm-mt-4;
@@ -1199,16 +1252,16 @@ onMounted(() => {
     }
 }
 
-.dlm-grid {
+// API key form layout
+.dlm-api-key-form-fields {
     display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
 }
 
-.dlm-grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dlm-gap-4 {
-    gap: 1rem;
+.dlm-api-key-form-actions {
+    @apply dlm-flex dlm-gap-2 dlm-mt-5 dlm-pt-4;
+    border-top: 1px solid #f3f4f6;
 }
 
 .dlm-credentials-box {
@@ -1334,6 +1387,21 @@ onMounted(() => {
         li {
             @apply dlm-flex-shrink-0;
         }
+    }
+
+    .dlm-settings-section {
+        padding: 16px 20px;
+
+        .dlm-form-group {
+            &:has(.dlm-input), &:has(.dlm-image-upload-field) {
+                grid-template-columns: 1fr;
+                gap: 4px 0;
+            }
+        }
+    }
+
+    .dlm-api-key-form-fields {
+        grid-template-columns: 1fr;
     }
 }
 </style>
