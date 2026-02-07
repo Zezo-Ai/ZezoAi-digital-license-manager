@@ -107,13 +107,13 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { trans } from '../utils/useLang'
-import { useAlertStore } from '../stores/alert'
+import { trans } from '@digital-license-manager/ui/utils/useLang'
+import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as licensesService from '../services/licenses'
-import Page from '../components/Page.vue'
-import AsyncSelect from '../components/input/AsyncSelect.vue'
-import Dropdown from '../components/input/Dropdown.vue'
-import TextArea from '../components/input/TextArea.vue'
+import Page from '@digital-license-manager/ui/components/Page.vue'
+import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
+import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
+import TextArea from '@digital-license-manager/ui/components/input/TextArea.vue'
 
 const alertStore = useAlertStore()
 

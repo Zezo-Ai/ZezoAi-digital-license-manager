@@ -1,13 +1,24 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { configure } from '@digital-license-manager/ui/setup'
+import menuFix from '@digital-license-manager/ui/utils/admin-menu-fix.js'
+import '@digital-license-manager/ui/styles/main.scss'
 import App from './App.vue'
 import router from './router/router.js'
-import menuFix from './utils/admin-menu-fix.js'
-import './styles/main.scss'
 
 const mountEl = document.getElementById('dlm-admin')
 
 if (mountEl) {
+    configure({
+        i18n: window.DLMAdmin?.i18n,
+        nonce: window.DLMAdmin?.nonce,
+        dropdownNonce: window.DLMAdmin?.dropdownNonce,
+        ajaxUrl: window.DLMAdmin?.ajaxUrl,
+        restUrl: window.DLMAdmin?.restUrl,
+        adminUrl: window.DLMAdmin?.adminUrl,
+        pluginUrl: window.DLMAdmin?.pluginUrl,
+    })
+
     const app = createApp(App)
 
     app.provide('pluginConfig', {

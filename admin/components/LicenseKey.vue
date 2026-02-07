@@ -60,8 +60,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { trans } from '../utils/useLang'
-import { useAlertStore } from '../stores/alert'
+import { trans } from '@digital-license-manager/ui/utils/useLang'
+import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as licensesService from '../services/licenses'
 
 const props = defineProps({

@@ -504,14 +504,14 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { trans } from '../utils/useLang'
-import { useAlertStore } from '../stores/alert'
+import { trans } from '@digital-license-manager/ui/utils/useLang'
+import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as settingsService from '../services/settings'
-import Page from '../components/Page.vue'
-import Dropdown from '../components/input/Dropdown.vue'
-import AsyncSelect from '../components/input/AsyncSelect.vue'
-import ImageUpload from '../components/input/ImageUpload.vue'
-import TextInput from '../components/input/TextInput.vue'
+import Page from '@digital-license-manager/ui/components/Page.vue'
+import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
+import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
+import ImageUpload from '@digital-license-manager/ui/components/input/ImageUpload.vue'
+import TextInput from '@digital-license-manager/ui/components/input/TextInput.vue'
 
 const props = defineProps({
     tab: {

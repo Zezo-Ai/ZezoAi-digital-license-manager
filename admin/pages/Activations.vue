@@ -105,13 +105,13 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
-import { trans } from '../utils/useLang'
-import { useAlertStore } from '../stores/alert'
+import { trans } from '@digital-license-manager/ui/utils/useLang'
+import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as activationsService from '../services/activations'
-import Page from '../components/Page.vue'
-import Table from '../components/Table.vue'
-import Pager from '../components/Pager.vue'
-import Modal from '../components/Modal.vue'
+import Page from '@digital-license-manager/ui/components/Page.vue'
+import Table from '@digital-license-manager/ui/components/Table.vue'
+import Pager from '@digital-license-manager/ui/components/Pager.vue'
+import Modal from '@digital-license-manager/ui/components/Modal.vue'
 
 const alertStore = useAlertStore()
 

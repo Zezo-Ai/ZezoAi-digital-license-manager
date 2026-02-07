@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import Alert from './components/Alert.vue'
+import Alert from '@digital-license-manager/ui/components/Alert.vue'
 </script>
 
 <style lang="scss">

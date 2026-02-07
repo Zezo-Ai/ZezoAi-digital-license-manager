@@ -165,11 +165,11 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { trans } from '../utils/useLang'
-import { useAlertStore } from '../stores/alert'
+import { trans } from '@digital-license-manager/ui/utils/useLang'
+import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as generatorsService from '../services/generators'
-import Page from '../components/Page.vue'
-import AsyncSelect from '../components/input/AsyncSelect.vue'
+import Page from '@digital-license-manager/ui/components/Page.vue'
+import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 
 const props = defineProps({
     id: {

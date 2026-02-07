@@ -1,4 +1,4 @@
-import { ajaxGet } from '../utils/useRequest'
+import { ajaxGet } from '@digital-license-manager/ui/utils/useRequest'
 
 /**
  * Search products.

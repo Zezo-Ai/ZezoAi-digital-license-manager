@@ -1,4 +1,4 @@
-import { ajaxGet, ajaxPost } from '../utils/useRequest'
+import { ajaxGet, ajaxPost } from '@digital-license-manager/ui/utils/useRequest'
 
 /**
  * Query licenses with pagination and filters.
