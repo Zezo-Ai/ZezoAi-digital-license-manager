@@ -95,7 +95,6 @@
                                                     :label="field.title"
                                                     :hint="field.explain"
                                                     :image-url="field.image_url"
-                                                    :placeholder="pluginUrl + 'assets/img/logo-placeholder.jpg'"
                                                 />
                                             </template>
 
@@ -532,7 +531,6 @@ const alertStore = useAlertStore()
 const activeTab = ref(props.tab || route.params.tab || 'general')
 const loading = ref(true)
 const saving = ref(false)
-const pluginUrl = window.DLMAdmin?.pluginUrl || ''
 
 // Settings data from PHP
 const tabData = ref({})

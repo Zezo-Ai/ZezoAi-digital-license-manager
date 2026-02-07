@@ -7,9 +7,17 @@
 
         <div class="dlm-image-upload-field">
             <div class="dlm-image-upload-preview" @click="openMedia">
-                <img :src="previewUrl || placeholder" :alt="label" />
-                <div class="dlm-image-upload-overlay">
-                    <span>{{ hasImage ? trans('global.actions.change') : trans('settings.general.upload') }}</span>
+                <img v-if="previewUrl" :src="previewUrl" :alt="label" />
+                <div v-else class="dlm-image-upload-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>{{ trans('settings.general.upload') }}</span>
+                </div>
+                <div v-if="previewUrl" class="dlm-image-upload-overlay">
+                    <span>{{ trans('global.actions.change') }}</span>
                 </div>
             </div>
 
@@ -72,10 +80,6 @@ const props = defineProps({
     required: {
         type: Boolean,
         default: false,
-    },
-    placeholder: {
-        type: String,
-        default: '',
     },
     imageUrl: {
         type: String,
@@ -161,17 +165,54 @@ onMounted(() => {
 }
 
 .dlm-image-upload-preview {
-    @apply dlm-relative dlm-cursor-pointer dlm-rounded dlm-border dlm-border-gray-200 dlm-overflow-hidden dlm-inline-block;
+    @apply dlm-relative dlm-cursor-pointer dlm-rounded-lg dlm-border-2 dlm-border-dashed dlm-border-gray-300 dlm-overflow-hidden dlm-inline-block;
+    @apply dlm-transition-all;
     width: 200px;
     height: 200px;
+
+    &:hover {
+        @apply dlm-border-primary-400;
+    }
 
     img {
         @apply dlm-w-full dlm-h-full;
         object-fit: cover;
     }
 
+    // Solid border when image is present
+    &:has(img) {
+        @apply dlm-border-solid dlm-border dlm-border-gray-200 dlm-rounded;
+    }
+
     &:hover .dlm-image-upload-overlay {
         @apply dlm-opacity-100;
+    }
+}
+
+.dlm-image-upload-placeholder {
+    @apply dlm-flex dlm-flex-col dlm-items-center dlm-justify-center dlm-h-full dlm-gap-3;
+    @apply dlm-bg-gray-50 dlm-transition-colors;
+
+    svg {
+        @apply dlm-text-gray-400 dlm-transition-colors;
+        width: 40px;
+        height: 40px;
+    }
+
+    span {
+        @apply dlm-text-sm dlm-font-medium dlm-text-gray-400 dlm-transition-colors;
+    }
+
+    .dlm-image-upload-preview:hover & {
+        @apply dlm-bg-primary-50;
+
+        svg {
+            @apply dlm-text-primary-400;
+        }
+
+        span {
+            @apply dlm-text-primary-500;
+        }
     }
 }
 
