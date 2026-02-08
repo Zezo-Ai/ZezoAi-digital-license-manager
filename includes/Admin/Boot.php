@@ -109,6 +109,10 @@ class Boot {
 		$submenu[ $slug ][] = [ __( 'Licenses', 'digital-license-manager' ), $capability, 'admin.php?page=' . $slug . '#/' ];
 		$submenu[ $slug ][] = [ __( 'Generators', 'digital-license-manager' ), $capability, 'admin.php?page=' . $slug . '#/generators' ];
 		$submenu[ $slug ][] = [ __( 'Activations', 'digital-license-manager' ), $capability, 'admin.php?page=' . $slug . '#/activations' ];
+
+		// Allow other plugins (e.g. Pro) to register submenu pages at this position.
+		do_action( 'dlm_admin_menu_pages', $slug );
+
 		$submenu[ $slug ][] = [ __( 'Settings', 'digital-license-manager' ), 'dlm_manage_settings', 'admin.php?page=' . $slug . '#/settings' ];
 	}
 

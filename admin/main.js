@@ -10,6 +10,7 @@ const mountEl = document.getElementById('dlm-admin')
 
 if (mountEl) {
     configure({
+        appId: 'dlm-admin',
         i18n: window.DLMAdmin?.i18n,
         nonce: window.DLMAdmin?.nonce,
         dropdownNonce: window.DLMAdmin?.dropdownNonce,
