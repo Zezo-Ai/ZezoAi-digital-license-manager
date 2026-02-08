@@ -323,7 +323,9 @@ return [
 		],
 	],
 	'settings' => [
-		'title' => __( 'Settings', 'digital-license-manager' ),
+		'title'       => __( 'Settings', 'digital-license-manager' ),
+		'select_page' => __( '— Select a page —', 'digital-license-manager' ),
+		'none'        => __( '— None —', 'digital-license-manager' ),
 		'tabs'  => [
 			'general'  => __( 'General', 'digital-license-manager' ),
 			'rest_api' => __( 'REST API', 'digital-license-manager' ),

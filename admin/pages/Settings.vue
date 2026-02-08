@@ -87,6 +87,49 @@
                                                 <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
                                             </template>
 
+                                            <!-- Page Select -->
+                                            <template v-else-if="field.type === 'page_select'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <select
+                                                    :id="field.id"
+                                                    v-model="settingsValues[field.id]"
+                                                    class="dlm-input"
+                                                >
+                                                    <option value="">{{ field.allow_empty ? trans('settings.none') : trans('settings.select_page') }}</option>
+                                                    <option
+                                                        v-for="(pageTitle, pageId) in field.options"
+                                                        :key="pageId"
+                                                        :value="pageId"
+                                                    >{{ pageTitle }}</option>
+                                                </select>
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
+                                            <!-- Password -->
+                                            <template v-else-if="field.type === 'password'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <input
+                                                    :id="field.id"
+                                                    v-model="settingsValues[field.id]"
+                                                    type="password"
+                                                    class="dlm-input"
+                                                    :placeholder="field.placeholder || ''"
+                                                />
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
+                                            <!-- Textarea -->
+                                            <template v-else-if="field.type === 'textarea'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <textarea
+                                                    :id="field.id"
+                                                    v-model="settingsValues[field.id]"
+                                                    class="dlm-input dlm-textarea"
+                                                    :rows="field.rows || 5"
+                                                ></textarea>
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
                                             <!-- Image upload -->
                                             <template v-else-if="field.type === 'image'">
                                                 <ImageUpload
@@ -599,7 +642,7 @@ function sectionCount(tab) {
 function isOrderStatusChecked(fieldId, statusSlug) {
     const val = settingsValues[fieldId]
     if (!val || typeof val !== 'object') return false
-    return val[statusSlug] && val[statusSlug].send === '1'
+    return !!(val[statusSlug] && val[statusSlug].send)
 }
 
 function toggleOrderStatus(fieldId, statusSlug, event) {
@@ -1143,7 +1186,7 @@ onMounted(() => {
         border-bottom: 1px solid #f3f4f6;
 
         // Horizontal grid for text/select inputs: label left, input right
-        &:has(.dlm-input), &:has(.dlm-image-upload-field) {
+        &:has(.dlm-input) {
             display: grid;
             grid-template-columns: 200px 1fr;
             gap: 0 24px;
@@ -1160,11 +1203,6 @@ onMounted(() => {
             .dlm-form-hint {
                 grid-column: 2;
             }
-        }
-
-        // Image upload: label aligns to top, no extra padding
-        &:has(.dlm-image-upload-field) > :deep(label) {
-            padding-top: 0;
         }
 
         // Checkbox rows: simple inline
@@ -1205,6 +1243,14 @@ onMounted(() => {
     tr:nth-child(even) {
         @apply dlm-bg-gray-50;
     }
+}
+
+// Textarea styling
+.dlm-textarea {
+    resize: vertical;
+    min-height: 60px;
+    max-width: 560px;
+    font-family: inherit;
 }
 
 // Footer for save button

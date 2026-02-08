@@ -868,8 +868,14 @@ class Ajax {
 									$field_type = 'text';
 								} elseif ( $method === 'fieldImageUpload' ) {
 									$field_type = 'image';
-								} elseif ( $method === 'fieldSelect' ) {
+								} elseif ( $method === 'fieldSelect' || $method === 'fieldCurrencySelect' ) {
 									$field_type = 'select';
+								} elseif ( $method === 'fieldPageSelect' ) {
+									$field_type = 'page_select';
+								} elseif ( $method === 'fieldPassword' ) {
+									$field_type = 'password';
+								} elseif ( $method === 'fieldTextarea' ) {
+									$field_type = 'textarea';
 								} elseif ( $method === 'fieldLicenseKeyDeliveryOptions' ) {
 									$field_type = 'order_statuses';
 								} elseif ( $method === 'fieldManageStock' ) {
@@ -925,6 +931,32 @@ class Ajax {
 								if ( $src ) {
 									$field_data['image_url'] = $src[0];
 								}
+							}
+
+							// For page_select fields, supply published pages as options.
+							if ( $field_type === 'page_select' ) {
+								$pages        = get_pages( [ 'post_status' => 'publish', 'sort_column' => 'post_title', 'sort_order' => 'ASC' ] );
+								$page_options = [];
+								if ( ! empty( $pages ) ) {
+									foreach ( $pages as $pg ) {
+										$page_options[ $pg->ID ] = $pg->post_title;
+									}
+								}
+								$field_data['options']     = $page_options;
+								$field_data['allow_empty'] = ! empty( $args['allow_empty'] );
+							}
+
+							// Allow extensions to supply options for select fields that populate dynamically.
+							$field_data = apply_filters( 'dlm_settings_field_data', $field_data, $field, $args );
+
+							// For textarea fields, supply rows if specified.
+							if ( $field_type === 'textarea' && ! empty( $args['rows'] ) ) {
+								$field_data['rows'] = (int) $args['rows'];
+							}
+
+							// For password fields, supply placeholder if specified.
+							if ( $field_type === 'password' && ! empty( $args['placeholder'] ) ) {
+								$field_data['placeholder'] = $args['placeholder'];
 							}
 
 							$section_data['fields'][] = $field_data;
