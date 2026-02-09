@@ -31,6 +31,7 @@ use IdeoLogix\DigitalLicenseManager\Database\Models\Generator;
 use IdeoLogix\DigitalLicenseManager\Database\Models\License;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Generators;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses;
+use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 use IdeoLogix\DigitalLicenseManager\Enums\LicenseSource;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePrivateStatus;
 use IdeoLogix\DigitalLicenseManager\Enums\PageSlug;
@@ -325,7 +326,8 @@ class Orders {
 					'status'            => LicensePrivateStatus::SOLD,
 					'source'            => LicenseSource::GENERATOR,
 					'valid_for'         => $generator->getExpiresIn(),
-					'activations_limit' => $activationsLimit
+					'activations_limit' => $activationsLimit,
+					'platform'          => LicensePlatform::WOOCOMMERCE,
 				] );
 				if ( ! is_wp_error( $result ) ) {
 					$licenses = $result['licenses'];
@@ -367,7 +369,7 @@ class Orders {
 		 */
 		if ( Settings::isAutoDeliveryEnabled() ) {
 			Licenses::instance()->updateBy(
-				array( 'order_id' => $order->get_id() ),
+				array( 'order_id' => $order->get_id(), 'platform' => LicensePlatform::WOOCOMMERCE ),
 				array( 'status' => LicensePrivateStatus::DELIVERED )
 			);
 			DebugLogger::info( sprintf( 'WC -> Generate Order Licenses (Order #%d, Product #%d): Order licenses status SET to DELIVERED.', $order->get_id(), $product->get_id() ) );
@@ -377,11 +379,11 @@ class Orders {
 		 * Set activations limit on the ordered licenses based on the max activastions behavior.
 		 * @var License[] $orderedLicenses
 		 */
-		$orderedLicenses = Licenses::instance()->findAllBy( array( 'order_id' => $order->get_id() ) );
+		$orderedLicenses = Licenses::instance()->findAllBy( array( 'order_id' => $order->get_id(), 'platform' => LicensePlatform::WOOCOMMERCE ) );
 		if ( 'quantity' === $maxActivationsBehavior ) {
 			foreach ( $orderedLicenses as $license ) {
 				Licenses::instance()->update( $license->getId(), [ 'activations_limit' => $orderItem->get_quantity() ] );
-				$orderedLicenses = Licenses::instance()->findAllBy( array( 'order_id' => $order->get_id() ) ); // Reload.
+				$orderedLicenses = Licenses::instance()->findAllBy( array( 'order_id' => $order->get_id(), 'platform' => LicensePlatform::WOOCOMMERCE ) ); // Reload.
 			}
 		}
 
@@ -461,7 +463,7 @@ class Orders {
 	 */
 	public function addSendLicenseKeysAction( $actions, $order ) {
 
-		if ( Licenses::instance()->countBy( array( 'order_id' => $order->get_id() ) ) ) {
+		if ( Licenses::instance()->countBy( array( 'order_id' => $order->get_id(), 'platform' => LicensePlatform::WOOCOMMERCE ) ) ) {
 			$actions['dlm_send_licenses'] = __( 'Resend license(s) to customer', 'digital-license-manager' );
 		}
 

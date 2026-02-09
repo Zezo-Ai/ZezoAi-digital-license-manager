@@ -24,24 +24,39 @@
  * Code written, maintained by Darko Gjorgjijoski (https://darkog.com)
  */
 
-namespace IdeoLogix\DigitalLicenseManager\Database\Repositories;
+/* @var int $migrationMode */
 
-use IdeoLogix\DigitalLicenseManager\Abstracts\AbstractDataRepository;
-use IdeoLogix\DigitalLicenseManager\Database\Models\License;
+use IdeoLogix\DigitalLicenseManager\Database\Migrator;
 use IdeoLogix\DigitalLicenseManager\Enums\DatabaseTable;
 
-class Licenses extends AbstractDataRepository {
+defined( 'ABSPATH' ) || exit;
 
+/**
+ * Upgrade script - Add platform column to licenses table
+ */
+if ( $migrationMode === Migrator::MODE_UP ) {
+	global $wpdb;
+	$table = $wpdb->prefix . DatabaseTable::LICENSES;
 
-	/**
-	 * Initializes the repository
-	 * @return void
-	 */
-	protected function init() {
-		$this->primaryKey = 'id';
-		$this->dataTable  = DatabaseTable::LICENSES;
-		$this->dataModel  = License::class;
-		$this->searchable = [ 'order_id', 'product_id', 'platform', 'user_id', 'license_key', 'hash', 'valid_for', 'source', 'status' ];
-	}
+	// Add the platform column
+	$wpdb->query(
+		"ALTER TABLE `{$table}`
+	        ADD `platform` VARCHAR(50) NULL DEFAULT NULL
+        	AFTER `product_id`;"
+	);
 
+	// Backfill existing licenses that have an order_id as WooCommerce
+	// (native ecommerce is new, so all existing order-linked licenses are WooCommerce)
+	$wpdb->query(
+		"UPDATE `{$table}` SET `platform` = 'woocommerce' WHERE `order_id` IS NOT NULL;"
+	);
+
+	// Add index for platform column
+	$wpdb->query(
+		"ALTER TABLE `{$table}` ADD INDEX `platform` (`platform`);"
+	);
+
+	return true;
 }
+
+return false;

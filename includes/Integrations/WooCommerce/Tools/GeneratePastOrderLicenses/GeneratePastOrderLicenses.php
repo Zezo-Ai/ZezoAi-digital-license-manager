@@ -29,6 +29,7 @@ namespace IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Tools\Generat
 use IdeoLogix\DigitalLicenseManager\Abstracts\AbstractTool;
 use IdeoLogix\DigitalLicenseManager\Core\Services\GeneratorsService;
 use IdeoLogix\DigitalLicenseManager\Core\Services\LicensesService;
+use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 use IdeoLogix\DigitalLicenseManager\Enums\LicenseSource;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePrivateStatus;
 
@@ -216,6 +217,7 @@ class GeneratePastOrderLicenses extends AbstractTool {
 									'source'            => LicenseSource::GENERATOR,
 									'activations_limit' => $generator->getActivationsLimit(),
 									'valid_for'         => $generator->getExpiresIn(),
+									'platform'          => LicensePlatform::WOOCOMMERCE,
 								]);
 
 								if ( ! is_wp_error( $status ) ) {

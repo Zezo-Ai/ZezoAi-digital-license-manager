@@ -40,6 +40,7 @@ use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\LicenseMeta as LicenseMetaRepository;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\LicenseActivations as LicenseActivations;
 use IdeoLogix\DigitalLicenseManager\Enums\ActivationSource;
+use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 use IdeoLogix\DigitalLicenseManager\Enums\LicenseSource;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePrivateStatus as LicenseStatusEnum;
 use IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Stock;
@@ -160,6 +161,7 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 		$status           = LicenseStatusEnum::INACTIVE;
 		$orderId          = null;
 		$productId        = null;
+		$platform         = null;
 		$userId           = null;
 		$expiresAt        = null;
 		$activationsLimit = null;
@@ -175,6 +177,10 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 
 		if ( array_key_exists( 'product_id', $data ) ) {
 			$productId = is_numeric( $data['product_id'] ) ? absint( $data['product_id'] ) : null;
+		}
+
+		if ( array_key_exists( 'platform', $data ) ) {
+			$platform = ! empty( $data['platform'] ) ? sanitize_text_field( $data['platform'] ) : null;
 		}
 
 		if ( array_key_exists( 'user_id', $data ) ) {
@@ -222,6 +228,7 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 		$queryData = array(
 			'order_id'          => $orderId,
 			'product_id'        => $productId,
+			'platform'          => $platform,
 			'user_id'           => $userId,
 			'license_key'       => $encryptedLicenseKey,
 			'hash'              => $hashedLicenseKey,
@@ -267,6 +274,7 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 		$validFor  = isset( $params['valid_for'] ) ? (int) $params['valid_for'] : null;
 		$limit     = isset( $params['activations_limit'] ) ? (int) $params['activations_limit'] : null;
 		$source    = isset( $params['source'] ) ? $params['source'] : null;
+		$platform  = isset( $params['platform'] ) ? sanitize_text_field( $params['platform'] ) : null;
 		$allowDups = (int) Settings::get( 'allow_duplicates', Settings::SECTION_GENERAL );
 
 		// Allow license user to be filtered
@@ -321,6 +329,7 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 			$params   = array(
 				'order_id'          => $orderId,
 				'product_id'        => $productId,
+				'platform'          => $platform,
 				'user_id'           => $userId,
 				'license_key'       => $encrypted,
 				'hash'              => $hashed,
@@ -461,6 +470,11 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 		// Times activated max
 		if ( array_key_exists( 'activations_limit', $data ) ) {
 			$updateData['activations_limit'] = is_numeric( $data['activations_limit'] ) ? absint( $data['activations_limit'] ) : null;
+		}
+
+		// Platform
+		if ( array_key_exists( 'platform', $data ) ) {
+			$updateData['platform'] = ! empty( $data['platform'] ) ? sanitize_text_field( $data['platform'] ) : null;
 		}
 
 		/** @var License $license */
@@ -1096,7 +1110,8 @@ class LicensesService implements ServiceInterface, MetadataInterface {
 				'order_id'   => $orderId,
 				'user_id'    => $orderUserId,
 				'expires_at' => $expiresAt,
-				'status'     => LicenseStatusEnum::SOLD
+				'status'     => LicenseStatusEnum::SOLD,
+				'platform'   => LicensePlatform::WOOCOMMERCE,
 			);
 
 			if ( is_numeric( $activationsLimit ) ) {

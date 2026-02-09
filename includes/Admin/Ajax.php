@@ -880,6 +880,8 @@ class Ajax {
 									$field_type = 'order_statuses';
 								} elseif ( $method === 'fieldManageStock' ) {
 									$field_type = 'checkbox';
+								} elseif ( $method === 'fieldPaymentGateways' ) {
+									$field_type = 'payment_gateways';
 								}
 							}
 
@@ -906,6 +908,11 @@ class Ajax {
 							}
 							if ( ! empty( $args['size'] ) ) {
 								$field_data['size'] = $args['size'];
+							}
+
+							// For payment_gateways, pass gateway definitions through.
+							if ( ! empty( $args['gateways'] ) ) {
+								$field_data['gateways'] = $args['gateways'];
 							}
 
 							// For order_statuses, supply WC order statuses as options and hardcoded label/explain from the callback.
@@ -949,6 +956,15 @@ class Ajax {
 							// Allow extensions to supply options for select fields that populate dynamically.
 							$field_data = apply_filters( 'dlm_settings_field_data', $field_data, $field, $args );
 
+							// Decode HTML entities in option labels so Vue renders them correctly.
+							if ( ! empty( $field_data['options'] ) && is_array( $field_data['options'] ) ) {
+								foreach ( $field_data['options'] as $opt_key => $opt_label ) {
+									if ( is_string( $opt_label ) ) {
+										$field_data['options'][ $opt_key ] = html_entity_decode( $opt_label, ENT_QUOTES, 'UTF-8' );
+									}
+								}
+							}
+
 							// For textarea fields, supply rows if specified.
 							if ( $field_type === 'textarea' && ! empty( $args['rows'] ) ) {
 								$field_data['rows'] = (int) $args['rows'];
@@ -957,6 +973,61 @@ class Ajax {
 							// For password fields, supply placeholder if specified.
 							if ( $field_type === 'password' && ! empty( $args['placeholder'] ) ) {
 								$field_data['placeholder'] = $args['placeholder'];
+							}
+
+							// For payment_gateways, serialize each gateway's sub-fields into Vue-ready format.
+							if ( $field_type === 'payment_gateways' && ! empty( $field_data['gateways'] ) ) {
+								foreach ( $field_data['gateways'] as $gw_id => $gw ) {
+									if ( empty( $gw['fields'] ) ) {
+										continue;
+									}
+									$serialized_fields = [];
+									foreach ( $gw['fields'] as $sub_field ) {
+										$sub_id = isset( $sub_field['id'] ) ? $sub_field['id'] : '';
+										if ( empty( $sub_id ) ) {
+											continue;
+										}
+										$sub_type = 'checkbox';
+										if ( isset( $sub_field['callback'][1] ) ) {
+											$sm = $sub_field['callback'][1];
+											if ( $sm === 'fieldText' ) {
+												$sub_type = 'text';
+											} elseif ( $sm === 'fieldSelect' ) {
+												$sub_type = 'select';
+											} elseif ( $sm === 'fieldPassword' ) {
+												$sub_type = 'password';
+											} elseif ( $sm === 'fieldTextarea' ) {
+												$sub_type = 'textarea';
+											}
+										}
+										$sub_args = isset( $sub_field['args'] ) ? $sub_field['args'] : [];
+										$sub_data = [
+											'id'    => $sub_id,
+											'title' => isset( $sub_field['title'] ) ? $sub_field['title'] : '',
+											'type'  => $sub_type,
+											'value' => array_key_exists( $sub_id, $stored ) ? $stored[ $sub_id ] : null,
+										];
+										if ( ! empty( $sub_args['label'] ) ) {
+											$sub_data['label'] = $sub_args['label'];
+										}
+										if ( ! empty( $sub_args['explain'] ) ) {
+											$sub_data['explain'] = $sub_args['explain'];
+										}
+										if ( ! empty( $sub_args['options'] ) ) {
+											$sub_data['options'] = array_map( function( $label ) {
+												return is_string( $label ) ? html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ) : $label;
+											}, $sub_args['options'] );
+										}
+										if ( ! empty( $sub_args['rows'] ) ) {
+											$sub_data['rows'] = (int) $sub_args['rows'];
+										}
+										if ( ! empty( $sub_args['placeholder'] ) ) {
+											$sub_data['placeholder'] = $sub_args['placeholder'];
+										}
+										$serialized_fields[] = $sub_data;
+									}
+									$field_data['gateways'][ $gw_id ]['fields'] = $serialized_fields;
+								}
 							}
 
 							$section_data['fields'][] = $field_data;
@@ -1026,6 +1097,22 @@ class Ajax {
 						// Detect fields that store array values (e.g. order_delivery_statuses).
 						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldLicenseKeyDeliveryOptions' ) {
 							$array_fields[] = $field['id'];
+						}
+
+						// For payment_gateways, also register all gateway sub-field IDs.
+						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldPaymentGateways' ) {
+							$gw_args = isset( $field['args'] ) ? $field['args'] : [];
+							if ( ! empty( $gw_args['gateways'] ) ) {
+								foreach ( $gw_args['gateways'] as $gw ) {
+									if ( ! empty( $gw['fields'] ) ) {
+										foreach ( $gw['fields'] as $sub_field ) {
+											if ( ! empty( $sub_field['id'] ) ) {
+												$valid_fields[] = $sub_field['id'];
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -1128,7 +1215,7 @@ class Ajax {
 			foreach ( $products as $product ) {
 				$results[] = [
 					'value' => $product->get_id(),
-					'label' => sprintf( '#%d - %s', $product->get_id(), $product->get_name() ),
+					'label' => sprintf( '#%d - %s', $product->get_id(), html_entity_decode( $product->get_name() ) ),
 				];
 			}
 		}
@@ -1185,7 +1272,7 @@ class Ajax {
 		foreach ( $users as $user ) {
 			$results[] = [
 				'value' => $user->ID,
-				'label' => sprintf( '%s (%s)', $user->display_name, $user->user_email ),
+				'label' => sprintf( '%s (%s)', html_entity_decode( $user->display_name ), $user->user_email ),
 			];
 		}
 
@@ -1206,7 +1293,7 @@ class Ajax {
 		foreach ( $generators as $generator ) {
 			$results[] = [
 				'value' => $generator->getId(),
-				'label' => $generator->getName(),
+				'label' => html_entity_decode( $generator->getName() ),
 			];
 		}
 

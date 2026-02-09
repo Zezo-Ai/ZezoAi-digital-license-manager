@@ -28,6 +28,7 @@ namespace IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Services;
 
 use IdeoLogix\DigitalLicenseManager\Database\Models\License;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses;
+use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 
 class OrdersService {
 
@@ -48,6 +49,7 @@ class OrdersService {
 			array(
 				'order_id'   => $order->get_id(),
 				'product_id' => $product->get_id(),
+				'platform'   => LicensePlatform::WOOCOMMERCE,
 			),
 			$order_item_product,
 			$product

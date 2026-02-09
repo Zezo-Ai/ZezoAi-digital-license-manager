@@ -81,6 +81,7 @@ class Schema {
                 `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `order_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
                 `product_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
+                `platform` VARCHAR(50) NULL DEFAULT NULL,
                 `user_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
                 `license_key` LONGTEXT NOT NULL COMMENT 'Encrypted License Key',
                 `hash` LONGTEXT NOT NULL COMMENT 'Hashed License Key ID	',

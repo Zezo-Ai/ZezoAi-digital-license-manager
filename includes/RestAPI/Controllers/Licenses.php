@@ -322,11 +322,13 @@ class Licenses extends AbstractRestController {
 		$expiresAt        = isset( $body['expires_at'] ) ? sanitize_text_field( $body['expires_at'] ) : null;
 		$activationsLimit = isset( $body['activations_limit'] ) ? absint( $body['activations_limit'] ) : null;
 		$status           = isset( $body['status'] ) ? sanitize_text_field( $body['status'] ) : null;
+		$platform         = isset( $body['platform'] ) ? sanitize_text_field( $body['platform'] ) : null;
 
 		$license = $this->service->create( array(
 			'license_key'       => $licenseKey,
 			'order_id'          => $orderId,
 			'product_id'        => $productId,
+			'platform'          => $platform,
 			'user_id'           => $userId,
 			'expires_at'        => $expiresAt,
 			'source'            => LicenseSource::API,

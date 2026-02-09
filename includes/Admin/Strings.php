@@ -326,6 +326,18 @@ return [
 		'title'       => __( 'Settings', 'digital-license-manager' ),
 		'select_page' => __( '— Select a page —', 'digital-license-manager' ),
 		'none'        => __( '— None —', 'digital-license-manager' ),
+		'gateways' => [
+			'gateway'       => __( 'Gateway', 'digital-license-manager' ),
+			'features'      => __( 'Features', 'digital-license-manager' ),
+			'status'        => __( 'Status', 'digital-license-manager' ),
+			'actions'       => __( 'Actions', 'digital-license-manager' ),
+			'configure'     => __( 'Configure', 'digital-license-manager' ),
+			'enabled'       => __( 'Enabled', 'digital-license-manager' ),
+			'disabled'      => __( 'Disabled', 'digital-license-manager' ),
+			'subscriptions' => __( 'Subscriptions', 'digital-license-manager' ),
+			'refunds'       => __( 'Refunds', 'digital-license-manager' ),
+			'done'          => __( 'Done', 'digital-license-manager' ),
+		],
 		'tabs'  => [
 			'general'  => __( 'General', 'digital-license-manager' ),
 			'rest_api' => __( 'REST API', 'digital-license-manager' ),

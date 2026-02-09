@@ -167,6 +167,137 @@
                                                 </table>
                                                 <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
                                             </template>
+
+                                            <!-- Payment Gateways -->
+                                            <template v-else-if="field.type === 'payment_gateways'">
+                                                <table class="dlm-gateways-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>{{ trans('settings.gateways.gateway') }}</th>
+                                                            <th>{{ trans('settings.gateways.features') }}</th>
+                                                            <th>{{ trans('settings.gateways.status') }}</th>
+                                                            <th>{{ trans('settings.gateways.actions') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(gw, gwId) in field.gateways" :key="gwId">
+                                                            <td>
+                                                                <div class="dlm-font-medium">{{ gw.title }}</div>
+                                                                <div v-if="gw.description" class="dlm-gateways-description">{{ gw.description }}</div>
+                                                            </td>
+                                                            <td>
+                                                                <span v-if="gw.supports_subscriptions" class="dlm-badge dlm-badge-info">{{ trans('settings.gateways.subscriptions') }}</span>
+                                                                <span v-if="gw.supports_refunds" class="dlm-badge dlm-badge-info">{{ trans('settings.gateways.refunds') }}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span
+                                                                    class="dlm-badge"
+                                                                    :class="settingsValues[gwId + '_enabled'] === '1' ? 'dlm-badge-success' : 'dlm-badge-gray'"
+                                                                >
+                                                                    {{ settingsValues[gwId + '_enabled'] === '1' ? trans('settings.gateways.enabled') : trans('settings.gateways.disabled') }}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <button
+                                                                    type="button"
+                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm"
+                                                                    @click="openGatewayModal(gw)"
+                                                                >
+                                                                    {{ trans('settings.gateways.configure') }}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Gateway Settings Modal -->
+                                                <Modal
+                                                    :show="gatewayModal.show"
+                                                    :title="gatewayModal.gateway?.title || ''"
+                                                    size="lg"
+                                                    @close="closeGatewayModal"
+                                                >
+                                                    <div v-if="gatewayModal.gateway" class="dlm-gateway-modal-fields">
+                                                        <div
+                                                            v-for="subField in gatewayModal.gateway.fields"
+                                                            :key="subField.id"
+                                                            class="dlm-form-group"
+                                                        >
+                                                            <template v-if="subField.type === 'checkbox'">
+                                                                <label>
+                                                                    <input
+                                                                        v-model="settingsValues[subField.id]"
+                                                                        type="checkbox"
+                                                                        class="dlm-checkbox"
+                                                                        true-value="1"
+                                                                        false-value=""
+                                                                    />
+                                                                    {{ subField.label || subField.title }}
+                                                                </label>
+                                                                <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                            </template>
+                                                            <template v-else-if="subField.type === 'text'">
+                                                                <label :for="subField.id">{{ subField.title }}</label>
+                                                                <input
+                                                                    :id="subField.id"
+                                                                    v-model="settingsValues[subField.id]"
+                                                                    type="text"
+                                                                    class="dlm-input"
+                                                                    :placeholder="subField.placeholder || ''"
+                                                                />
+                                                                <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                            </template>
+                                                            <template v-else-if="subField.type === 'select'">
+                                                                <label :for="subField.id">{{ subField.title }}</label>
+                                                                <select
+                                                                    :id="subField.id"
+                                                                    v-model="settingsValues[subField.id]"
+                                                                    class="dlm-input"
+                                                                >
+                                                                    <option
+                                                                        v-for="(optLabel, optVal) in subField.options"
+                                                                        :key="optVal"
+                                                                        :value="optVal"
+                                                                    >{{ optLabel }}</option>
+                                                                </select>
+                                                                <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                            </template>
+                                                            <template v-else-if="subField.type === 'password'">
+                                                                <label :for="subField.id">{{ subField.title }}</label>
+                                                                <input
+                                                                    :id="subField.id"
+                                                                    v-model="settingsValues[subField.id]"
+                                                                    type="password"
+                                                                    class="dlm-input"
+                                                                    :placeholder="subField.placeholder || ''"
+                                                                />
+                                                                <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                            </template>
+                                                            <template v-else-if="subField.type === 'textarea'">
+                                                                <label :for="subField.id">{{ subField.title }}</label>
+                                                                <textarea
+                                                                    :id="subField.id"
+                                                                    v-model="settingsValues[subField.id]"
+                                                                    class="dlm-input dlm-textarea"
+                                                                    :rows="subField.rows || 5"
+                                                                ></textarea>
+                                                                <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+
+                                                    <template #footer>
+                                                        <button
+                                                            type="button"
+                                                            class="dlm-btn dlm-btn-primary"
+                                                            :disabled="saving"
+                                                            @click="saveAndCloseGatewayModal"
+                                                        >
+                                                            {{ saving ? trans('global.buttons.saving') : trans('settings.gateways.done') }}
+                                                        </button>
+                                                    </template>
+                                                </Modal>
+                                            </template>
                                         </div>
                                     </div>
                                 </template>
@@ -555,6 +686,7 @@ import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
 import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 import ImageUpload from '@digital-license-manager/ui/components/input/ImageUpload.vue'
 import TextInput from '@digital-license-manager/ui/components/input/TextInput.vue'
+import Modal from '@digital-license-manager/ui/components/Modal.vue'
 
 const props = defineProps({
     tab: {
@@ -582,6 +714,24 @@ const toolProgress = reactive({})
 const toolForms = reactive({})
 const migrationForm = reactive({ identifier: 'none', preserve_ids: false })
 const migrationStatus = ref('')
+
+// Gateway modal state
+const gatewayModal = reactive({ show: false, gateway: null })
+
+function openGatewayModal(gw) {
+    gatewayModal.gateway = gw
+    gatewayModal.show = true
+}
+
+function closeGatewayModal() {
+    gatewayModal.show = false
+    gatewayModal.gateway = null
+}
+
+async function saveAndCloseGatewayModal() {
+    await saveSettings()
+    closeGatewayModal()
+}
 
 // Tab icons (Heroicons outline SVGs)
 const tabIcons = {
@@ -719,6 +869,17 @@ async function loadSettings() {
                             for (const field of section.fields) {
                                 const defaultVal = field.type === 'order_statuses' ? {} : ''
                                 settingsValues[field.id] = field.value != null ? field.value : defaultVal
+
+                                // For payment_gateways, also populate sub-field values
+                                if (field.type === 'payment_gateways' && field.gateways) {
+                                    for (const gw of Object.values(field.gateways)) {
+                                        if (gw.fields) {
+                                            for (const subField of gw.fields) {
+                                                settingsValues[subField.id] = subField.value != null ? subField.value : ''
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -747,6 +908,19 @@ async function saveSettings() {
                     for (const field of section.fields) {
                         if (field.id in settingsValues) {
                             tabValues[field.id] = settingsValues[field.id]
+                        }
+
+                        // For payment_gateways, include all gateway sub-field values
+                        if (field.type === 'payment_gateways' && field.gateways) {
+                            for (const gw of Object.values(field.gateways)) {
+                                if (gw.fields) {
+                                    for (const subField of gw.fields) {
+                                        if (subField.id in settingsValues) {
+                                            tabValues[subField.id] = settingsValues[subField.id]
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1337,6 +1511,81 @@ onMounted(() => {
 
 .dlm-badge {
     @apply dlm-inline-block dlm-px-2 dlm-py-0.5 dlm-text-xs dlm-font-medium dlm-rounded dlm-bg-gray-100 dlm-text-gray-700;
+}
+
+.dlm-badge-success {
+    @apply dlm-bg-green-100 dlm-text-green-700;
+}
+
+.dlm-badge-info {
+    @apply dlm-bg-blue-100 dlm-text-blue-700;
+}
+
+.dlm-badge-gray {
+    @apply dlm-bg-gray-100 dlm-text-gray-500;
+}
+
+// Payment Gateways table
+.dlm-gateways-table {
+    @apply dlm-w-full dlm-text-sm;
+
+    th {
+        @apply dlm-text-left dlm-p-3 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
+    }
+
+    td {
+        @apply dlm-p-3 dlm-border-b dlm-border-gray-100;
+        vertical-align: middle;
+    }
+
+    .dlm-badge + .dlm-badge {
+        @apply dlm-ml-1;
+    }
+}
+
+.dlm-gateways-description {
+    @apply dlm-text-xs dlm-text-gray-500 dlm-mt-0.5;
+}
+
+.dlm-font-medium {
+    font-weight: 500;
+}
+
+// Gateway modal fields
+.dlm-gateway-modal-fields {
+    .dlm-form-group {
+        @apply dlm-mb-0;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        &:first-child {
+            padding-top: 0;
+        }
+
+        &:has(.dlm-input) {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 0 16px;
+            align-items: start;
+
+            > label {
+                padding-top: 7px;
+            }
+
+            .dlm-form-hint {
+                grid-column: 2;
+            }
+        }
+
+        label:has(.dlm-checkbox) {
+            @apply dlm-flex dlm-items-center dlm-gap-2.5;
+        }
+    }
 }
 
 .dlm-endpoints-grid {

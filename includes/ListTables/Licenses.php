@@ -33,6 +33,7 @@ use IdeoLogix\DigitalLicenseManager\Core\Services\LicensesService;
 use IdeoLogix\DigitalLicenseManager\Database\Models\License;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses as LicensesRepository;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\LicenseActivations;
+use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePrivateStatus;
 use IdeoLogix\DigitalLicenseManager\Enums\PageSlug;
 use IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Stock;
@@ -378,19 +379,26 @@ class Licenses extends AbstractListTable {
 		$html = '';
 
 		$order_id = ! empty( $item->getOrderId() ) ? (int) $item->getOrderId() : 0;
+		$platform = $item->getPlatform();
 
-		if ( function_exists( 'wc_get_order' ) ) {
-			if ( $order = wc_get_order( $order_id ) ) {
+		if ( empty( $platform ) || $platform === LicensePlatform::WOOCOMMERCE ) {
+			if ( function_exists( 'wc_get_order' ) ) {
+				if ( $order = wc_get_order( $order_id ) ) {
 
-				$edit_link = class_exists('\Automattic\WooCommerce\Utilities\OrderUtil')
-                        && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
-                            ? admin_url('admin.php?page=wc-orders&action=edit&id='.(int) $order_id ) : get_edit_post_link( $order_id );
+					$edit_link = class_exists('\Automattic\WooCommerce\Utilities\OrderUtil')
+							&& \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
+								? admin_url('admin.php?page=wc-orders&action=edit&id='.(int) $order_id ) : get_edit_post_link( $order_id );
 
-				$html = sprintf(
-					'<a href="%s" target="_blank">#%s</a>',
-					$edit_link,
-					$order->get_order_number()
-				);
+					$html = sprintf(
+						'<a href="%s" target="_blank">#%s</a>',
+						$edit_link,
+						$order->get_order_number()
+					);
+				}
+			} else {
+				if ( ! empty( $order_id ) ) {
+					$html = sprintf( '#%s', $order_id );
+				}
 			}
 		} else {
 			if ( ! empty( $order_id ) ) {
@@ -398,7 +406,7 @@ class Licenses extends AbstractListTable {
 			}
 		}
 
-		return $html;
+		return apply_filters( 'dlm_license_order_link', $html, $item );
 	}
 
 	/**
@@ -412,33 +420,40 @@ class Licenses extends AbstractListTable {
 		$html = '';
 
 		$product_id = ! empty( $item->getProductId() ) ? (int) $item->getProductId() : '';
+		$platform   = $item->getPlatform();
 
-		/** @var WC_Product $product */
-		if ( function_exists( 'wc_get_product' ) ) {
-			if ( $product = wc_get_product( $product_id ) ) {
-				if ( $parentId = $product->get_parent_id() ) {
-					$html = sprintf(
-						'<span>#%s - %s</span>',
-						$product->get_id(),
-						$product->get_name()
-					);
+		if ( empty( $platform ) || $platform === LicensePlatform::WOOCOMMERCE ) {
+			/** @var WC_Product $product */
+			if ( function_exists( 'wc_get_product' ) ) {
+				if ( $product = wc_get_product( $product_id ) ) {
+					if ( $parentId = $product->get_parent_id() ) {
+						$html = sprintf(
+							'<span>#%s - %s</span>',
+							$product->get_id(),
+							$product->get_name()
+						);
 
-					if ( $parent = wc_get_product( $parentId ) ) {
-						$html .= sprintf(
-							'<br><small>%s <a href="%s" target="_blank">#%s - %s</a></small>',
-							__( 'Variation of', 'digital-license-manager' ),
-							get_edit_post_link( $parent->get_id() ),
-							$parent->get_id(),
-							$parent->get_name()
+						if ( $parent = wc_get_product( $parentId ) ) {
+							$html .= sprintf(
+								'<br><small>%s <a href="%s" target="_blank">#%s - %s</a></small>',
+								__( 'Variation of', 'digital-license-manager' ),
+								get_edit_post_link( $parent->get_id() ),
+								$parent->get_id(),
+								$parent->get_name()
+							);
+						}
+					} else {
+						$html = sprintf(
+							'<a href="%s" target="_blank">#%s - %s</a>',
+							get_edit_post_link( $item->getProductId() ),
+							$product->get_id(),
+							$product->get_name()
 						);
 					}
-				} else {
-					$html = sprintf(
-						'<a href="%s" target="_blank">#%s - %s</a>',
-						get_edit_post_link( $item->getProductId() ),
-						$product->get_id(),
-						$product->get_name()
-					);
+				}
+			} else {
+				if ( ! empty( $product_id ) ) {
+					$html = sprintf( '#%s', $product_id );
 				}
 			}
 		} else {
@@ -447,8 +462,7 @@ class Licenses extends AbstractListTable {
 			}
 		}
 
-
-		return $html;
+		return apply_filters( 'dlm_license_product_link', $html, $item );
 	}
 
 	/**

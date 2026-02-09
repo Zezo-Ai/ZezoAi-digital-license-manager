@@ -49,7 +49,7 @@ class Setup {
 	 * The database version
 	 * @var int
 	 */
-	const DB_VERSION = 103;
+	const DB_VERSION = 104;
 
 	/**
 	 * The minimum PHP version

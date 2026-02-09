@@ -24,24 +24,58 @@
  * Code written, maintained by Darko Gjorgjijoski (https://darkog.com)
  */
 
-namespace IdeoLogix\DigitalLicenseManager\Database\Repositories;
+namespace IdeoLogix\DigitalLicenseManager\Enums;
 
-use IdeoLogix\DigitalLicenseManager\Abstracts\AbstractDataRepository;
-use IdeoLogix\DigitalLicenseManager\Database\Models\License;
-use IdeoLogix\DigitalLicenseManager\Enums\DatabaseTable;
-
-class Licenses extends AbstractDataRepository {
-
+abstract class LicensePlatform {
 
 	/**
-	 * Initializes the repository
-	 * @return void
+	 * Platform value for WooCommerce orders/products.
+	 *
+	 * @var string
 	 */
-	protected function init() {
-		$this->primaryKey = 'id';
-		$this->dataTable  = DatabaseTable::LICENSES;
-		$this->dataModel  = License::class;
-		$this->searchable = [ 'order_id', 'product_id', 'platform', 'user_id', 'license_key', 'hash', 'valid_for', 'source', 'status' ];
+	const WOOCOMMERCE = 'woocommerce';
+
+	/**
+	 * Platform value for native ecommerce orders/products.
+	 *
+	 * @var string
+	 */
+	const NATIVE = 'native';
+
+	/**
+	 * Available platform values.
+	 *
+	 * @var array
+	 */
+	public static $platforms = array(
+		self::WOOCOMMERCE,
+		self::NATIVE,
+	);
+
+	/**
+	 * Returns the string label for a specific platform value.
+	 *
+	 * @param string $platform Platform value
+	 *
+	 * @return string|null
+	 */
+	public static function getLabel( $platform ) {
+		$labels = array(
+			self::WOOCOMMERCE => 'WooCommerce',
+			self::NATIVE      => 'Native',
+		);
+
+		return isset( $labels[ $platform ] ) ? $labels[ $platform ] : null;
 	}
 
+	/**
+	 * Checks if the given platform value is valid.
+	 *
+	 * @param string $platform Platform value
+	 *
+	 * @return bool
+	 */
+	public static function isValid( $platform ) {
+		return in_array( $platform, self::$platforms, true );
+	}
 }

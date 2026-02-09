@@ -62,6 +62,7 @@ class License extends AbstractDataModel {
 		'id'                => 'int',
 		'order_id'          => 'int',
 		'product_id'        => 'int',
+		'platform'          => 'string',
 		'valid_for'         => 'int',
 		'source'            => 'int',
 		'status'            => 'int',
@@ -102,6 +103,14 @@ class License extends AbstractDataModel {
 	 */
 	public function getProductId() {
 		return $this->get( 'product_id' );
+	}
+
+	/**
+	 * The platform (e.g. 'woocommerce', 'native')
+	 * @return string|null
+	 */
+	public function getPlatform() {
+		return $this->get( 'platform' );
 	}
 
 	/**
