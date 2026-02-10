@@ -130,6 +130,33 @@
                                                 <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
                                             </template>
 
+                                            <!-- Color picker -->
+                                            <template v-else-if="field.type === 'color'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <div class="dlm-color-field">
+                                                    <input
+                                                        :id="field.id"
+                                                        v-model="settingsValues[field.id]"
+                                                        type="color"
+                                                        class="dlm-color-input"
+                                                    />
+                                                    <input
+                                                        v-model="settingsValues[field.id]"
+                                                        type="text"
+                                                        class="dlm-input dlm-color-text"
+                                                        maxlength="7"
+                                                        placeholder="#000000"
+                                                    />
+                                                    <button
+                                                        v-if="field.default_value && settingsValues[field.id] !== field.default_value"
+                                                        type="button"
+                                                        class="dlm-btn dlm-btn-secondary dlm-btn-sm"
+                                                        @click="settingsValues[field.id] = field.default_value"
+                                                    >Reset</button>
+                                                </div>
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
                                             <!-- Image upload -->
                                             <template v-else-if="field.type === 'image'">
                                                 <ImageUpload
@@ -1423,6 +1450,28 @@ onMounted(() => {
     tr:nth-child(even) {
         @apply dlm-bg-gray-50;
     }
+}
+
+// Color picker field
+.dlm-color-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dlm-color-input {
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    cursor: pointer;
+    background: none;
+}
+
+.dlm-color-text {
+    width: 100px !important;
+    font-family: monospace;
 }
 
 // Textarea styling

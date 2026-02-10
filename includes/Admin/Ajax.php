@@ -882,6 +882,8 @@ class Ajax {
 									$field_type = 'checkbox';
 								} elseif ( $method === 'fieldPaymentGateways' ) {
 									$field_type = 'payment_gateways';
+								} elseif ( $method === 'fieldColorPicker' ) {
+									$field_type = 'color';
 								}
 							}
 
@@ -973,6 +975,11 @@ class Ajax {
 							// For password fields, supply placeholder if specified.
 							if ( $field_type === 'password' && ! empty( $args['placeholder'] ) ) {
 								$field_data['placeholder'] = $args['placeholder'];
+							}
+
+							// For color fields, supply default_value for reset button.
+							if ( $field_type === 'color' && ! empty( $args['default_value'] ) ) {
+								$field_data['default_value'] = $args['default_value'];
 							}
 
 							// For payment_gateways, serialize each gateway's sub-fields into Vue-ready format.
