@@ -23,8 +23,8 @@ jobs:
         run: |
           TAG_VERSION="${{ steps.get_version.outputs.VERSION }}"
 
-          # Strip pre-release suffix (-test, -alpha, -beta, -rc*) for comparison
-          BASE_VERSION=$(echo "$TAG_VERSION" | sed -E 's/-(test|alpha|beta|rc[0-9]*)$//')
+          # Strip pre-release suffix (-test, -alpha, -beta, -rc) and optional version (.N or N) for comparison
+          BASE_VERSION=$(echo "$TAG_VERSION" | sed -E 's/-(test|alpha|beta|rc)[.0-9]*$//')
 
           # Extract version from PHP header
           PHP_HEADER_VERSION=$(grep -Po "Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+" digital-license-manager.php | head -1)

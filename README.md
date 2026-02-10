@@ -41,8 +41,8 @@ git tag v1.8.5-rc1
 git push origin v1.8.5-rc1
 
 # Pre-release (GitHub only, skips WordPress.org)
-git tag v1.8.5-beta
-git push origin v1.8.5-beta
+git tag v1.8.5-beta.1
+git push origin v1.8.5-beta.1
 ```
 
 #### Version Tag Patterns
@@ -51,9 +51,13 @@ git push origin v1.8.5-beta
 |---------|---------|---------------|----------------|
 | `vX.Y.Z` | `v1.8.5` | Yes | Stable |
 | `vX.Y.Z-rcN` | `v1.8.5-rc1` | Yes | Pre-release |
+| `vX.Y.Z-rc.N` | `v1.8.5-rc.1` | Yes | Pre-release |
 | `vX.Y.Z-alpha` | `v1.8.5-alpha` | **No** | Pre-release |
+| `vX.Y.Z-alpha.N` | `v1.8.5-alpha.1` | **No** | Pre-release |
 | `vX.Y.Z-beta` | `v1.8.5-beta` | **No** | Pre-release |
+| `vX.Y.Z-beta.N` | `v1.8.5-beta.1` | **No** | Pre-release |
 | `vX.Y.Z-test` | `v1.8.5-test` | **No** | Pre-release |
+| `vX.Y.Z-test.N` | `v1.8.5-test.1` | **No** | Pre-release |
 
 ### Scripts
 
