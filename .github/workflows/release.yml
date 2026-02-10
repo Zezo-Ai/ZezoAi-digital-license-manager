@@ -112,9 +112,10 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
-          # Skip WordPress.org for -test tags (use for internal testing only)
-          if [[ "${{ github.ref_name }}" =~ -test ]]; then
-            echo "Skipping WordPress.org deployment for test release"
+          # Only deploy to WordPress.org for stable and RC tags
+          # Skip: -test, -alpha, -alphaN, -alpha.N, -beta, -betaN, -beta.N
+          if [[ "${{ github.ref_name }}" =~ -(test|alpha|beta) ]]; then
+            echo "Skipping WordPress.org deployment for pre-release: ${{ github.ref_name }}"
             echo "available=false" >> $GITHUB_OUTPUT
           elif [ -n "$SVN_USERNAME" ] && [ -n "$SVN_PASSWORD" ]; then
             echo "available=true" >> $GITHUB_OUTPUT
