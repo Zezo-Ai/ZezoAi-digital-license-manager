@@ -1076,6 +1076,7 @@ class Ajax {
 		$tabs                = $settings_controller->all();
 		$valid_fields        = [];
 		$array_fields        = [];
+		$textarea_fields     = [];
 
 		// Find the matching tab by slug.
 		foreach ( $tabs as $tab_key => $tab ) {
@@ -1099,6 +1100,11 @@ class Ajax {
 							$array_fields[] = $field['id'];
 						}
 
+						// Detect textarea fields so we preserve newlines.
+						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldTextarea' ) {
+							$textarea_fields[] = $field['id'];
+						}
+
 						// For payment_gateways, also register all gateway sub-field IDs.
 						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldPaymentGateways' ) {
 							$gw_args = isset( $field['args'] ) ? $field['args'] : [];
@@ -1108,6 +1114,9 @@ class Ajax {
 										foreach ( $gw['fields'] as $sub_field ) {
 											if ( ! empty( $sub_field['id'] ) ) {
 												$valid_fields[] = $sub_field['id'];
+												if ( isset( $sub_field['type'] ) && $sub_field['type'] === 'textarea' ) {
+													$textarea_fields[] = $sub_field['id'];
+												}
 											}
 										}
 									}
@@ -1135,6 +1144,8 @@ class Ajax {
 					}
 					return sanitize_text_field( $item );
 				}, $value ) : [];
+			} elseif ( in_array( $key, $textarea_fields, true ) ) {
+				$stored[ $key ] = sanitize_textarea_field( $value );
 			} else {
 				$stored[ $key ] = sanitize_text_field( $value );
 			}

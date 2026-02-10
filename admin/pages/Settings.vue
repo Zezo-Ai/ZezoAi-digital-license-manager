@@ -186,8 +186,7 @@
                                                                 <div v-if="gw.description" class="dlm-gateways-description">{{ gw.description }}</div>
                                                             </td>
                                                             <td>
-                                                                <span v-if="gw.supports_subscriptions" class="dlm-badge dlm-badge-info">{{ trans('settings.gateways.subscriptions') }}</span>
-                                                                <span v-if="gw.supports_refunds" class="dlm-badge dlm-badge-info">{{ trans('settings.gateways.refunds') }}</span>
+                                                                <span class="dlm-text-sm dlm-text-gray-600 dlm-italic">{{ gatewayFeatures(gw) }}</span>
                                                             </td>
                                                             <td>
                                                                 <span
@@ -726,6 +725,13 @@ function openGatewayModal(gw) {
 function closeGatewayModal() {
     gatewayModal.show = false
     gatewayModal.gateway = null
+}
+
+function gatewayFeatures(gw) {
+    const features = []
+    if (gw.supports_subscriptions) features.push(trans('settings.gateways.subscriptions'))
+    if (gw.supports_refunds) features.push(trans('settings.gateways.refunds'))
+    return features.length ? features.join(', ') : '\u2014'
 }
 
 async function saveAndCloseGatewayModal() {
@@ -1517,10 +1523,6 @@ onMounted(() => {
     @apply dlm-bg-green-100 dlm-text-green-700;
 }
 
-.dlm-badge-info {
-    @apply dlm-bg-blue-100 dlm-text-blue-700;
-}
-
 .dlm-badge-gray {
     @apply dlm-bg-gray-100 dlm-text-gray-500;
 }
@@ -1538,9 +1540,6 @@ onMounted(() => {
         vertical-align: middle;
     }
 
-    .dlm-badge + .dlm-badge {
-        @apply dlm-ml-1;
-    }
 }
 
 .dlm-gateways-description {
