@@ -130,4 +130,20 @@ class ApiKey extends AbstractDataModel {
 		return $this->get( 'last_access' );
 	}
 
+	/**
+	 * The created at timestamp
+	 * @return string
+	 */
+	public function getCreatedAt() {
+		return $this->get( 'created_at' );
+	}
+
+	/**
+	 * The updated at timestamp
+	 * @return string
+	 */
+	public function getUpdatedAt() {
+		return $this->get( 'updated_at' );
+	}
+
 }

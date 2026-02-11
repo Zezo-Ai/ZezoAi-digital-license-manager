@@ -92,7 +92,6 @@ class Ajax {
 		add_action( 'wp_ajax_dlm_admin_settings_get', [ $this, 'settings_get' ] );
 		add_action( 'wp_ajax_dlm_admin_settings_save', [ $this, 'settings_save' ] );
 		add_action( 'wp_ajax_dlm_admin_settings_export', [ $this, 'settings_export' ] );
-		add_action( 'wp_ajax_dlm_admin_settings_rebuild_db', [ $this, 'settings_rebuild_db' ] );
 
 		// API Keys
 		add_action( 'wp_ajax_dlm_admin_api_keys_query', [ $this, 'api_keys_query' ] );
@@ -1196,22 +1195,6 @@ class Ajax {
 	}
 
 	/**
-	 * Rebuild database tables.
-	 *
-	 * @return void
-	 */
-	public function settings_rebuild_db() {
-		$this->check_access( 'dlm_manage_settings' );
-
-		try {
-			\IdeoLogix\DigitalLicenseManager\Setup::install();
-			wp_send_json_success( [ 'message' => __( 'Database tables rebuilt successfully.', 'digital-license-manager' ) ] );
-		} catch ( \Exception $e ) {
-			wp_send_json_error( [ 'message' => $e->getMessage() ] );
-		}
-	}
-
-	/**
 	 * Search products.
 	 *
 	 * @return void
@@ -1599,12 +1582,25 @@ class Ajax {
 	 * @return string|null
 	 */
 	protected function get_product_name( $product_id ) {
-		if ( ! $product_id || ! function_exists( 'wc_get_product' ) ) {
+		if ( ! $product_id ) {
 			return null;
 		}
 
-		$product = wc_get_product( $product_id );
-		return $product ? $product->get_name() : null;
+		$name = null;
+
+		if ( function_exists( 'wc_get_product' ) ) {
+			$product = wc_get_product( $product_id );
+			if ( $product ) {
+				$name = $product->get_name();
+			}
+		}
+
+		if ( ! $name ) {
+			$title = get_the_title( $product_id );
+			$name  = ! empty( $title ) ? $title : null;
+		}
+
+		return apply_filters( 'dlm_license_product_name', $name, $product_id );
 	}
 
 	/**
@@ -1767,10 +1763,9 @@ class Ajax {
 			] );
 
 			if ( $result ) {
-				$api_key = $repo->find( $result );
 				wp_send_json_success( [
 					'message'         => __( 'API key created successfully. Copy your keys now — the secret will not be shown again.', 'digital-license-manager' ),
-					'record'          => $this->format_api_key( $api_key ),
+					'record'          => $this->format_api_key( $result ),
 					'consumer_key'    => $consumer_key,
 					'consumer_secret' => $consumer_secret,
 				] );

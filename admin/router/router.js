@@ -26,9 +26,8 @@ const routes = [
     // Activations
     { path: '/activations', name: 'activations', component: Activations },
 
-    // Settings
-    { path: '/settings', name: 'settings', component: Settings },
-    { path: '/settings/:tab', name: 'settings-tab', component: Settings, props: true },
+    // Settings (tab is optional)
+    { path: '/settings/:tab?', name: 'settings', component: Settings, props: true },
 ]
 
 const router = createRouter({

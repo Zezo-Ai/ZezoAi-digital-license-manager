@@ -1,13 +1,17 @@
 <template>
-    <Page :title="trans('generators.title')">
-        <template #actions>
-            <router-link to="/generators/add" class="dlm-btn dlm-btn-primary">
-                {{ trans('global.buttons.add_new') }}
-            </router-link>
-            <router-link to="/generators/generate" class="dlm-btn dlm-btn-secondary">
-                {{ trans('generators.buttons.generate') }}
-            </router-link>
-        </template>
+    <div>
+        <!-- Page header -->
+        <div class="dlm-page-header">
+            <h1>{{ trans('generators.title') }}</h1>
+            <div class="dlm-page-actions">
+                <router-link to="/generators/add" class="dlm-btn dlm-btn-primary">
+                    {{ trans('global.buttons.add_new') }}
+                </router-link>
+                <router-link to="/generators/generate" class="dlm-btn dlm-btn-secondary">
+                    {{ trans('generators.buttons.generate') }}
+                </router-link>
+            </div>
+        </div>
 
         <div class="dlm-card">
             <div class="dlm-card-body">
@@ -86,7 +90,7 @@
                 </button>
             </template>
         </Modal>
-    </Page>
+    </div>
 </template>
 
 <script setup>
@@ -94,7 +98,6 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as generatorsService from '../services/generators'
-import Page from '@digital-license-manager/ui/components/Page.vue'
 import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
@@ -199,6 +202,7 @@ async function deleteGenerator() {
 onMounted(() => {
     loadGenerators()
 })
+
 </script>
 
 <style lang="scss" scoped>

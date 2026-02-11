@@ -1,5 +1,10 @@
 <template>
-    <Page :title="trans('settings.title')">
+    <div>
+        <!-- Page header -->
+        <div class="dlm-page-header">
+            <h1>{{ trans('settings.title') }}</h1>
+        </div>
+
         <div class="dlm-settings-layout">
             <!-- Vertical Nav Sidebar -->
             <nav class="dlm-settings-nav">
@@ -352,121 +357,155 @@
 
                                 <!-- Newly created key credentials -->
                                 <div v-if="newCredentials" class="dlm-credentials-box dlm-mb-4">
-                                    <p class="dlm-text-sm dlm-font-medium dlm-mb-2">{{ trans('settings.rest_api.credentials_notice') }}</p>
-                                    <div class="dlm-form-group">
-                                        <label>{{ trans('settings.rest_api.consumer_key') }}</label>
-                                        <code class="dlm-credential">{{ newCredentials.consumer_key }}</code>
+                                    <div class="dlm-credentials-header">
+                                        <svg class="dlm-credentials-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                                        </svg>
+                                        <div>
+                                            <p class="dlm-credentials-title">{{ trans('settings.rest_api.credentials_notice') }}</p>
+                                        </div>
                                     </div>
-                                    <div class="dlm-form-group">
-                                        <label>{{ trans('settings.rest_api.consumer_secret') }}</label>
-                                        <code class="dlm-credential">{{ newCredentials.consumer_secret }}</code>
+                                    <div class="dlm-credentials-keys">
+                                        <div class="dlm-credentials-key-row">
+                                            <label>{{ trans('settings.rest_api.consumer_key') }}</label>
+                                            <div class="dlm-credentials-key-value">
+                                                <code>{{ newCredentials.consumer_key }}</code>
+                                                <button type="button" class="dlm-credentials-copy" @click="copyToClipboard(newCredentials.consumer_key)" title="Copy">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" /></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="dlm-credentials-key-row">
+                                            <label>{{ trans('settings.rest_api.consumer_secret') }}</label>
+                                            <div class="dlm-credentials-key-value">
+                                                <code>{{ newCredentials.consumer_secret }}</code>
+                                                <button type="button" class="dlm-credentials-copy" @click="copyToClipboard(newCredentials.consumer_secret)" title="Copy">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" /></svg>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="newCredentials = null">
                                         {{ trans('settings.rest_api.dismiss_credentials') }}
                                     </button>
                                 </div>
 
-                                <!-- API Key Form (create/edit) -->
-                                <div v-if="showApiKeyForm" class="dlm-card dlm-mb-4">
-                                    <div class="dlm-card-body">
-                                        <h4 class="dlm-mb-4">
-                                            {{ editingApiKey ? trans('settings.rest_api.edit_key') : trans('settings.rest_api.add_key') }}
-                                        </h4>
-                                        <form @submit.prevent="saveApiKey">
-                                            <div class="dlm-api-key-form-fields">
-                                                <TextInput
-                                                    id="api_key_description"
-                                                    v-model="apiKeyForm.description"
-                                                    :label="trans('settings.rest_api.fields.description')"
+                                <!-- API Key Form Modal -->
+                                <Modal
+                                    :show="showApiKeyForm"
+                                    :title="editingApiKey ? trans('settings.rest_api.edit_key') : trans('settings.rest_api.add_key')"
+                                    size="xl"
+                                    @close="showApiKeyForm = false"
+                                >
+                                    <form id="api-key-form" @submit.prevent="saveApiKey">
+                                        <div class="dlm-api-key-form-fields">
+                                            <TextInput
+                                                id="api_key_description"
+                                                v-model="apiKeyForm.description"
+                                                :label="trans('settings.rest_api.fields.description')"
+                                                :required="true"
+                                            />
+
+                                            <div class="dlm-form-group">
+                                                <AsyncSelect
+                                                    id="api_key_user"
+                                                    v-model="apiKeyForm.user_id"
+                                                    search-type="user"
+                                                    :label="trans('settings.rest_api.fields.user')"
                                                     :required="true"
-                                                />
-
-                                                <div class="dlm-form-group">
-                                                    <AsyncSelect
-                                                        id="api_key_user"
-                                                        v-model="apiKeyForm.user_id"
-                                                        search-type="user"
-                                                        :label="trans('settings.rest_api.fields.user')"
-                                                        :required="true"
-                                                        :placeholder="trans('settings.rest_api.fields.user_placeholder')"
-                                                        :initial-option="editingApiKeyUserOption"
-                                                    />
-                                                </div>
-
-                                                <Dropdown
-                                                    id="api_key_permissions"
-                                                    v-model="apiKeyForm.permissions"
-                                                    :label="trans('settings.rest_api.fields.permissions')"
-                                                    :options="permissionOptions"
+                                                    :placeholder="trans('settings.rest_api.fields.user_placeholder')"
+                                                    :initial-option="editingApiKeyUserOption"
                                                 />
                                             </div>
 
-                                            <div class="dlm-form-group dlm-mt-4">
-                                                <label>{{ trans('settings.rest_api.fields.endpoints') }} *</label>
-                                                <div class="dlm-endpoints-grid">
-                                                    <label
-                                                        v-for="ep in availableEndpoints"
-                                                        :key="ep.id"
-                                                        class="dlm-endpoint-item"
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            :value="ep.id"
-                                                            v-model="apiKeyForm.endpoints"
-                                                            class="dlm-checkbox"
-                                                        />
+                                            <Dropdown
+                                                id="api_key_permissions"
+                                                v-model="apiKeyForm.permissions"
+                                                :label="trans('settings.rest_api.fields.permissions')"
+                                                :options="permissionOptions"
+                                            />
+                                        </div>
+
+                                        <div class="dlm-form-group dlm-mt-4">
+                                            <label>{{ trans('settings.rest_api.fields.endpoints') }} *</label>
+
+                                            <div class="dlm-endpoint-groups-grid">
+                                                <div v-for="(group, groupKey) in groupedEndpoints" :key="groupKey" class="dlm-endpoint-group" :data-group="groupKey">
+                                                <div class="dlm-endpoint-group-header">
+                                                    <span class="dlm-endpoint-group-title">
+                                                        <svg v-if="groupKey === 'licenses'" class="dlm-endpoint-group-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" /></svg>
+                                                        <svg v-else-if="groupKey === 'generators'" class="dlm-endpoint-group-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                                                        {{ endpointGroupLabels[groupKey] || groupKey }}
+                                                    </span>
+                                                    <div class="dlm-endpoint-group-actions">
+                                                        <button type="button" class="dlm-btn-link" @click="selectAllInGroup(groupKey)">
+                                                            {{ trans('global.buttons.select_all') }}
+                                                        </button>
+                                                        <span class="dlm-text-gray-400">|</span>
+                                                        <button type="button" class="dlm-btn-link" @click="deselectAllInGroup(groupKey)">
+                                                            {{ trans('global.buttons.deselect_all') }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="dlm-endpoint-group-items">
+                                                    <label v-for="ep in group.endpoints" :key="ep.id" class="dlm-endpoint-item">
+                                                        <input type="checkbox" :value="ep.id" v-model="apiKeyForm.endpoints" class="dlm-checkbox" />
                                                         <span class="dlm-endpoint-method" :class="'dlm-method-' + ep.method.toLowerCase()">{{ ep.method }}</span>
-                                                        <span>{{ ep.name }}</span>
+                                                        <span class="dlm-endpoint-route">{{ ep.name }}</span>
                                                     </label>
                                                 </div>
+                                                </div>
                                             </div>
+                                        </div>
+                                    </form>
 
-                                            <div class="dlm-api-key-form-actions">
-                                                <button type="submit" class="dlm-btn dlm-btn-primary" :disabled="savingApiKey">
-                                                    {{ savingApiKey ? trans('global.buttons.saving') : trans('global.buttons.save') }}
-                                                </button>
-                                                <button type="button" class="dlm-btn dlm-btn-secondary" @click="showApiKeyForm = false">
-                                                    {{ trans('global.buttons.cancel') }}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                    <template #footer>
+                                        <button type="submit" form="api-key-form" class="dlm-btn dlm-btn-primary" :disabled="savingApiKey">
+                                            {{ savingApiKey ? trans('global.buttons.saving') : trans('global.buttons.save') }}
+                                        </button>
+                                        <button type="button" class="dlm-btn dlm-btn-secondary" @click="showApiKeyForm = false">
+                                            {{ trans('global.buttons.cancel') }}
+                                        </button>
+                                    </template>
+                                </Modal>
 
                                 <!-- API Keys Table -->
-                                <table v-if="apiKeys.length > 0" class="dlm-table">
-                                    <thead>
-                                        <tr>
-                                            <th>{{ trans('settings.rest_api.columns.description') }}</th>
-                                            <th>{{ trans('settings.rest_api.columns.user') }}</th>
-                                            <th>{{ trans('settings.rest_api.columns.permissions') }}</th>
-                                            <th>{{ trans('settings.rest_api.columns.truncated_key') }}</th>
-                                            <th>{{ trans('settings.rest_api.columns.last_access') }}</th>
-                                            <th>{{ trans('global.labels.actions') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="key in apiKeys" :key="key.id">
-                                            <td>{{ key.description }}</td>
-                                            <td>{{ key.user_label }}</td>
-                                            <td>
-                                                <span class="dlm-badge">{{ key.permissions }}</span>
-                                            </td>
-                                            <td><code>...{{ key.truncated_key }}</code></td>
-                                            <td>{{ key.last_access || trans('settings.rest_api.never') }}</td>
-                                            <td>
-                                                <div class="dlm-flex dlm-gap-2">
-                                                    <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="editApiKey(key)">
-                                                        {{ trans('global.actions.edit') }}
-                                                    </button>
-                                                    <button class="dlm-btn dlm-btn-danger dlm-btn-sm" @click="deleteApiKey(key.id)">
-                                                        {{ trans('global.actions.delete') }}
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div v-if="apiKeys.length > 0" class="dlm-table-responsive">
+                                    <table class="dlm-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ trans('settings.rest_api.columns.description') }}</th>
+                                                <th>{{ trans('settings.rest_api.columns.user') }}</th>
+                                                <th>{{ trans('settings.rest_api.columns.permissions') }}</th>
+                                                <th>{{ trans('settings.rest_api.columns.truncated_key') }}</th>
+                                                <th>{{ trans('settings.rest_api.columns.last_access') }}</th>
+                                                <th>{{ trans('global.labels.actions') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="key in apiKeys" :key="key.id">
+                                                <td>{{ key.description }}</td>
+                                                <td>{{ key.user_label }}</td>
+                                                <td>
+                                                    <span class="dlm-badge">{{ key.permissions }}</span>
+                                                </td>
+                                                <td><code>...{{ key.truncated_key }}</code></td>
+                                                <td>{{ key.last_access || trans('settings.rest_api.never') }}</td>
+                                                <td>
+                                                    <div class="dlm-flex dlm-gap-2">
+                                                        <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="editApiKey(key)">
+                                                            {{ trans('global.actions.edit') }}
+                                                        </button>
+                                                        <button class="dlm-btn dlm-btn-danger dlm-btn-sm" @click="deleteApiKey(key.id)">
+                                                            {{ trans('global.actions.delete') }}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <p v-else-if="!loadingApiKeys" class="dlm-text-gray-500">
                                     {{ trans('global.messages.no_records') }}
                                 </p>
@@ -485,20 +524,6 @@
                                     <p>{{ trans('settings.tools.export.description') }}</p>
                                     <button class="dlm-btn dlm-btn-secondary" @click="exportData">
                                         {{ trans('settings.tools.export.button') }}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Rebuild Database (static) -->
-                            <div class="dlm-tools-card">
-                                <div class="dlm-tools-card-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>
-                                </div>
-                                <div class="dlm-tools-card-content">
-                                    <h3>{{ trans('settings.tools.database.title') }}</h3>
-                                    <p>{{ trans('settings.tools.database.description') }}</p>
-                                    <button class="dlm-btn dlm-btn-secondary" @click="rebuildDatabase">
-                                        {{ trans('settings.tools.database.button') }}
                                     </button>
                                 </div>
                             </div>
@@ -532,7 +557,7 @@
                                         </div>
 
                                         <!-- Preserve IDs checkbox -->
-                                        <div class="dlm-form-group dlm-mb-3">
+                                        <div class="dlm-form-group dlm-mt-4 dlm-mb-3">
                                             <label>
                                                 <input
                                                     v-model="migrationForm.preserve_ids"
@@ -698,7 +723,7 @@
                 </div>
             </div>
         </div>
-    </Page>
+    </div>
 </template>
 
 <script setup>
@@ -707,7 +732,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as settingsService from '../services/settings'
-import Page from '@digital-license-manager/ui/components/Page.vue'
 import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
 import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 import ImageUpload from '@digital-license-manager/ui/components/input/ImageUpload.vue'
@@ -871,6 +895,36 @@ const editingApiKeyUserOption = computed(() => {
     return null
 })
 
+// Group endpoints by their group field
+const groupedEndpoints = computed(() => {
+    const groups = {}
+    for (const ep of availableEndpoints.value) {
+        const group = ep.group || 'other'
+        if (!groups[group]) {
+            groups[group] = { name: group, endpoints: [] }
+        }
+        groups[group].endpoints.push(ep)
+    }
+    return groups
+})
+
+// Labels for endpoint groups
+const endpointGroupLabels = {
+    licenses: trans('settings.rest_api.groups.licenses'),
+    generators: trans('settings.rest_api.groups.generators'),
+}
+
+// Select/deselect helpers for endpoint groups
+function selectAllInGroup(group) {
+    const ids = groupedEndpoints.value[group].endpoints.map(ep => String(ep.id))
+    apiKeyForm.endpoints = [...new Set([...apiKeyForm.endpoints, ...ids])]
+}
+
+function deselectAllInGroup(group) {
+    const ids = groupedEndpoints.value[group].endpoints.map(ep => String(ep.id))
+    apiKeyForm.endpoints = apiKeyForm.endpoints.filter(id => !ids.includes(String(id)))
+}
+
 function changeTab(tabId) {
     activeTab.value = tabId
     router.push(`/settings/${tabId}`)
@@ -1011,12 +1065,19 @@ function resetApiKeyForm() {
     apiKeyForm.endpoints = []
 }
 
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alertStore.success(trans('global.messages.copied') || 'Copied to clipboard!')
+    })
+}
+
 function editApiKey(key) {
     editingApiKey.value = key
     apiKeyForm.description = key.description
     apiKeyForm.user_id = key.user_id
     apiKeyForm.permissions = key.permissions
-    apiKeyForm.endpoints = Array.isArray(key.endpoints) ? [...key.endpoints] : []
+    // Ensure endpoints are strings to match checkbox values
+    apiKeyForm.endpoints = Array.isArray(key.endpoints) ? key.endpoints.map(String) : []
     showApiKeyForm.value = true
 }
 
@@ -1250,25 +1311,6 @@ async function exportData() {
     }
 }
 
-async function rebuildDatabase() {
-    if (!confirm(trans('settings.tools.database.confirm'))) {
-        return
-    }
-
-    try {
-        const response = await settingsService.rebuildDatabase()
-        const json = await response.json()
-
-        if (json.success) {
-            alertStore.success(json.data.message)
-        } else {
-            alertStore.error(json.data?.message || trans('global.errors.network'))
-        }
-    } catch (error) {
-        alertStore.error(trans('global.errors.network'))
-    }
-}
-
 watch(() => route.params.tab, (newTab) => {
     if (newTab) {
         activeTab.value = newTab
@@ -1292,6 +1334,7 @@ onMounted(() => {
         loadTools()
     }
 })
+
 </script>
 
 <style lang="scss" scoped>
@@ -1519,11 +1562,15 @@ onMounted(() => {
     @apply dlm-flex-1;
 
     h3 {
-        @apply dlm-text-base dlm-font-semibold dlm-mb-1 dlm-mt-0;
+        @apply dlm-text-base dlm-font-semibold dlm-mb-2 dlm-mt-0;
     }
 
     p {
-        @apply dlm-text-sm dlm-text-gray-600 dlm-mb-3;
+        @apply dlm-text-sm dlm-text-gray-600 dlm-mb-4;
+    }
+
+    .dlm-btn {
+        @apply dlm-mt-4;
     }
 }
 
@@ -1540,16 +1587,90 @@ onMounted(() => {
 }
 
 .dlm-credentials-box {
-    @apply dlm-p-4 dlm-bg-yellow-50 dlm-border dlm-border-yellow-200 dlm-rounded;
+    @apply dlm-rounded-lg dlm-overflow-hidden;
+    border: 1px solid #fbbf24;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
 
-    code {
-        @apply dlm-block dlm-p-2 dlm-bg-white dlm-border dlm-border-gray-200 dlm-rounded dlm-text-sm dlm-font-mono;
-        word-break: break-all;
+.dlm-credentials-header {
+    @apply dlm-flex dlm-items-start dlm-gap-3 dlm-p-4;
+    background: rgba(251, 191, 36, 0.15);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.dlm-credentials-icon {
+    width: 24px;
+    height: 24px;
+    color: #d97706;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.dlm-credentials-title {
+    @apply dlm-font-semibold dlm-m-0;
+    color: #92400e;
+    font-size: 0.9rem;
+}
+
+.dlm-credentials-keys {
+    @apply dlm-p-4;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dlm-credentials-key-row {
+    label {
+        @apply dlm-block dlm-text-xs dlm-font-medium dlm-mb-1;
+        color: #92400e;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 }
 
-.dlm-credential {
-    @apply dlm-block dlm-mb-2;
+.dlm-credentials-key-value {
+    @apply dlm-flex dlm-items-center dlm-gap-2;
+
+    code {
+        @apply dlm-flex-1 dlm-p-3 dlm-bg-white dlm-rounded-md dlm-font-mono dlm-text-sm;
+        border: 1px solid #e5e7eb;
+        word-break: break-all;
+        color: #1f2937;
+    }
+}
+
+.dlm-credentials-copy {
+    @apply dlm-flex dlm-items-center dlm-justify-center dlm-p-2 dlm-rounded-md dlm-cursor-pointer;
+    background: white;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+    transition: all 0.15s ease;
+
+    &:hover {
+        background: #f9fafb;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.dlm-credentials-box > .dlm-btn {
+    margin: 0 16px 16px 16px;
+}
+
+// Responsive table wrapper
+.dlm-table-responsive {
+    @apply dlm-w-full;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .dlm-table {
+        min-width: 700px;
+    }
 }
 
 .dlm-table {
@@ -1636,21 +1757,113 @@ onMounted(() => {
     }
 }
 
-.dlm-endpoints-grid {
-    @apply dlm-grid dlm-gap-2;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
+// Endpoint groups - 2-column grid layout
+.dlm-endpoint-groups-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 
-.dlm-endpoint-item {
-    @apply dlm-flex dlm-items-center dlm-gap-2 dlm-text-sm dlm-p-2 dlm-rounded dlm-border dlm-border-gray-200;
-
-    &:hover {
-        @apply dlm-bg-gray-50;
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
     }
 }
 
+.dlm-endpoint-group {
+    @apply dlm-rounded-lg dlm-overflow-hidden;
+    border: 1px solid #e5e7eb;
+    border-top: 3px solid;
+
+    // Licenses group - green accent
+    &[data-group="licenses"] {
+        border-top-color: #10b981;
+
+        .dlm-endpoint-group-header {
+            background: rgba(16, 185, 129, 0.06);
+        }
+
+        .dlm-endpoint-group-icon {
+            color: #10b981;
+        }
+    }
+
+    // Generators group - purple accent
+    &[data-group="generators"] {
+        border-top-color: #8b5cf6;
+
+        .dlm-endpoint-group-header {
+            background: rgba(139, 92, 246, 0.06);
+        }
+
+        .dlm-endpoint-group-icon {
+            color: #8b5cf6;
+        }
+    }
+}
+
+.dlm-endpoint-group-header {
+    @apply dlm-flex dlm-items-center dlm-justify-between dlm-px-3 dlm-py-2;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dlm-endpoint-group-title {
+    @apply dlm-flex dlm-items-center dlm-gap-2 dlm-font-semibold dlm-text-gray-700;
+    font-size: 0.8rem;
+}
+
+.dlm-endpoint-group-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.dlm-endpoint-group-actions {
+    @apply dlm-flex dlm-items-center dlm-gap-1;
+}
+
+.dlm-btn-link {
+    @apply dlm-bg-transparent dlm-border-0 dlm-p-0 dlm-cursor-pointer;
+    color: #6b7280;
+    font-size: 0.7rem;
+
+    &:hover {
+        color: #374151;
+        text-decoration: underline;
+    }
+}
+
+.dlm-endpoint-group-items {
+    padding: 6px;
+}
+
+.dlm-endpoint-item {
+    @apply dlm-flex dlm-items-center dlm-gap-3 dlm-rounded;
+    padding: 4px 6px;
+    font-size: 0.75rem;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    .dlm-checkbox {
+        flex-shrink: 0;
+        width: 14px;
+        height: 14px;
+    }
+}
+
+.dlm-endpoint-route {
+    @apply dlm-font-mono;
+    font-size: 0.7rem;
+    color: #374151;
+}
+
 .dlm-endpoint-method {
-    @apply dlm-inline-block dlm-px-1.5 dlm-py-0.5 dlm-text-xs dlm-font-bold dlm-rounded dlm-text-white;
+    @apply dlm-inline-block dlm-text-center dlm-font-bold dlm-rounded dlm-text-white;
+    width: 38px;
+    padding: 1px 4px;
+    font-size: 0.6rem;
+    flex-shrink: 0;
 
     &.dlm-method-get {
         @apply dlm-bg-green-500;
@@ -1661,7 +1874,7 @@ onMounted(() => {
     }
 
     &.dlm-method-put {
-        @apply dlm-bg-yellow-500;
+        background: #f59e0b;
     }
 
     &.dlm-method-delete {
@@ -1745,6 +1958,27 @@ onMounted(() => {
 
     .dlm-api-key-form-fields {
         grid-template-columns: 1fr;
+    }
+}
+
+// Loading state
+.dlm-loading-container {
+    @apply dlm-flex dlm-items-center dlm-justify-center;
+    min-height: 300px;
+}
+
+.dlm-loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: dlm-spin 0.8s linear infinite;
+}
+
+@keyframes dlm-spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 </style>

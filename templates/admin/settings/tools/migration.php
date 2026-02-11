@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php endforeach; ?>
         </select>
     </div>
-    <div class="dlm-tool-form-row">
+    <div class="dlm-tool-form-row" style="margin-top: 1rem;">
         <label>
             <input type="checkbox" name="preserve_ids" value="1">
             <small style="color:red;"><?php esc_html_e( 'Preserve old IDs. If checked, your existing Digital License Manager database will be wiped to remove/free used IDs. Use this ONLY if you are absolutely sure what you are doing and if your app depend on the existing license/generator IDs.', 'digital-license-manager' ); ?></small>

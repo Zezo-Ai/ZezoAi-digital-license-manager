@@ -50,6 +50,8 @@ return [
 			'filter'       => __( 'Filter', 'digital-license-manager' ),
 			'reset'        => __( 'Reset', 'digital-license-manager' ),
 			'close'        => __( 'Close', 'digital-license-manager' ),
+			'select_all'   => __( 'Select All', 'digital-license-manager' ),
+			'deselect_all' => __( 'Deselect All', 'digital-license-manager' ),
 		],
 		'actions' => [
 			'edit'   => __( 'Edit', 'digital-license-manager' ),
@@ -77,6 +79,7 @@ return [
 			'error'         => __( 'An error occurred.', 'digital-license-manager' ),
 			'saved'         => __( 'Changes saved successfully.', 'digital-license-manager' ),
 			'deleted'       => __( 'Item deleted successfully.', 'digital-license-manager' ),
+			'copied'        => __( 'Copied to clipboard!', 'digital-license-manager' ),
 		],
 		'errors' => [
 			'network'    => __( 'Network error. Please try again.', 'digital-license-manager' ),
@@ -385,6 +388,10 @@ return [
 				'read'       => __( 'Read', 'digital-license-manager' ),
 				'write'      => __( 'Write', 'digital-license-manager' ),
 				'read_write' => __( 'Read/Write', 'digital-license-manager' ),
+			],
+			'groups' => [
+				'licenses'   => __( 'Licenses', 'digital-license-manager' ),
+				'generators' => __( 'Generators', 'digital-license-manager' ),
 			],
 		],
 		'tools' => [

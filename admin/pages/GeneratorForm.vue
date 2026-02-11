@@ -1,165 +1,170 @@
 <template>
-    <Page :title="isEditing ? trans('generators.titles.edit') : trans('generators.titles.add')">
+    <div>
+        <!-- Page header -->
+        <div class="dlm-page-header">
+            <h1>{{ pageTitle }}</h1>
+        </div>
+
         <form @submit.prevent="saveGenerator" class="dlm-card">
-            <div class="dlm-card-body">
-                <div class="dlm-form-grid">
-                    <!-- Name -->
-                    <div class="dlm-form-group dlm-col-span-2">
-                        <label for="name">{{ trans('generators.fields.name') }} *</label>
-                        <input
-                            id="name"
-                            v-model="form.name"
-                            type="text"
-                            class="dlm-input"
-                            required
-                            :placeholder="trans('generators.placeholders.name')"
-                        />
-                    </div>
+        <div class="dlm-card-body">
+            <div class="dlm-form-grid">
+                <!-- Name -->
+                <div class="dlm-form-group dlm-col-span-2">
+                    <label for="name">{{ trans('generators.fields.name') }} *</label>
+                    <input
+                        id="name"
+                        v-model="form.name"
+                        type="text"
+                        class="dlm-input"
+                        required
+                        :placeholder="trans('generators.placeholders.name')"
+                    />
+                </div>
 
-                    <!-- Products -->
-                    <div class="dlm-form-group dlm-col-span-2">
-                        <label for="product_ids">{{ trans('generators.fields.products') }}</label>
-                        <AsyncSelect
-                            id="product_ids"
-                            v-model="form.product_ids"
-                            search-type="product"
-                            :placeholder="trans('generators.placeholders.products')"
-                            :multiple="true"
-                            :initial-options="initialProducts"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.products') }}</p>
-                    </div>
+                <!-- Products -->
+                <div class="dlm-form-group dlm-col-span-2">
+                    <label for="product_ids">{{ trans('generators.fields.products') }}</label>
+                    <AsyncSelect
+                        id="product_ids"
+                        v-model="form.product_ids"
+                        search-type="product"
+                        :placeholder="trans('generators.placeholders.products')"
+                        :multiple="true"
+                        :initial-options="initialProducts"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.products') }}</p>
+                </div>
 
-                    <!-- Charset -->
-                    <div class="dlm-form-group dlm-col-span-2">
-                        <label for="charset">{{ trans('generators.fields.charset') }} *</label>
-                        <input
-                            id="charset"
-                            v-model="form.charset"
-                            type="text"
-                            class="dlm-input"
-                            required
-                            :placeholder="trans('generators.placeholders.charset')"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.charset') }}</p>
-                    </div>
+                <!-- Charset -->
+                <div class="dlm-form-group dlm-col-span-2">
+                    <label for="charset">{{ trans('generators.fields.charset') }} *</label>
+                    <input
+                        id="charset"
+                        v-model="form.charset"
+                        type="text"
+                        class="dlm-input"
+                        required
+                        :placeholder="trans('generators.placeholders.charset')"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.charset') }}</p>
+                </div>
 
-                    <!-- Chunks -->
-                    <div class="dlm-form-group">
-                        <label for="chunks">{{ trans('generators.fields.chunks') }} *</label>
-                        <input
-                            id="chunks"
-                            v-model.number="form.chunks"
-                            type="number"
-                            min="1"
-                            max="10"
-                            class="dlm-input"
-                            required
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.chunks') }}</p>
-                    </div>
+                <!-- Chunks -->
+                <div class="dlm-form-group">
+                    <label for="chunks">{{ trans('generators.fields.chunks') }} *</label>
+                    <input
+                        id="chunks"
+                        v-model.number="form.chunks"
+                        type="number"
+                        min="1"
+                        max="10"
+                        class="dlm-input"
+                        required
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.chunks') }}</p>
+                </div>
 
-                    <!-- Chunk Length -->
-                    <div class="dlm-form-group">
-                        <label for="chunk_length">{{ trans('generators.fields.chunk_length') }} *</label>
-                        <input
-                            id="chunk_length"
-                            v-model.number="form.chunk_length"
-                            type="number"
-                            min="1"
-                            max="20"
-                            class="dlm-input"
-                            required
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.chunk_length') }}</p>
-                    </div>
+                <!-- Chunk Length -->
+                <div class="dlm-form-group">
+                    <label for="chunk_length">{{ trans('generators.fields.chunk_length') }} *</label>
+                    <input
+                        id="chunk_length"
+                        v-model.number="form.chunk_length"
+                        type="number"
+                        min="1"
+                        max="20"
+                        class="dlm-input"
+                        required
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.chunk_length') }}</p>
+                </div>
 
-                    <!-- Separator -->
-                    <div class="dlm-form-group">
-                        <label for="separator">{{ trans('generators.fields.separator') }}</label>
-                        <input
-                            id="separator"
-                            v-model="form.separator"
-                            type="text"
-                            maxlength="1"
-                            class="dlm-input"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.separator') }}</p>
-                    </div>
+                <!-- Separator -->
+                <div class="dlm-form-group">
+                    <label for="separator">{{ trans('generators.fields.separator') }}</label>
+                    <input
+                        id="separator"
+                        v-model="form.separator"
+                        type="text"
+                        maxlength="1"
+                        class="dlm-input"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.separator') }}</p>
+                </div>
 
-                    <!-- Prefix -->
-                    <div class="dlm-form-group">
-                        <label for="prefix">{{ trans('generators.fields.prefix') }}</label>
-                        <input
-                            id="prefix"
-                            v-model="form.prefix"
-                            type="text"
-                            class="dlm-input"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.prefix') }}</p>
-                    </div>
+                <!-- Prefix -->
+                <div class="dlm-form-group">
+                    <label for="prefix">{{ trans('generators.fields.prefix') }}</label>
+                    <input
+                        id="prefix"
+                        v-model="form.prefix"
+                        type="text"
+                        class="dlm-input"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.prefix') }}</p>
+                </div>
 
-                    <!-- Suffix -->
-                    <div class="dlm-form-group">
-                        <label for="suffix">{{ trans('generators.fields.suffix') }}</label>
-                        <input
-                            id="suffix"
-                            v-model="form.suffix"
-                            type="text"
-                            class="dlm-input"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.suffix') }}</p>
-                    </div>
+                <!-- Suffix -->
+                <div class="dlm-form-group">
+                    <label for="suffix">{{ trans('generators.fields.suffix') }}</label>
+                    <input
+                        id="suffix"
+                        v-model="form.suffix"
+                        type="text"
+                        class="dlm-input"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.suffix') }}</p>
+                </div>
 
-                    <!-- Max Activations -->
-                    <div class="dlm-form-group">
-                        <label for="times_activated_max">{{ trans('generators.fields.max_activations') }}</label>
-                        <input
-                            id="times_activated_max"
-                            v-model.number="form.times_activated_max"
-                            type="number"
-                            min="0"
-                            class="dlm-input"
-                            :placeholder="trans('generators.placeholders.max_activations')"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.max_activations') }}</p>
-                    </div>
+                <!-- Max Activations -->
+                <div class="dlm-form-group">
+                    <label for="times_activated_max">{{ trans('generators.fields.max_activations') }}</label>
+                    <input
+                        id="times_activated_max"
+                        v-model.number="form.times_activated_max"
+                        type="number"
+                        min="0"
+                        class="dlm-input"
+                        :placeholder="trans('generators.placeholders.max_activations')"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.max_activations') }}</p>
+                </div>
 
-                    <!-- Expires In -->
-                    <div class="dlm-form-group">
-                        <label for="expires_in">{{ trans('generators.fields.expires_in') }}</label>
-                        <input
-                            id="expires_in"
-                            v-model.number="form.expires_in"
-                            type="number"
-                            min="0"
-                            class="dlm-input"
-                            :placeholder="trans('generators.placeholders.expires_in')"
-                        />
-                        <p class="dlm-form-hint">{{ trans('generators.hints.expires_in') }}</p>
-                    </div>
+                <!-- Expires In -->
+                <div class="dlm-form-group">
+                    <label for="expires_in">{{ trans('generators.fields.expires_in') }}</label>
+                    <input
+                        id="expires_in"
+                        v-model.number="form.expires_in"
+                        type="number"
+                        min="0"
+                        class="dlm-input"
+                        :placeholder="trans('generators.placeholders.expires_in')"
+                    />
+                    <p class="dlm-form-hint">{{ trans('generators.hints.expires_in') }}</p>
+                </div>
 
-                    <!-- Preview -->
-                    <div class="dlm-form-group dlm-col-span-2">
-                        <label>{{ trans('generators.fields.preview') }}</label>
-                        <div class="dlm-license-preview">
-                            <code>{{ previewKey }}</code>
-                        </div>
+                <!-- Preview -->
+                <div class="dlm-form-group dlm-col-span-2">
+                    <label>{{ trans('generators.fields.preview') }}</label>
+                    <div class="dlm-license-preview">
+                        <code>{{ previewKey }}</code>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="dlm-card-footer">
-                <router-link to="/generators" class="dlm-btn dlm-btn-secondary">
-                    {{ trans('global.buttons.cancel') }}
-                </router-link>
-                <button type="submit" class="dlm-btn dlm-btn-primary" :disabled="saving">
-                    <span v-if="saving">{{ trans('global.buttons.saving') }}</span>
-                    <span v-else>{{ isEditing ? trans('global.buttons.update') : trans('global.buttons.create') }}</span>
-                </button>
-            </div>
-        </form>
-    </Page>
+        <div class="dlm-card-footer">
+            <router-link to="/generators" class="dlm-btn dlm-btn-secondary">
+                {{ trans('global.buttons.cancel') }}
+            </router-link>
+            <button type="submit" class="dlm-btn dlm-btn-primary" :disabled="saving">
+                <span v-if="saving">{{ trans('global.buttons.saving') }}</span>
+                <span v-else>{{ isEditing ? trans('global.buttons.update') : trans('global.buttons.create') }}</span>
+            </button>
+        </div>
+    </form>
+    </div>
 </template>
 
 <script setup>
@@ -168,7 +173,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as generatorsService from '../services/generators'
-import Page from '@digital-license-manager/ui/components/Page.vue'
 import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 
 const props = defineProps({
@@ -184,6 +188,11 @@ const alertStore = useAlertStore()
 
 const isEditing = computed(() => !!props.id || !!route.params.id)
 const generatorId = computed(() => props.id || route.params.id)
+const pageTitle = computed(() => {
+    return isEditing.value
+        ? trans('generators.titles.edit')
+        : trans('generators.titles.add')
+})
 
 const loading = ref(false)
 const saving = ref(false)
@@ -291,6 +300,7 @@ onMounted(() => {
         loadGenerator()
     }
 })
+
 </script>
 
 <style lang="scss" scoped>

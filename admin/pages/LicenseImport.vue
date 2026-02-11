@@ -1,5 +1,10 @@
 <template>
-    <Page :title="trans('licenses.titles.import')">
+    <div>
+        <!-- Page header -->
+        <div class="dlm-page-header">
+            <h1>{{ trans('licenses.titles.import') }}</h1>
+        </div>
+
         <form @submit.prevent="importLicenses" class="dlm-card">
             <div class="dlm-card-body">
                 <div class="dlm-form-grid">
@@ -102,7 +107,7 @@
                 </div>
             </div>
         </div>
-    </Page>
+    </div>
 </template>
 
 <script setup>
@@ -110,7 +115,6 @@ import { ref, reactive } from 'vue'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as licensesService from '../services/licenses'
-import Page from '@digital-license-manager/ui/components/Page.vue'
 import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
 import TextArea from '@digital-license-manager/ui/components/input/TextArea.vue'
@@ -162,6 +166,7 @@ async function importLicenses() {
         importing.value = false
     }
 }
+
 </script>
 
 <style lang="scss" scoped>

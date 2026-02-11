@@ -1,5 +1,10 @@
 <template>
-    <Page :title="trans('generators.generate.title')">
+    <div>
+        <!-- Page header -->
+        <div class="dlm-page-header">
+            <h1>{{ trans('generators.generate.title') }}</h1>
+        </div>
+
         <form @submit.prevent="generateLicenses" class="dlm-card">
             <div class="dlm-card-body">
                 <div class="dlm-form-grid">
@@ -123,7 +128,7 @@
                 ></textarea>
             </div>
         </div>
-    </Page>
+    </div>
 </template>
 
 <script setup>
@@ -131,7 +136,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as generatorsService from '../services/generators'
-import Page from '@digital-license-manager/ui/components/Page.vue'
 import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
 
@@ -223,6 +227,7 @@ function downloadCsv() {
 onMounted(() => {
     loadGenerators()
 })
+
 </script>
 
 <style lang="scss" scoped>

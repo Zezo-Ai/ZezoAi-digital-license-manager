@@ -27,14 +27,6 @@ export async function exportData() {
 }
 
 /**
- * Rebuild database tables.
- * @returns {Promise<Response>}
- */
-export async function rebuildDatabase() {
-    return ajaxPost('dlm_admin_settings_rebuild_db')
-}
-
-/**
  * Get API keys.
  * @param {Object} params - Query parameters
  * @returns {Promise<Response>}

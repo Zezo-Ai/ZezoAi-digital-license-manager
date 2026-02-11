@@ -1,5 +1,9 @@
 <template>
-    <Page :title="trans('activations.title')">
+    <div>
+        <!-- Page header -->
+        <div class="dlm-page-header">
+            <h1>{{ trans('activations.title') }}</h1>
+        </div>
 
         <div class="dlm-card">
             <div class="dlm-card-body">
@@ -100,7 +104,7 @@
                 </button>
             </template>
         </Modal>
-    </Page>
+    </div>
 </template>
 
 <script setup>
@@ -108,7 +112,6 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as activationsService from '../services/activations'
-import Page from '@digital-license-manager/ui/components/Page.vue'
 import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
@@ -258,6 +261,7 @@ function formatDate(dateString) {
 onMounted(() => {
     loadActivations()
 })
+
 </script>
 
 <style lang="scss" scoped>
