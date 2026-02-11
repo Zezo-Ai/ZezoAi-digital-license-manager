@@ -98,6 +98,11 @@ class Authentication {
 
 		$restPrefix = trailingslashit( rest_get_url_prefix() );
 
+		// Exclude webhook endpoints - they use their own signature verification
+		if ( false !== strpos( $requestUri, $restPrefix . 'dlm/v1/webhooks/' ) ) {
+			return false;
+		}
+
 		if ( false !== strpos( $requestUri, $restPrefix . 'dlm/' ) ) {
 			return true;
 		}
