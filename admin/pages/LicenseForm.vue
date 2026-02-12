@@ -119,6 +119,18 @@
                     <p class="dlm-form-hint">{{ trans('licenses.hints.activations_limit') }}</p>
                 </div>
             </div>
+
+            <!-- Extension panels (added by PRO or other addons) -->
+            <template v-if="extensionPanels.length > 0">
+                <div
+                    v-for="panel in extensionPanels"
+                    :key="panel.id"
+                    class="dlm-extension-panel"
+                >
+                    <h3 v-if="panel.title" class="dlm-extension-panel-title">{{ panel.title }}</h3>
+                    <div class="dlm-extension-panel-content" v-html="panel.content"></div>
+                </div>
+            </template>
         </div>
 
         <div class="dlm-card-footer">
@@ -166,6 +178,7 @@ const pageTitle = computed(() => {
 
 const loading = ref(false)
 const saving = ref(false)
+const extensionPanels = ref([])
 
 const form = reactive({
     license_key: '',
@@ -235,6 +248,11 @@ async function loadLicense() {
             }
             if (license.user_email) {
                 initialUser.value = { id: license.user_id, text: license.user_email }
+            }
+
+            // Load extension panels (added by PRO or other addons)
+            if (license.extension_panels && Array.isArray(license.extension_panels)) {
+                extensionPanels.value = license.extension_panels
             }
         } else {
             alertStore.error(json.data.message)

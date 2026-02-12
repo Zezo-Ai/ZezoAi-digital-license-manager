@@ -1517,7 +1517,14 @@ class Ajax {
 			$data['decrypted_license_key'] = $decrypted_key;
 		}
 
-		return $data;
+		/**
+		 * Filter the formatted license data for Vue admin responses.
+		 *
+		 * @param array  $data        The formatted license data.
+		 * @param object $license     The license object.
+		 * @param bool   $include_key Whether the decrypted key is included.
+		 */
+		return apply_filters( 'dlm_admin_format_license', $data, $license, $include_key );
 	}
 
 	/**
