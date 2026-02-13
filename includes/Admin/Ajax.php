@@ -181,6 +181,11 @@ class Ajax {
 			}
 		}
 
+		// License key search: hash the search term and match against the hash column
+		if ( ! empty( $search ) ) {
+			$query['hash'] = CryptoHelper::hash( $search );
+		}
+
 		// Get licenses
 		$licenses_repo = Licenses::instance();
 		$offset        = ( $page - 1 ) * $per_page;
