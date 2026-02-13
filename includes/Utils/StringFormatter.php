@@ -41,6 +41,9 @@ class StringFormatter {
 	 * @return string
 	 */
 	public static function formatBytes( $size ) {
+		if ( empty( $size ) || $size < 0 ) {
+			return '0';
+		}
 		$base   = log( $size ) / log( 1024 );
 		$suffix = array( "", "KB", "MB", "GB", "TB" );
 		$f_base = floor( $base );

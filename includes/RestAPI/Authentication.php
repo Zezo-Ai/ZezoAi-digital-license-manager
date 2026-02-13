@@ -103,6 +103,11 @@ class Authentication {
 			return false;
 		}
 
+		// Allow extensions to exclude specific endpoints from authentication
+		if ( apply_filters( 'dlm_rest_api_skip_authentication', false, $requestUri ) ) {
+			return false;
+		}
+
 		if ( false !== strpos( $requestUri, $restPrefix . 'dlm/' ) ) {
 			return true;
 		}
