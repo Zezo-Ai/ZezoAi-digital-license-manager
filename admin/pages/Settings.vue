@@ -1066,9 +1066,21 @@ function resetApiKeyForm() {
 }
 
 function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+            alertStore.success(trans('global.messages.copied') || 'Copied to clipboard!')
+        })
+    } else {
+        const textarea = document.createElement('textarea')
+        textarea.value = text
+        textarea.style.position = 'fixed'
+        textarea.style.opacity = '0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textarea)
         alertStore.success(trans('global.messages.copied') || 'Copied to clipboard!')
-    })
+    }
 }
 
 function editApiKey(key) {

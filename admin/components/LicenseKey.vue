@@ -54,12 +54,25 @@
                     <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
                 </svg>
             </button>
+
+            <RouterLink
+                v-if="showLink"
+                :to="{ name: 'license-edit', params: { id: license.id } }"
+                class="dlm-key-action"
+                :title="trans('global.actions.edit')"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
+                    <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
+                </svg>
+            </RouterLink>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as licensesService from '../services/licenses'
@@ -69,13 +82,17 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    showLink: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const alertStore = useAlertStore()
 
 const loading = ref(false)
-const revealed = ref(false)
-const decryptedKey = ref('')
+const revealed = ref(!!props.license.decrypted_license_key)
+const decryptedKey = ref(props.license.decrypted_license_key || '')
 const copied = ref(false)
 
 const maskedKey = computed(() => {
@@ -150,8 +167,9 @@ async function copyKey() {
 }
 
 .dlm-key-action {
-    @apply dlm-p-1 dlm-rounded dlm-text-gray-400 hover:dlm-text-gray-600 dlm-bg-transparent dlm-border-0 dlm-cursor-pointer;
+    @apply dlm-p-1 dlm-rounded dlm-text-gray-400 hover:dlm-text-gray-600 dlm-bg-transparent dlm-border-0 dlm-cursor-pointer dlm-no-underline;
     @apply disabled:dlm-opacity-50 disabled:dlm-cursor-not-allowed;
+    color: inherit;
 
     svg {
         @apply dlm-w-4 dlm-h-4;

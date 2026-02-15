@@ -168,6 +168,39 @@ trait SettingsFieldsTrait {
 	}
 
 	/**
+	 * Renders a textarea field.
+	 *
+	 * @param array $args {
+	 *     Optional arguments.
+	 *
+	 * @type string $explain A description of the setting.
+	 * @type string $field The setting identifier in the option group.
+	 * @type string $key The option group name.
+	 * @type int $rows The number of rows. Defaults to 5.
+	 * @type string $value The setting's value.
+	 * }
+	 */
+	public function fieldTextarea( $args ) {
+
+		$key     = isset( $args['key'] ) ? $args['key'] : '';
+		$field   = isset( $args['field'] ) ? $args['field'] : '';
+		$value   = isset( $args['value'] ) ? $args['value'] : '';
+		$explain = isset( $args['explain'] ) ? $args['explain'] : '';
+		$rows    = isset( $args['rows'] ) ? (int) $args['rows'] : 5;
+
+		$html = sprintf(
+			'<textarea id="%s" name="%s[%s]" class="large-text" rows="%d">%s</textarea>',
+			esc_attr( $field ),
+			esc_attr( $key ),
+			esc_attr( $field ),
+			$rows,
+			esc_textarea( $value )
+		);
+		$html .= sprintf( '<p class="description">%s</p>', wp_kses( $explain, SanitizeHelper::ksesAllowedHtmlTags() ) );
+		echo $html;
+	}
+
+	/**
 	 * Renders a text input field.
 	 *
 	 * @param array $args {

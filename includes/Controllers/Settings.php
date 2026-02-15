@@ -125,6 +125,16 @@ class Settings {
 									'label'   => __( 'Upload a company logo that will be displayed in the certification PDF.', 'digital-license-manager' ),
 									'explain' => __( "If no logo provided, it will attempt to use the website logo that is set in 'Customize' section.", 'digital-license-manager' ),
 								)
+							),
+							array(
+								'id'       => 'company_address',
+								'title'    => __( 'Company Address', 'digital-license-manager' ),
+								'priority' => 20,
+								'callback' => array( $this, 'fieldTextarea' ),
+								'args'     => array(
+									'explain' => __( 'Your company address displayed on PDF documents. Enter each line separately (company name, street, city, country).', 'digital-license-manager' ),
+									'rows'    => 4,
+								),
 							)
 						)
 					),

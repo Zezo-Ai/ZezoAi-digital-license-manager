@@ -313,10 +313,22 @@ return [
 			'source'      => __( 'Source', 'digital-license-manager' ),
 			'ip_address'  => __( 'IP Address', 'digital-license-manager' ),
 			'user_agent'  => __( 'User Agent', 'digital-license-manager' ),
+			'status'      => __( 'Status', 'digital-license-manager' ),
 			'created_at'  => __( 'Created At', 'digital-license-manager' ),
 		],
 		'actions' => [
-			'delete' => __( 'Delete', 'digital-license-manager' ),
+			'enable'  => __( 'Enable', 'digital-license-manager' ),
+			'disable' => __( 'Disable', 'digital-license-manager' ),
+			'delete'  => __( 'Delete', 'digital-license-manager' ),
+		],
+		'labels' => [
+			'enabled'  => __( 'Enabled', 'digital-license-manager' ),
+			'disabled' => __( 'Disabled', 'digital-license-manager' ),
+		],
+		'filters' => [
+			'license_key' => __( 'License Key', 'digital-license-manager' ),
+			'all_sources' => __( 'All Sources', 'digital-license-manager' ),
+			'filter'      => __( 'Filter', 'digital-license-manager' ),
 		],
 		'modals' => [
 			'delete' => [

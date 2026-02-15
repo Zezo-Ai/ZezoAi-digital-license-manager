@@ -43,10 +43,6 @@
                     row-key="id"
                     @sort="handleSort"
                 >
-                    <template #cell-product_ids="{ row }">
-                        <span v-if="row.product_names">{{ row.product_names }}</span>
-                        <span v-else class="dlm-text-gray-400">&mdash;</span>
-                    </template>
                     <template #cell-times_activated_max="{ row }">
                         {{ row.times_activated_max || '&infin;' }}
                     </template>
@@ -123,7 +119,6 @@ const pagination = reactive({
 const columns = computed(() => [
     { key: 'id', label: trans('generators.columns.id'), sortable: true, width: '80px' },
     { key: 'name', label: trans('generators.columns.name'), sortable: true },
-    { key: 'product_ids', label: trans('generators.columns.products'), sortable: false },
     { key: 'charset', label: trans('generators.columns.charset'), sortable: false },
     { key: 'chunks', label: trans('generators.columns.chunks'), sortable: false, width: '80px' },
     { key: 'chunk_length', label: trans('generators.columns.chunk_length'), sortable: false, width: '100px' },

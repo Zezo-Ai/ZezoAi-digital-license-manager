@@ -260,16 +260,7 @@ class LMFW extends AbstractToolMigrator {
 
 						if ( ! empty( $new_row ) ) {
 
-							if ( ! empty( $row['times_activated'] ) ) {
-								for ( $i = 0; $i < $row['times_activated']; $i ++ ) {
-									LicenseActivations::instance()->insert( array(
-										'token'      => $licenseService->generateActivationToken( $license_key ),
-										'license_id' => $new_row->getId(),
-										'label'      => __( 'Untitled', 'digital-license-manager' ),
-										'source'     => ActivationSource::MIGRATION,
-									) );
-								}
-							}
+							$this->migrateActivations( $row['id'], $new_row->getId(), $row['times_activated'], $licenseService, $license_key );
 
 							$old_meta_rows = $this->getLicenseMeta( $row['id'] );
 							if ( ! empty( $old_meta_rows ) ) {
@@ -524,6 +515,89 @@ class LMFW extends AbstractToolMigrator {
 		$query  = $wpdb->prepare( "SELECT * FROM {$table} WHERE license_id=%d", $license_id );
 
 		return $wpdb->get_results( $query, ARRAY_A );
+	}
+
+	/**
+	 * Migrate activations for a license.
+	 *
+	 * If the LMFWC activations table exists and contains records for this license,
+	 * migrate the actual activation data. Otherwise fall back to creating placeholder
+	 * activations based on the times_activated count.
+	 *
+	 * @param int             $old_license_id  The LMFWC license ID.
+	 * @param int             $new_license_id  The DLM license ID.
+	 * @param int             $times_activated The times_activated count from the LMFWC license.
+	 * @param LicensesService $licenseService  The license service instance.
+	 * @param string          $license_key     The decrypted license key.
+	 */
+	protected function migrateActivations( $old_license_id, $new_license_id, $times_activated, $licenseService, $license_key ) {
+		$activations = $this->getLicenseActivations( $old_license_id );
+
+		if ( ! empty( $activations ) ) {
+			foreach ( $activations as $activation ) {
+				LicenseActivations::instance()->insert( array(
+					'token'          => ! empty( $activation['token'] ) ? $activation['token'] : $licenseService->generateActivationToken( $license_key ),
+					'license_id'     => $new_license_id,
+					'label'          => $activation['label'] ?? '',
+					'source'         => ! empty( $activation['source'] ) ? $activation['source'] : ActivationSource::MIGRATION,
+					'ip_address'     => $activation['ip_address'] ?? null,
+					'user_agent'     => $activation['user_agent'] ?? null,
+					'meta_data'      => $activation['meta_data'] ?? null,
+					'created_at'     => $activation['created_at'] ?? null,
+					'updated_at'     => $activation['updated_at'] ?? null,
+					'deactivated_at' => $activation['deactivated_at'] ?? null,
+				) );
+			}
+		} elseif ( ! empty( $times_activated ) ) {
+			for ( $i = 0; $i < $times_activated; $i ++ ) {
+				LicenseActivations::instance()->insert( array(
+					'token'      => $licenseService->generateActivationToken( $license_key ),
+					'license_id' => $new_license_id,
+					'label'      => __( 'Untitled', 'digital-license-manager' ),
+					'source'     => ActivationSource::MIGRATION,
+				) );
+			}
+		}
+	}
+
+	/**
+	 * Get activations for a license from the LMFWC activations table.
+	 *
+	 * @param int $license_id The LMFWC license ID.
+	 *
+	 * @return array
+	 */
+	protected function getLicenseActivations( $license_id ) {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'lmfwc_activations';
+
+		if ( ! $this->tableExists( $table ) ) {
+			return [];
+		}
+
+		return $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE license_id = %d", $license_id ),
+			ARRAY_A
+		);
+	}
+
+	/**
+	 * Check if a database table exists.
+	 *
+	 * @param string $table The table name.
+	 *
+	 * @return bool
+	 */
+	protected function tableExists( $table ) {
+		static $cache = [];
+
+		if ( ! isset( $cache[ $table ] ) ) {
+			global $wpdb;
+			$cache[ $table ] = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ) === $table;
+		}
+
+		return $cache[ $table ];
 	}
 
 	/**

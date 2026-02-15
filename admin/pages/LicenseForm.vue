@@ -143,6 +143,77 @@
             </button>
         </div>
     </form>
+
+        <!-- Activations Panel (edit mode only) -->
+        <div v-if="isEditing" class="dlm-card dlm-mt-4">
+            <div class="dlm-card-body">
+                <h3 class="dlm-mb-4">{{ trans('activations.title') }}</h3>
+
+                <Table
+                    :columns="activationColumns"
+                    :rows="activations"
+                    :loading="activationsLoading"
+                    row-key="id"
+                >
+                    <template #cell-source="{ row }">
+                        <code class="dlm-text-xs dlm-bg-gray-100 dlm-px-2 dlm-py-1 dlm-rounded">
+                            {{ row.source_label }}
+                        </code>
+                    </template>
+                    <template #cell-status="{ row }">
+                        <span
+                            class="dlm-badge"
+                            :class="row.deactivated_at ? 'dlm-badge-danger' : 'dlm-badge-success'"
+                        >
+                            {{ row.deactivated_at ? trans('activations.labels.disabled') : trans('activations.labels.enabled') }}
+                        </span>
+                    </template>
+                    <template #cell-created_at="{ row }">
+                        {{ formatDate(row.created_at) }}
+                    </template>
+                    <template #cell-actions="{ row }">
+                        <div class="dlm-row-actions">
+                            <button
+                                class="dlm-action-link"
+                                :class="row.deactivated_at ? 'dlm-text-success-600' : 'dlm-text-warning-600'"
+                                @click="toggleActivation(row)"
+                            >
+                                {{ row.deactivated_at ? trans('activations.actions.enable') : trans('activations.actions.disable') }}
+                            </button>
+                            <button class="dlm-action-link dlm-text-danger-600" @click="confirmDeleteActivation(row)">
+                                {{ trans('activations.actions.delete') }}
+                            </button>
+                        </div>
+                    </template>
+                </Table>
+
+                <Pager
+                    v-if="activationsPagination.total > 0"
+                    :current-page="activationsPagination.currentPage"
+                    :total-pages="activationsPagination.totalPages"
+                    :total-items="activationsPagination.total"
+                    :per-page="activationsPagination.perPage"
+                    @page-change="goToActivationsPage"
+                />
+            </div>
+        </div>
+
+        <!-- Delete Activation Confirmation Modal -->
+        <Modal
+            :show="showDeleteActivationModal"
+            :title="trans('activations.modals.delete.title')"
+            @close="showDeleteActivationModal = false"
+        >
+            <p>{{ trans('activations.modals.delete.message') }}</p>
+            <template #footer>
+                <button class="dlm-btn dlm-btn-secondary" @click="showDeleteActivationModal = false">
+                    {{ trans('global.buttons.cancel') }}
+                </button>
+                <button class="dlm-btn dlm-btn-danger" :disabled="deletingActivation" @click="deleteActivation">
+                    {{ trans('global.buttons.delete') }}
+                </button>
+            </template>
+        </Modal>
     </div>
 </template>
 
@@ -152,9 +223,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as licensesService from '../services/licenses'
+import * as activationsService from '../services/activations'
 import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 import Dropdown from '@digital-license-manager/ui/components/input/Dropdown.vue'
 import DateTimePicker from '@digital-license-manager/ui/components/input/DateTimePicker.vue'
+import Table from '@digital-license-manager/ui/components/Table.vue'
+import Pager from '@digital-license-manager/ui/components/Pager.vue'
+import Modal from '@digital-license-manager/ui/components/Modal.vue'
 
 const props = defineProps({
     id: {
@@ -179,6 +254,29 @@ const pageTitle = computed(() => {
 const loading = ref(false)
 const saving = ref(false)
 const extensionPanels = ref([])
+
+// Activations panel state
+const activations = ref([])
+const activationsLoading = ref(false)
+const showDeleteActivationModal = ref(false)
+const activationToDelete = ref(null)
+const deletingActivation = ref(false)
+const activationsPagination = reactive({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    perPage: 25,
+})
+
+const activationColumns = computed(() => [
+    { key: 'id', label: trans('activations.columns.id'), sortable: false, width: '80px' },
+    { key: 'label', label: trans('activations.columns.label'), sortable: false },
+    { key: 'source', label: trans('activations.columns.source'), sortable: false, width: '120px' },
+    { key: 'ip_address', label: trans('activations.columns.ip_address'), sortable: false, width: '130px' },
+    { key: 'status', label: trans('activations.columns.status'), sortable: false, width: '100px' },
+    { key: 'created_at', label: trans('activations.columns.created_at'), sortable: false, width: '150px' },
+    { key: 'actions', label: '', sortable: false, width: '120px' },
+])
 
 const form = reactive({
     license_key: '',
@@ -254,6 +352,9 @@ async function loadLicense() {
             if (license.extension_panels && Array.isArray(license.extension_panels)) {
                 extensionPanels.value = license.extension_panels
             }
+
+            // Load activations for this license
+            loadActivations()
         } else {
             alertStore.error(json.data.message)
             router.push('/')
@@ -306,6 +407,91 @@ async function generateKey() {
     }
 }
 
+// Activations panel methods
+async function loadActivations() {
+    if (!licenseId.value) return
+
+    activationsLoading.value = true
+
+    try {
+        const response = await activationsService.query({
+            license_id: licenseId.value,
+            page: activationsPagination.currentPage,
+            per_page: activationsPagination.perPage,
+        })
+
+        const json = await response.json()
+
+        if (json.success) {
+            activations.value = json.data.records
+            activationsPagination.currentPage = json.data.pagination.current_page
+            activationsPagination.totalPages = json.data.pagination.total_pages
+            activationsPagination.total = json.data.pagination.total
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    } finally {
+        activationsLoading.value = false
+    }
+}
+
+function goToActivationsPage(page) {
+    activationsPagination.currentPage = page
+    loadActivations()
+}
+
+async function toggleActivation(row) {
+    const action = row.deactivated_at ? 'enable' : 'disable'
+
+    try {
+        const response = await activationsService.bulkAction(action, [row.id])
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+            loadActivations()
+        } else {
+            alertStore.error(json.data.message)
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    }
+}
+
+function confirmDeleteActivation(row) {
+    activationToDelete.value = row
+    showDeleteActivationModal.value = true
+}
+
+async function deleteActivation() {
+    if (!activationToDelete.value) return
+
+    deletingActivation.value = true
+
+    try {
+        const response = await activationsService.remove(activationToDelete.value.id)
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+            showDeleteActivationModal.value = false
+            loadActivations()
+        } else {
+            alertStore.error(json.data.message)
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
+    } finally {
+        deletingActivation.value = false
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return date.toLocaleString()
+}
+
 onMounted(() => {
     if (isEditing.value) {
         loadLicense()
@@ -313,3 +499,13 @@ onMounted(() => {
 })
 
 </script>
+
+<style lang="scss" scoped>
+.dlm-row-actions {
+    @apply dlm-flex dlm-items-center dlm-gap-3;
+}
+
+.dlm-action-link {
+    @apply dlm-text-sm dlm-cursor-pointer dlm-bg-transparent dlm-border-0 dlm-p-0;
+}
+</style>

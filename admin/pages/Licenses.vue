@@ -84,11 +84,27 @@
                         <Status :status="row.status" />
                     </template>
                     <template #cell-product_id="{ row }">
-                        <span v-if="row.product_name">{{ row.product_name }}</span>
+                        <a v-if="row.product_url" :href="row.product_url" target="_blank">{{ row.product_name }}</a>
+                        <span v-else-if="row.product_name">{{ row.product_name }}</span>
                         <span v-else class="dlm-text-gray-400">&mdash;</span>
                     </template>
                     <template #cell-user_id="{ row }">
                         <span v-if="row.user_email">{{ row.user_email }}</span>
+                        <span v-else class="dlm-text-gray-400">&mdash;</span>
+                    </template>
+                    <template #cell-order_id="{ row }">
+                        <div v-if="row.order_id" class="dlm-order-cell">
+                            <div class="dlm-order-line">
+                                <span class="dashicons dashicons-cart"></span>
+                                <a v-if="row.order_url" :href="row.order_url" target="_blank">{{ row.order_number }}</a>
+                                <span v-else>{{ row.order_number || '#' + row.order_id }}</span>
+                            </div>
+                            <div v-if="row.subscription" class="dlm-order-line dlm-order-sub">
+                                <span class="dashicons dashicons-update"></span>
+                                <a v-if="row.subscription.url" :href="row.subscription.url" target="_blank">{{ row.subscription.label }}</a>
+                                <span v-else>{{ row.subscription.label }}</span>
+                            </div>
+                        </div>
                         <span v-else class="dlm-text-gray-400">&mdash;</span>
                     </template>
                     <template #cell-activations="{ row }">
@@ -188,6 +204,7 @@ const columns = computed(() => [
     { key: 'license_key', label: trans('licenses.columns.license_key'), sortable: false },
     { key: 'product_id', label: trans('licenses.columns.product'), sortable: true },
     { key: 'user_id', label: trans('licenses.columns.user'), sortable: true },
+    { key: 'order_id', label: trans('licenses.columns.order'), sortable: true },
     { key: 'status', label: trans('licenses.columns.status'), sortable: true, width: '120px' },
     { key: 'activations', label: trans('licenses.columns.activations'), sortable: false, width: '120px' },
     { key: 'expires_at', label: trans('licenses.columns.expires_at'), sortable: true, width: '150px' },
@@ -355,5 +372,24 @@ onMounted(() => {
 
 .dlm-action-link {
     @apply dlm-text-sm dlm-cursor-pointer dlm-bg-transparent dlm-border-0 dlm-p-0;
+}
+
+.dlm-order-cell {
+    @apply dlm-flex dlm-flex-col dlm-gap-1;
+}
+
+.dlm-order-line {
+    @apply dlm-flex dlm-items-center dlm-gap-1;
+
+    .dashicons {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        @apply dlm-text-gray-400;
+    }
+}
+
+.dlm-order-sub {
+    @apply dlm-text-xs dlm-text-gray-500;
 }
 </style>

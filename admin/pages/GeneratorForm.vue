@@ -21,20 +21,6 @@
                     />
                 </div>
 
-                <!-- Products -->
-                <div class="dlm-form-group dlm-col-span-2">
-                    <label for="product_ids">{{ trans('generators.fields.products') }}</label>
-                    <AsyncSelect
-                        id="product_ids"
-                        v-model="form.product_ids"
-                        search-type="product"
-                        :placeholder="trans('generators.placeholders.products')"
-                        :multiple="true"
-                        :initial-options="initialProducts"
-                    />
-                    <p class="dlm-form-hint">{{ trans('generators.hints.products') }}</p>
-                </div>
-
                 <!-- Charset -->
                 <div class="dlm-form-group dlm-col-span-2">
                     <label for="charset">{{ trans('generators.fields.charset') }} *</label>
@@ -173,7 +159,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
 import * as generatorsService from '../services/generators'
-import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 
 const props = defineProps({
     id: {
@@ -196,11 +181,8 @@ const pageTitle = computed(() => {
 
 const loading = ref(false)
 const saving = ref(false)
-const initialProducts = ref([])
-
 const form = reactive({
     name: '',
-    product_ids: [],
     charset: 'ABCDEFGHJKMNPQRSTUVWXYZ23456789',
     chunks: 4,
     chunk_length: 4,
@@ -244,7 +226,6 @@ async function loadGenerator() {
             const generator = json.data.record
 
             form.name = generator.name
-            form.product_ids = generator.product_ids || []
             form.charset = generator.charset
             form.chunks = generator.chunks
             form.chunk_length = generator.chunk_length
@@ -253,13 +234,6 @@ async function loadGenerator() {
             form.suffix = generator.suffix || ''
             form.times_activated_max = generator.times_activated_max
             form.expires_in = generator.expires_in
-
-            if (generator.products && generator.products.length > 0) {
-                initialProducts.value = generator.products.map(p => ({
-                    id: p.id,
-                    text: p.name,
-                }))
-            }
         } else {
             alertStore.error(json.data.message)
             router.push('/generators')

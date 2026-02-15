@@ -53,7 +53,7 @@ export async function remove(id) {
  * @returns {Promise<Response>}
  */
 export async function bulkAction(action, ids) {
-    return ajaxPost('dlm_admin_licenses_bulk_action', { action, ids })
+    return ajaxPost('dlm_admin_licenses_bulk_action', { bulk_action: action, ids })
 }
 
 /**

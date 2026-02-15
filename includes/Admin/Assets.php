@@ -26,6 +26,7 @@
 
 namespace IdeoLogix\DigitalLicenseManager\Admin;
 
+use IdeoLogix\DigitalLicenseManager\Enums\ActivationSource;
 use IdeoLogix\DigitalLicenseManager\Traits\Singleton;
 
 defined( 'ABSPATH' ) || exit;
@@ -146,8 +147,9 @@ class Assets {
 			'pluginUrl' => defined( 'DLM_PLUGIN_URL' ) ? DLM_PLUGIN_URL : '',
 			'version'   => defined( 'DLM_PLUGIN_VERSION' ) ? DLM_PLUGIN_VERSION : '1.0.0',
 			'config'    => [
-				'dateFormat' => get_option( 'date_format', 'Y-m-d' ),
-				'timeFormat' => get_option( 'time_format', 'H:i' ),
+				'dateFormat'        => get_option( 'date_format', 'Y-m-d' ),
+				'timeFormat'        => get_option( 'time_format', 'H:i' ),
+				'activationSources' => ActivationSource::all(),
 			],
 		] );
 	}

@@ -11,15 +11,29 @@
                 <div class="dlm-filters">
                     <div class="dlm-filter-item">
                         <input
-                            v-model="search"
+                            v-model="filterLicenseKey"
                             type="text"
-                            class="dlm-input"
-                            :placeholder="trans('global.placeholders.search')"
-                            @keyup.enter="loadActivations"
+                            class="dlm-input dlm-input-sm"
+                            :placeholder="trans('activations.filters.license_key')"
+                            @keyup.enter="applyFilters"
                         />
                     </div>
                     <div class="dlm-filter-item">
-                        <select v-model="perPage" class="dlm-select" @change="loadActivations">
+                        <select v-model="filterSource" class="dlm-select">
+                            <option value="">{{ trans('activations.filters.all_sources') }}</option>
+                            <option v-for="(label, value) in sourceOptions" :key="value" :value="value">{{ label }}</option>
+                        </select>
+                    </div>
+                    <div class="dlm-filter-item">
+                        <button
+                            class="dlm-btn dlm-btn-secondary dlm-btn-sm"
+                            @click="applyFilters"
+                        >
+                            {{ trans('activations.filters.filter') }}
+                        </button>
+                    </div>
+                    <div class="dlm-filter-item">
+                        <select v-model="perPage" class="dlm-select" @change="applyFilters">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -29,6 +43,8 @@
                     <div class="dlm-filter-item dlm-ml-auto">
                         <select v-model="bulkAction" class="dlm-select">
                             <option value="">{{ trans('global.labels.bulk_actions') }}</option>
+                            <option value="enable">{{ trans('activations.actions.enable') }}</option>
+                            <option value="disable">{{ trans('activations.actions.disable') }}</option>
                             <option value="delete">{{ trans('activations.actions.delete') }}</option>
                         </select>
                         <button
@@ -54,21 +70,33 @@
                     @sort="handleSort"
                 >
                     <template #cell-license_key="{ row }">
-                        <span v-if="row.license_key_partial" class="dlm-font-mono">
-                            {{ row.license_key_partial }}
-                        </span>
-                        <span v-else class="dlm-text-gray-400">&mdash;</span>
+                        <LicenseKey :license="{ id: row.license_id, license_key_partial: row.license_key_partial }" show-link />
                     </template>
                     <template #cell-source="{ row }">
                         <code class="dlm-text-xs dlm-bg-gray-100 dlm-px-2 dlm-py-1 dlm-rounded">
-                            {{ row.source || 'api' }}
+                            {{ row.source_label }}
                         </code>
+                    </template>
+                    <template #cell-status="{ row }">
+                        <span
+                            class="dlm-badge"
+                            :class="row.deactivated_at ? 'dlm-badge-danger' : 'dlm-badge-success'"
+                        >
+                            {{ row.deactivated_at ? trans('activations.labels.disabled') : trans('activations.labels.enabled') }}
+                        </span>
                     </template>
                     <template #cell-created_at="{ row }">
                         {{ formatDate(row.created_at) }}
                     </template>
                     <template #cell-actions="{ row }">
                         <div class="dlm-row-actions">
+                            <button
+                                class="dlm-action-link"
+                                :class="row.deactivated_at ? 'dlm-text-success-600' : 'dlm-text-warning-600'"
+                                @click="toggleActivation(row)"
+                            >
+                                {{ row.deactivated_at ? trans('activations.actions.enable') : trans('activations.actions.disable') }}
+                            </button>
                             <button class="dlm-action-link dlm-text-danger-600" @click="confirmDelete(row)">
                                 {{ trans('global.actions.delete') }}
                             </button>
@@ -115,12 +143,14 @@ import * as activationsService from '../services/activations'
 import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
+import LicenseKey from '../components/LicenseKey.vue'
 
 const alertStore = useAlertStore()
 
 const loading = ref(true)
 const activations = ref([])
-const search = ref('')
+const filterLicenseKey = ref('')
+const filterSource = ref('')
 const perPage = ref(25)
 const bulkAction = ref('')
 const selectedIds = ref([])
@@ -136,6 +166,8 @@ const pagination = reactive({
     total: 0,
 })
 
+const sourceOptions = window.DLMAdmin?.config?.activationSources || {}
+
 const columns = computed(() => [
     { key: 'id', label: trans('activations.columns.id'), sortable: true, width: '80px' },
     { key: 'license_key', label: trans('activations.columns.license_key'), sortable: false },
@@ -143,21 +175,28 @@ const columns = computed(() => [
     { key: 'source', label: trans('activations.columns.source'), sortable: true, width: '120px' },
     { key: 'ip_address', label: trans('activations.columns.ip_address'), sortable: true, width: '130px' },
     { key: 'user_agent', label: trans('activations.columns.user_agent'), sortable: false },
+    { key: 'status', label: trans('activations.columns.status'), sortable: false, width: '100px' },
     { key: 'created_at', label: trans('activations.columns.created_at'), sortable: true, width: '150px' },
-    { key: 'actions', label: '', sortable: false, width: '80px' },
+    { key: 'actions', label: '', sortable: false, width: '120px' },
 ])
 
 async function loadActivations() {
     loading.value = true
 
     try {
-        const response = await activationsService.query({
+        const params = {
             page: pagination.currentPage,
             per_page: perPage.value,
-            search: search.value,
             orderby: sortBy.value,
             order: sortOrder.value,
-        })
+        }
+        if (filterLicenseKey.value) {
+            params.license_key = filterLicenseKey.value
+        }
+        if (filterSource.value) {
+            params.source = filterSource.value
+        }
+        const response = await activationsService.query(params)
 
         const json = await response.json()
 
@@ -178,6 +217,11 @@ async function loadActivations() {
 
 function goToPage(page) {
     pagination.currentPage = page
+    loadActivations()
+}
+
+function applyFilters() {
+    pagination.currentPage = 1
     loadActivations()
 }
 
@@ -229,6 +273,24 @@ async function deleteActivation() {
         alertStore.error(trans('global.errors.network'))
     } finally {
         deleting.value = false
+    }
+}
+
+async function toggleActivation(row) {
+    const action = row.deactivated_at ? 'enable' : 'disable'
+
+    try {
+        const response = await activationsService.bulkAction(action, [row.id])
+        const json = await response.json()
+
+        if (json.success) {
+            alertStore.success(json.data.message)
+            loadActivations()
+        } else {
+            alertStore.error(json.data.message)
+        }
+    } catch (error) {
+        alertStore.error(trans('global.errors.network'))
     }
 }
 

@@ -34,7 +34,9 @@ use IdeoLogix\DigitalLicenseManager\Database\Repositories\ApiKeys as ApiKeysRepo
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\LicenseActivations;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Generators;
+use IdeoLogix\DigitalLicenseManager\Enums\ActivationSource;
 use IdeoLogix\DigitalLicenseManager\Enums\LicenseSource;
+use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 use IdeoLogix\DigitalLicenseManager\Enums\LicenseStatus;
 use IdeoLogix\DigitalLicenseManager\RestAPI\Setup as RestAPISetup;
 use IdeoLogix\DigitalLicenseManager\Settings;
@@ -204,9 +206,10 @@ class Ajax {
 		);
 
 		// Format records for response
+		$include_key = ! (bool) Settings::get( 'hide_license_keys' );
 		$records = [];
 		foreach ( $licenses as $license ) {
-			$records[] = $this->format_license( $license );
+			$records[] = $this->format_license( $license, $include_key );
 		}
 
 		wp_send_json_success( [
@@ -343,7 +346,7 @@ class Ajax {
 	public function licenses_bulk_action() {
 		$this->check_access();
 
-		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
+		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
 		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : [];
 
 		if ( empty( $action ) || empty( $ids ) ) {
@@ -502,15 +505,21 @@ class Ajax {
 
 		$page     = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1;
 		$per_page = isset( $_GET['per_page'] ) ? absint( $_GET['per_page'] ) : 25;
+		$search   = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : '';
 		$orderby  = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
 		$order    = isset( $_GET['order'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) : 'DESC';
 
+		$query = [];
+		if ( ! empty( $search ) ) {
+			$query['search'] = $search;
+		}
+
 		$generators_repo = Generators::instance();
 		$offset          = ( $page - 1 ) * $per_page;
-		$total_count     = $generators_repo->count();
+		$total_count     = $generators_repo->count( $query );
 
 		// get($where, $sortBy, $sortDir, $offset, $limit)
-		$generators = $generators_repo->get( [], $orderby, $order, $offset, $per_page );
+		$generators = $generators_repo->get( $query, $orderby, $order, $offset, $per_page );
 
 		$records = [];
 		foreach ( $generators as $generator ) {
@@ -711,17 +720,32 @@ class Ajax {
 	public function activations_query() {
 		$this->check_access();
 
-		$page     = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1;
-		$per_page = isset( $_GET['per_page'] ) ? absint( $_GET['per_page'] ) : 25;
-		$orderby  = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
-		$order    = isset( $_GET['order'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) : 'DESC';
+		$page       = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1;
+		$per_page   = isset( $_GET['per_page'] ) ? absint( $_GET['per_page'] ) : 25;
+		$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
+		$order      = isset( $_GET['order'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) : 'DESC';
+		$license_id  = isset( $_GET['license_id'] ) ? absint( $_GET['license_id'] ) : 0;
+		$license_key = isset( $_GET['license_key'] ) ? sanitize_text_field( wp_unslash( $_GET['license_key'] ) ) : '';
+		$source      = isset( $_GET['source'] ) ? absint( $_GET['source'] ) : 0;
+
+		$query = [];
+		if ( $license_id ) {
+			$query['license_id'] = $license_id;
+		} elseif ( ! empty( $license_key ) ) {
+			$hash    = CryptoHelper::hash( $license_key );
+			$license = Licenses::instance()->find( [ 'hash' => $hash ] );
+			$query['license_id'] = $license ? $license->getId() : -1;
+		}
+		if ( $source ) {
+			$query['source'] = $source;
+		}
 
 		$activations_repo = LicenseActivations::instance();
 		$offset           = ( $page - 1 ) * $per_page;
-		$total_count      = $activations_repo->count();
+		$total_count      = $activations_repo->count( $query );
 
 		// get($where, $sortBy, $sortDir, $offset, $limit)
-		$activations = $activations_repo->get( [], $orderby, $order, $offset, $per_page );
+		$activations = $activations_repo->get( $query, $orderby, $order, $offset, $per_page );
 
 		$records = [];
 		foreach ( $activations as $activation ) {
@@ -793,7 +817,7 @@ class Ajax {
 	public function activations_bulk_action() {
 		$this->check_access();
 
-		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
+		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
 		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : [];
 
 		if ( empty( $action ) || empty( $ids ) ) {
@@ -803,6 +827,22 @@ class Ajax {
 		$count = 0;
 
 		switch ( $action ) {
+			case 'enable':
+				foreach ( $ids as $id ) {
+					LicenseActivations::instance()->update( $id, [ 'deactivated_at' => null ] );
+					$count++;
+				}
+				$message = sprintf( __( '%d activation(s) enabled.', 'digital-license-manager' ), $count );
+				break;
+
+			case 'disable':
+				foreach ( $ids as $id ) {
+					LicenseActivations::instance()->update( $id, [ 'deactivated_at' => gmdate( 'Y-m-d H:i:s' ) ] );
+					$count++;
+				}
+				$message = sprintf( __( '%d activation(s) disabled.', 'digital-license-manager' ), $count );
+				break;
+
 			case 'delete':
 				foreach ( $ids as $id ) {
 					if ( LicenseActivations::instance()->delete( $id ) ) {
@@ -1504,7 +1544,10 @@ class Ajax {
 			'license_key_partial' => $partial_key,
 			'product_id'         => $license->getProductId(),
 			'product_name'       => $this->get_product_name( $license->getProductId() ),
+			'product_url'        => $this->get_product_url( $license ),
 			'order_id'           => $license->getOrderId(),
+			'order_url'          => $this->get_order_url( $license ),
+			'order_number'       => $this->get_order_number( $license ),
 			'user_id'            => $license->getUserId(),
 			'user_email'         => $this->get_user_email( $license->getUserId() ),
 			'status'             => $this->status_to_slug( $license->getStatus() ),
@@ -1579,8 +1622,10 @@ class Ajax {
 			'license_key_partial' => $partial_key,
 			'label'            => $activation->getLabel(),
 			'source'           => $activation->getSource(),
+			'source_label'     => ActivationSource::format( $activation->getSource() ),
 			'ip_address'       => $activation->getIpAddress(),
 			'user_agent'       => $activation->getUserAgent(),
+			'deactivated_at'   => $activation->getDeactivatedAt(),
 			'created_at'       => $activation->getCreatedAt(),
 			'updated_at'       => $activation->getUpdatedAt(),
 		];
@@ -1629,6 +1674,90 @@ class Ajax {
 
 		$user = get_user_by( 'ID', $user_id );
 		return $user ? $user->user_email : null;
+	}
+
+	/**
+	 * Get the admin URL for a license's product.
+	 *
+	 * @param object $license The license object.
+	 *
+	 * @return string|null
+	 */
+	protected function get_product_url( $license ) {
+		$product_id = $license->getProductId();
+		if ( empty( $product_id ) ) {
+			return null;
+		}
+
+		$platform = $license->getPlatform();
+		if ( $platform === LicensePlatform::NATIVE ) {
+			return admin_url( 'admin.php?page=dlm-ecommerce#/products/' . (int) $product_id );
+		}
+
+		if ( empty( $platform ) || $platform === LicensePlatform::WOOCOMMERCE ) {
+			if ( function_exists( 'wc_get_product' ) && wc_get_product( $product_id ) ) {
+				return get_edit_post_link( $product_id, 'raw' );
+			}
+		}
+
+		$title = get_the_title( $product_id );
+		if ( ! empty( $title ) ) {
+			return get_edit_post_link( $product_id, 'raw' );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the admin URL for a license's order.
+	 *
+	 * @param object $license The license object.
+	 *
+	 * @return string|null
+	 */
+	protected function get_order_url( $license ) {
+		$order_id = $license->getOrderId();
+		if ( empty( $order_id ) ) {
+			return null;
+		}
+
+		$platform = $license->getPlatform();
+		if ( empty( $platform ) || $platform === LicensePlatform::WOOCOMMERCE ) {
+			if ( function_exists( 'wc_get_order' ) && wc_get_order( $order_id ) ) {
+				return class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' )
+					&& \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
+						? admin_url( 'admin.php?page=wc-orders&action=edit&id=' . (int) $order_id )
+						: get_edit_post_link( $order_id );
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the display number for a license's order.
+	 *
+	 * @param object $license The license object.
+	 *
+	 * @return string|null
+	 */
+	protected function get_order_number( $license ) {
+		$order_id = $license->getOrderId();
+		if ( empty( $order_id ) ) {
+			return null;
+		}
+
+		$platform = $license->getPlatform();
+		if ( empty( $platform ) || $platform === LicensePlatform::WOOCOMMERCE ) {
+			if ( function_exists( 'wc_get_order' ) ) {
+				$order = wc_get_order( $order_id );
+				if ( $order ) {
+					return '#' . $order->get_order_number();
+				}
+			}
+		}
+
+		return '#' . $order_id;
 	}
 
 	/**
