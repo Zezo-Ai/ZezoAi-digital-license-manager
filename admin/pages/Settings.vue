@@ -514,20 +514,6 @@
 
                         <!-- Tools -->
                         <div v-show="activeTab === 'tools'">
-                            <!-- Export Data (static) -->
-                            <div class="dlm-tools-card">
-                                <div class="dlm-tools-card-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-                                </div>
-                                <div class="dlm-tools-card-content">
-                                    <h3>{{ trans('settings.tools.export.title') }}</h3>
-                                    <p>{{ trans('settings.tools.export.description') }}</p>
-                                    <button class="dlm-btn dlm-btn-secondary" @click="exportData">
-                                        {{ trans('settings.tools.export.button') }}
-                                    </button>
-                                </div>
-                            </div>
-
                             <!-- Dynamic tools -->
                             <template v-for="tool in tools" :key="tool.slug">
                                 <!-- Migration type tool -->
@@ -607,7 +593,8 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.193-.14 1.743" /></svg>
                                     </div>
                                     <div class="dlm-tools-card-content">
-                                        <h3>{{ tool.description }}</h3>
+                                        <h3>{{ tool.name }}</h3>
+                                        <p>{{ tool.description }}</p>
 
                                         <!-- Dynamic form fields -->
                                         <template v-if="tool.form_fields && tool.form_fields.length">
@@ -693,7 +680,7 @@
                                     <h3>{{ trans('settings.help.documentation.title') }}</h3>
                                     <p>{{ trans('settings.help.documentation.description') }}</p>
                                     <a
-                                        href="https://developer.ideologix.com/plugins/digital-license-manager/getting-started/"
+                                        href="https://docs.codeverve.com/digital-license-manager/"
                                         target="_blank"
                                         class="dlm-btn dlm-btn-secondary"
                                     >
@@ -710,7 +697,7 @@
                                     <h3>{{ trans('settings.help.support.title') }}</h3>
                                     <p>{{ trans('settings.help.support.description') }}</p>
                                     <a
-                                        href="https://developer.ideologix.com/support/"
+                                        href="https://docs.codeverve.com/digital-license-manager/"
                                         target="_blank"
                                         class="dlm-btn dlm-btn-secondary"
                                     >
@@ -1292,29 +1279,6 @@ async function undoMigration() {
             toolProgress['migration'] = { running: false, finished: false, percent: 0, message: '' }
             alertStore.success(trans('settings.tools.dynamic.undo_success'))
             await loadTools()
-        } else {
-            alertStore.error(json.data?.message || trans('global.errors.network'))
-        }
-    } catch (error) {
-        alertStore.error(trans('global.errors.network'))
-    }
-}
-
-async function exportData() {
-    try {
-        const response = await settingsService.exportData()
-        const json = await response.json()
-
-        if (json.success) {
-            const blob = new Blob([JSON.stringify(json.data, null, 2)], { type: 'application/json' })
-            const url = window.URL.createObjectURL(blob)
-            const link = document.createElement('a')
-            link.href = url
-            link.download = `dlm-export-${Date.now()}.json`
-            link.click()
-            window.URL.revokeObjectURL(url)
-
-            alertStore.success(trans('settings.tools.export.success'))
         } else {
             alertStore.error(json.data?.message || trans('global.errors.network'))
         }

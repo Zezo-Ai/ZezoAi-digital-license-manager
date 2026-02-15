@@ -96,13 +96,13 @@ class Boot {
 
 		// Add main menu page
 		add_menu_page(
-			__( 'Digital License Manager', 'digital-license-manager' ),
-			__( 'DLM (New UI)', 'digital-license-manager' ),
+			__( 'License Manager', 'digital-license-manager' ),
+			__( 'License Manager', 'digital-license-manager' ),
 			$capability,
 			$slug,
 			[ $this, 'render_page' ],
 			$icon,
-			59
+			58
 		);
 
 		// Add submenus directly to $submenu global (required for hash-based routing)
@@ -132,7 +132,8 @@ class Boot {
 	 */
 	protected function get_menu_icon() {
 		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">'
-		       . '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>'
+		       . '<path d="M7 11V6a5 5 0 0 1 10 0v2h-2.5V6a2.5 2.5 0 0 0-5 0v5H7z"/>'
+		       . '<path fill-rule="evenodd" d="M6 11h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2zM12 14.2A1.8 1.8 0 0 0 10.7 17.3L12 21 13.3 17.3A1.8 1.8 0 0 1 12 14.2z"/>'
 		       . '</svg>';
 
 		return 'data:image/svg+xml;base64,' . base64_encode( $svg );

@@ -27,10 +27,7 @@
 namespace IdeoLogix\DigitalLicenseManager;
 
 use IdeoLogix\DigitalLicenseManager\Abstracts\AbstractIntegrationController;
-use IdeoLogix\DigitalLicenseManager\Controllers\Admin as AdminController;
-use IdeoLogix\DigitalLicenseManager\Controllers\ApiKeys as ApiKeyController;
 use IdeoLogix\DigitalLicenseManager\Controllers\Dropdowns as DropdownsController;
-use IdeoLogix\DigitalLicenseManager\Controllers\Generators as GeneratorController;
 use IdeoLogix\DigitalLicenseManager\Controllers\Licenses as LicenseController;
 use IdeoLogix\DigitalLicenseManager\Controllers\Settings as SettingsController;
 use IdeoLogix\DigitalLicenseManager\Controllers\Notices as NoticeController;
@@ -64,12 +61,6 @@ class Boot {
 	public $version;
 
 	/**
-	 * The admin controller
-	 * @var AdminController
-	 */
-	public $admin;
-
-	/**
 	 * The main licenses controller
 	 * @var LicenseController
 	 */
@@ -80,18 +71,6 @@ class Boot {
 	 * @var DropdownsController
 	 */
 	public $dropdowns;
-
-	/**
-	 * The main generators screen controller
-	 * @var GeneratorController
-	 */
-	public $generators;
-
-	/**
-	 * The main api keys screen controller
-	 * @var ApiKeyController
-	 */
-	public $api_keys;
 
 	/**
 	 * The list of integrations
@@ -236,14 +215,7 @@ class Boot {
 			'dlm_select',
 			'dlm_flatpickr'
 		), $this->version );
-		wp_register_script( 'dlm_generators_page', DLM_JS_URL . 'admin/generators.js', array( 'dlm_select' ), $this->version );
-		wp_register_script( 'dlm_activations_page', DLM_JS_URL . 'admin/activations.js', array( 'dlm_select' ), $this->version );
-		wp_register_script( 'dlm_settings_page', DLM_JS_URL . 'admin/settings.js', array( 'dlm_utils' ), $this->version );
-		wp_register_style( 'dlm_settings_page', DLM_CSS_URL . 'admin/settings.css', array(), $this->version, 'all' );
 		wp_register_script( 'dlm_products_page', DLM_JS_URL . 'admin/products.js', array(), $this->version );
-		wp_register_style( 'dlm_manage_page', DLM_CSS_URL . 'admin/manage.css', array(), $this->version, 'all' );
-		wp_register_script( 'dlm_tools_page', DLM_JS_URL . 'admin/tools.js', array( 'dlm_http' ), $this->version );
-		wp_register_style( 'dlm_tools_page', DLM_CSS_URL . 'admin/tools.css', array(), $this->version, 'all' );
 
 		/**
 		 * Element specific
@@ -281,13 +253,8 @@ class Boot {
 	public function adminEnqueueScripts( $hook ) {
 
 		// Conditionals
-		$isLicenses    = strpos( $hook, 'page_dlm_licenses' ) !== false;
-		$isGenerators  = strpos( $hook, 'page_dlm_generators' ) !== false;
-		$isActivations = strpos( $hook, 'page_dlm_activations' ) !== false;
-		$isSettings    = strpos( $hook, 'page_dlm_settings' ) !== false;
 		$isProducts    = apply_filters( 'dlm_is_product_page', false, $hook );
 		$isOrder       = apply_filters( 'dlm_is_order_page', false, $hook );
-		$isManage      = $isLicenses || $isGenerators || $isActivations || apply_filters( 'dlm_admin_stylesheet_is_manage', false );
 
 		/**
 		 * Global assets
@@ -318,16 +285,9 @@ class Boot {
 		);
 
 		/**
-		 * Enqueue css on the create/edit pages
+		 * Page: WooCommerce Order (license key show/hide)
 		 */
-		if ( $isManage ) {
-			wp_enqueue_style( 'dlm_manage_page' );
-		}
-
-		/**
-		 * Page: Licenses
-		 */
-		if ( $isLicenses || $isOrder ) {
+		if ( $isOrder ) {
 			$dateFormat = get_option( 'date_format' );
 			$timeFormat = DateFormatter::convertTimeFormatForFlatpickr( get_option( 'time_format' ) );
 
@@ -360,78 +320,7 @@ class Boot {
 		}
 
 		/**
-		 * Page: Generators
-		 */
-		if ( $isGenerators ) {
-			wp_enqueue_style( 'dlm_select' );
-			wp_enqueue_style( 'dlm_flatpickr' );
-			wp_enqueue_script( 'dlm_generators_page' );
-			wp_localize_script(
-				'dlm_generators_page',
-				'dlm_generators_i18n',
-				array(
-					'placeholderSearchOrders'   => __( 'Search by order ID or customer email', 'digital-license-manager' ),
-					'placeholderSearchProducts' => __( 'Search by product ID or product name', 'digital-license-manager' )
-				)
-			);
-			wp_localize_script(
-				'dlm_generators_page',
-				'dlm_generators_security',
-				array(
-					'dropdownSearch' => wp_create_nonce( 'dlm_dropdown_search' )
-				)
-			);
-		}
-
-		if ( $isActivations ) {
-			wp_enqueue_style( 'dlm_select' );
-			wp_enqueue_style( 'dlm_flatpickr' );
-			wp_enqueue_script( 'dlm_activations_page' );
-			wp_localize_script(
-				'dlm_activations_page',
-				'dlm_activations_i18n',
-				array(
-					'placeholderSearchLicenses' => __( 'Search by license ID', 'digital-license-manager' ),
-					'placeholderSearchSources'  => __( 'Search by source', 'digital-license-manager' ),
-				)
-			);
-			wp_localize_script(
-				'dlm_activations_page',
-				'dlm_activations_security',
-				array(
-					'dropdownSearch' => wp_create_nonce( 'dlm_dropdown_search' )
-				)
-			);
-		}
-
-		/**
-		 * Page: Settings
-		 */
-		if ( $isSettings ) {
-			wp_enqueue_style( 'dlm_select' );
-			wp_enqueue_style( 'dlm_flatpickr' );
-			wp_enqueue_media();
-			wp_enqueue_script( 'dlm_settings_page' );
-			wp_enqueue_style( 'dlm_settings_page' );
-			if ( isset( $_GET['tab'] ) && 'tools' === $_GET['tab'] ) {
-				wp_enqueue_script( 'dlm_tools_page' );
-				wp_enqueue_style( 'dlm_tools_page' );
-				wp_localize_script( 'dlm_tools_page', 'DLM_Tools', array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'nonce'    => wp_create_nonce( 'dlm-tools' ),
-					'i18n'     => [
-						'loading'      => '<img alt="Loading..." src="' . DLM_PLUGIN_URL . '/assets/img/loader.gif" width="20" height="20"/>',
-						'undo'         => __( 'Undo', 'digital-license-manager' ),
-						'undo_confirm' => __( 'Are you sure you want to undo this migration? This will remove any imported licenses using this Database Migration tool. This action is useful only if you want to re-run the migration process, but in most cases is unecessary. And, if your database is huge, you may need to re-run this multiple times until it is done.', 'digital-license-manager' ),
-						'finished'     => __( 'Process finished', 'digital-license-manager' ),
-						'confirmation' => __( 'WARNING - Please take backups before running this tool. It can cause a damage to your database if not used properly.', 'digital-license-manager' )
-					]
-				) );
-			}
-		}
-
-		/**
-		 * Page: Products
+		 * Page: WooCommerce Products (conditional DLM fields)
 		 */
 		if ( $isProducts ) {
 			wp_enqueue_script( 'dlm_products_page' );
@@ -586,14 +475,11 @@ class Boot {
 	public function initControllers() {
 
 		$this->commands   = new CommandsController();
-		$this->admin      = new AdminController();
 
 		// Initialize Vue3 Admin interface
 		Admin\Boot::instance();
 		$this->dropdowns  = new DropdownsController();
 		$this->licenses   = new LicenseController();
-		$this->generators = new GeneratorController();
-		$this->api_keys   = new ApiKeyController();
 		$this->notices    = new NoticeController();
 
 		$this->rest = new RestController();

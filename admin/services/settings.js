@@ -19,14 +19,6 @@ export async function save(section, settings) {
 }
 
 /**
- * Export all data.
- * @returns {Promise<Response>}
- */
-export async function exportData() {
-    return ajaxGet('dlm_admin_settings_export')
-}
-
-/**
  * Get API keys.
  * @param {Object} params - Query parameters
  * @returns {Promise<Response>}

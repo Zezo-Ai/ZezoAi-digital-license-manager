@@ -30,8 +30,7 @@ use IdeoLogix\DigitalLicenseManager\Abstracts\AbstractTool;
 use IdeoLogix\DigitalLicenseManager\Abstracts\SettingsFieldsTrait;
 use IdeoLogix\DigitalLicenseManager\Database\Models\ApiKey;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\ApiKeys;
-use IdeoLogix\DigitalLicenseManager\Enums\PageSlug;
-use IdeoLogix\DigitalLicenseManager\ListTables\ApiKeys as ApiKeysListTable;
+use IdeoLogix\DigitalLicenseManager\Admin\Boot as AdminBoot;
 use IdeoLogix\DigitalLicenseManager\Tools\Migration\Migration;
 use IdeoLogix\DigitalLicenseManager\Traits\Singleton;
 use IdeoLogix\DigitalLicenseManager\Utils\ArrayFormatter;
@@ -321,7 +320,7 @@ class Settings {
 						)
 					);
 				}
-				$keys = new ApiKeysListTable();
+				$keys = [];
 				break;
 			case 'show':
 				if ( ! current_user_can( 'dlm_read_api_keys' ) ) {
@@ -744,7 +743,7 @@ class Settings {
 	 * @return string|void
 	 */
 	public static function getSettingsUrl() {
-		return admin_url( sprintf( 'admin.php?page=%s', PageSlug::SETTINGS ) );
+		return admin_url( sprintf( 'admin.php?page=%s#/settings', AdminBoot::PAGE_SLUG ) );
 	}
 
 }

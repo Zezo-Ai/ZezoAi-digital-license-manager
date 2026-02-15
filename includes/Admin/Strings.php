@@ -407,12 +407,6 @@ return [
 			],
 		],
 		'tools' => [
-			'export' => [
-				'title'       => __( 'Export Data', 'digital-license-manager' ),
-				'description' => __( 'Export all licenses, generators, and settings as a JSON file.', 'digital-license-manager' ),
-				'button'      => __( 'Export', 'digital-license-manager' ),
-				'success'     => __( 'Data exported successfully.', 'digital-license-manager' ),
-			],
 			'database' => [
 				'title'       => __( 'Rebuild Database Tables', 'digital-license-manager' ),
 				'description' => __( 'Recreate database tables. Use this if you experience database-related issues.', 'digital-license-manager' ),

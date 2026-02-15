@@ -41,6 +41,12 @@ abstract class AbstractTool {
 	protected $slug;
 
 	/**
+	 * The name
+	 * @var string
+	 */
+	protected $name;
+
+	/**
 	 * The description
 	 * @var string
 	 */
@@ -367,6 +373,14 @@ abstract class AbstractTool {
 	 */
 	public function getSlug() {
 		return $this->slug;
+	}
+
+	/**
+	 * Return the name
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name ?: $this->description;
 	}
 
 	/**

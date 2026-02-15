@@ -42,10 +42,16 @@ class GeneratePastOrderLicenses extends AbstractTool {
 	protected $slug = 'generate_past_order_licenses';
 
 	/**
+	 * The name
+	 * @var string
+	 */
+	protected $name = 'Generate Licenses For Past Orders';
+
+	/**
 	 * The description
 	 * @var string
 	 */
-	protected $description = 'Generate Licenses For Past Orders';
+	protected $description = 'Generate license keys for WooCommerce orders that were completed before the plugin was installed or configured.';
 
 	/**
 	 * Returns the form fields for this tool

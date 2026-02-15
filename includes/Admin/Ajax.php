@@ -93,8 +93,6 @@ class Ajax {
 		// Settings
 		add_action( 'wp_ajax_dlm_admin_settings_get', [ $this, 'settings_get' ] );
 		add_action( 'wp_ajax_dlm_admin_settings_save', [ $this, 'settings_save' ] );
-		add_action( 'wp_ajax_dlm_admin_settings_export', [ $this, 'settings_export' ] );
-
 		// API Keys
 		add_action( 'wp_ajax_dlm_admin_api_keys_query', [ $this, 'api_keys_query' ] );
 		add_action( 'wp_ajax_dlm_admin_api_keys_store', [ $this, 'api_keys_store' ] );
@@ -1211,35 +1209,6 @@ class Ajax {
 	}
 
 	/**
-	 * Export data.
-	 *
-	 * @return void
-	 */
-	public function settings_export() {
-		$this->check_access( 'dlm_manage_settings' );
-
-		$licenses   = Licenses::instance()->findAll();
-		$generators = Generators::instance()->findAll();
-
-		$export = [
-			'version'    => defined( 'DLM_PLUGIN_VERSION' ) ? DLM_PLUGIN_VERSION : '1.0.0',
-			'exported_at' => current_time( 'mysql' ),
-			'licenses'   => [],
-			'generators' => [],
-		];
-
-		foreach ( $licenses as $license ) {
-			$export['licenses'][] = $this->format_license( $license, true );
-		}
-
-		foreach ( $generators as $generator ) {
-			$export['generators'][] = $this->format_generator( $generator, true );
-		}
-
-		wp_send_json_success( $export );
-	}
-
-	/**
 	 * Search products.
 	 *
 	 * @return void
@@ -1379,6 +1348,7 @@ class Ajax {
 
 			$item = [
 				'slug'        => $tool->getSlug(),
+				'name'        => $tool->getName(),
 				'description' => $tool->getDescription(),
 				'is_one_time' => (bool) $tool->isOneTime(),
 				'is_complete' => $tool->isComplete(),
