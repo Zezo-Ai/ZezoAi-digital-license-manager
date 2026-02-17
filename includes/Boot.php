@@ -118,8 +118,11 @@ class Boot {
 		add_action( 'admin_init', array( $this, 'onAdminInit' ) );
 
 		new RestAPI\Authentication();
-		new Controllers\Blocks();
-		new Controllers\Shortcodes();
+
+		if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) && ! wp_doing_cron() ) {
+			new Controllers\Blocks();
+			new Controllers\Shortcodes();
+		}
 
 		// Init other plugins dependant on DLM
 		do_action( 'dlm_boot' );
@@ -447,8 +450,11 @@ class Boot {
 		Setup::migrate();
 
 		CryptoHelper::instance();
-		NoticeFlasher::instance();
-		NoticeManager::instance();
+
+		if ( is_admin() ) {
+			NoticeFlasher::instance();
+			NoticeManager::instance();
+		}
 
 		$this->initIntegrations();
 		$this->initControllers();
@@ -474,20 +480,34 @@ class Boot {
 	 */
 	public function initControllers() {
 
-		$this->commands   = new CommandsController();
+		// CLI — only commands
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			$this->commands = new CommandsController();
+			return;
+		}
 
-		// Initialize Vue3 Admin interface
-		Admin\Boot::instance();
-		$this->dropdowns  = new DropdownsController();
-		$this->licenses   = new LicenseController();
-		$this->notices    = new NoticeController();
+		// Cron — no controllers needed
+		if ( wp_doing_cron() ) {
+			return;
+		}
 
+		// REST API controller
 		$this->rest = new RestController();
 
 		if ( apply_filters( 'dlm_compatibility_layer_for_lmfwc', false ) ) {
 			new \IdeoLogix\DigitalLicenseManager\RestAPI\Compat\LMFWC\Setup();
 		}
 
+		// Admin (pages + AJAX) — admin UI controllers
+		if ( is_admin() ) {
+			Admin\Boot::instance();
+			$this->dropdowns = new DropdownsController();
+			$this->licenses  = new LicenseController();
+			$this->notices   = new NoticeController();
+			return;
+		}
+
+		// Frontend
 		$this->frontend = new FrontendController();
 	}
 

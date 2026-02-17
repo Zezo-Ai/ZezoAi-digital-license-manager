@@ -149,6 +149,9 @@ class Setup {
 	 * Migration script.
 	 */
 	public static function migrate() {
+		if ( (int) get_option( 'dlm_db_version' ) >= self::DB_VERSION ) {
+			return;
+		}
 		$migrator = new Migrator( DLM_MIGRATIONS_DIR . '*.php', 'dlm_db_version', self::DB_VERSION );
 		$migrator->run();
 	}
