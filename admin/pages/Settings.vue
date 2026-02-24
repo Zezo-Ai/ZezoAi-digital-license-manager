@@ -1075,8 +1075,14 @@ function editApiKey(key) {
     apiKeyForm.description = key.description
     apiKeyForm.user_id = key.user_id
     apiKeyForm.permissions = key.permissions
-    // Ensure endpoints are strings to match checkbox values
-    apiKeyForm.endpoints = Array.isArray(key.endpoints) ? key.endpoints.map(String) : []
+    // Handle both indexed arrays (old format) and associative objects (new format)
+    // Vue checkboxes expect an array of values: ["011", "015"]
+    if (Array.isArray(key.endpoints)) {
+        apiKeyForm.endpoints = key.endpoints.map(String)
+    } else {
+        // Convert associative object {"011": true, "015": true} to array ["011", "015"]
+        apiKeyForm.endpoints = Object.keys(key.endpoints || {})
+    }
     showApiKeyForm.value = true
 }
 

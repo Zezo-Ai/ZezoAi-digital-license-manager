@@ -1822,6 +1822,10 @@ class Ajax {
 		$permissions = isset( $_POST['permissions'] ) ? sanitize_text_field( wp_unslash( $_POST['permissions'] ) ) : 'read';
 		$endpoints   = isset( $_POST['endpoints'] ) ? array_map( 'sanitize_text_field', (array) $_POST['endpoints'] ) : [];
 
+		// Convert indexed array to associative array for validation compatibility
+		// Validation expects {"011": 1, "015": 1} but checkboxes send ["011", "015"]
+		$endpoints_associative = array_fill_keys( $endpoints, 1 );
+
 		if ( empty( $description ) ) {
 			wp_send_json_error( [ 'message' => __( 'Description is required.', 'digital-license-manager' ) ] );
 		}
@@ -1846,7 +1850,7 @@ class Ajax {
 				'user_id'     => $user_id,
 				'description' => $description,
 				'permissions' => $permissions,
-				'endpoints'   => JsonFormatter::encode( $endpoints ),
+				'endpoints'   => JsonFormatter::encode( $endpoints_associative ),
 			] );
 
 			if ( $result ) {
@@ -1867,7 +1871,7 @@ class Ajax {
 				'user_id'         => $user_id,
 				'description'     => $description,
 				'permissions'     => $permissions,
-				'endpoints'       => JsonFormatter::encode( $endpoints ),
+				'endpoints'       => JsonFormatter::encode( $endpoints_associative ),
 				'consumer_key'    => StringHasher::make( $consumer_key ),
 				'consumer_secret' => $consumer_secret,
 				'truncated_key'   => substr( $consumer_key, -7 ),
