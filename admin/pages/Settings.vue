@@ -200,171 +200,56 @@
                                                 <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
                                             </template>
 
-                                            <!-- Notifications -->
-                                            <template v-else-if="field.type === 'notifications'">
+                                            <!-- Items Table -->
+                                            <template v-else-if="field.type === 'items_table'">
                                                 <table class="dlm-gateways-table">
                                                     <thead>
                                                         <tr>
-                                                            <th>{{ trans('settings.notifications.notification') }}</th>
-                                                            <th>{{ trans('settings.notifications.status') }}</th>
-                                                            <th>{{ trans('settings.notifications.actions') }}</th>
+                                                            <th v-for="col in field.columns" :key="col.key">{{ col.label }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(notif, notifId) in field.notifications" :key="notifId">
-                                                            <td>
-                                                                <div class="dlm-font-medium">{{ notif.title }}</div>
-                                                                <div v-if="notif.description" class="dlm-gateways-description">{{ notif.description }}</div>
-                                                            </td>
-                                                            <td>
-                                                                <span
-                                                                    class="dlm-badge"
-                                                                    :class="settingsValues[notif.enabled_key] === '1' ? 'dlm-badge-success' : 'dlm-badge-gray'"
-                                                                >
-                                                                    {{ settingsValues[notif.enabled_key] === '1' ? trans('settings.notifications.enabled') : trans('settings.notifications.disabled') }}
-                                                                </span>
-                                                            </td>
-                                                            <td>
-                                                                <button
-                                                                    type="button"
-                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm"
-                                                                    @click="openNotificationModal(notif)"
-                                                                >
-                                                                    {{ trans('settings.notifications.configure') }}
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- Notification Settings Modal -->
-                                                <Modal
-                                                    :show="notificationModal.show"
-                                                    :title="notificationModal.notification?.title || ''"
-                                                    size="lg"
-                                                    @close="closeNotificationModal"
-                                                >
-                                                    <div v-if="notificationModal.notification" class="dlm-gateway-modal-fields">
-                                                        <div class="dlm-form-group">
-                                                            <label>
-                                                                <input
-                                                                    v-model="settingsValues[notificationModal.notification.enabled_key]"
-                                                                    type="checkbox"
-                                                                    class="dlm-checkbox"
-                                                                    true-value="1"
-                                                                    false-value=""
-                                                                />
-                                                                {{ trans('settings.notifications.enable_notification') }}
-                                                            </label>
-                                                            <p class="dlm-form-hint">{{ notificationModal.notification.description }}</p>
-                                                        </div>
-
-                                                        <!-- Reminders repeater -->
-                                                        <template v-if="notificationModal.notification.has_reminders">
-                                                            <div class="dlm-form-group">
-                                                                <label>{{ notificationModal.notification.reminder_label }}</label>
-                                                                <p class="dlm-form-hint dlm-mb-2">{{ trans('settings.notifications.reminders_explain') }}</p>
-
-                                                                <div
-                                                                    v-for="(reminder, index) in getReminders(notificationModal.notification.reminders_key)"
-                                                                    :key="index"
-                                                                    class="dlm-notification-reminder-row"
-                                                                >
-                                                                    <input
-                                                                        :value="reminder.days"
-                                                                        @input="updateReminderDays(notificationModal.notification.reminders_key, index, $event)"
-                                                                        type="number"
-                                                                        min="1"
-                                                                        class="dlm-input dlm-input-sm"
-                                                                        style="width: 80px;"
-                                                                    />
-                                                                    <span class="dlm-text-sm dlm-text-gray-600">{{ trans('settings.notifications.days') }}</span>
+                                                        <tr v-for="(item, itemId) in field.items" :key="itemId">
+                                                            <td v-for="col in field.columns" :key="col.key">
+                                                                <template v-if="col.key === 'name'">
+                                                                    <div class="dlm-font-medium">{{ item.title }}</div>
+                                                                    <div v-if="item.description" class="dlm-gateways-description">{{ item.description }}</div>
+                                                                </template>
+                                                                <template v-else-if="col.key === 'info'">
+                                                                    <span class="dlm-text-sm dlm-text-gray-600 dlm-italic">{{ item.info || '\u2014' }}</span>
+                                                                </template>
+                                                                <template v-else-if="col.key === 'status'">
+                                                                    <span
+                                                                        class="dlm-badge"
+                                                                        :class="settingsValues[item.status_key] === '1' ? 'dlm-badge-success' : 'dlm-badge-gray'"
+                                                                    >
+                                                                        {{ settingsValues[item.status_key] === '1' ? trans('settings.items_table.enabled') : trans('settings.items_table.disabled') }}
+                                                                    </span>
+                                                                </template>
+                                                                <template v-else-if="col.key === 'actions'">
                                                                     <button
                                                                         type="button"
-                                                                        class="dlm-btn dlm-btn-danger dlm-btn-sm"
-                                                                        @click="removeReminder(notificationModal.notification.reminders_key, index)"
+                                                                        class="dlm-btn dlm-btn-secondary dlm-btn-sm"
+                                                                        @click="openItemModal(field, item)"
                                                                     >
-                                                                        {{ trans('global.actions.remove') }}
+                                                                        {{ trans('settings.items_table.configure') }}
                                                                     </button>
-                                                                </div>
-
-                                                                <button
-                                                                    v-if="getReminders(notificationModal.notification.reminders_key).length < 10"
-                                                                    type="button"
-                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm dlm-mt-2"
-                                                                    @click="addReminder(notificationModal.notification.reminders_key)"
-                                                                >
-                                                                    {{ trans('settings.notifications.add_reminder') }}
-                                                                </button>
-                                                                <p v-else class="dlm-form-hint dlm-mt-2">{{ trans('settings.notifications.max_reminders') }}</p>
-                                                            </div>
-                                                        </template>
-                                                    </div>
-
-                                                    <template #footer>
-                                                        <button
-                                                            type="button"
-                                                            class="dlm-btn dlm-btn-primary"
-                                                            :disabled="saving"
-                                                            @click="saveAndCloseNotificationModal"
-                                                        >
-                                                            {{ saving ? trans('global.buttons.saving') : trans('settings.notifications.done') }}
-                                                        </button>
-                                                    </template>
-                                                </Modal>
-                                            </template>
-
-                                            <!-- Payment Gateways -->
-                                            <template v-else-if="field.type === 'payment_gateways'">
-                                                <table class="dlm-gateways-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>{{ trans('settings.gateways.gateway') }}</th>
-                                                            <th>{{ trans('settings.gateways.features') }}</th>
-                                                            <th>{{ trans('settings.gateways.status') }}</th>
-                                                            <th>{{ trans('settings.gateways.actions') }}</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr v-for="(gw, gwId) in field.gateways" :key="gwId">
-                                                            <td>
-                                                                <div class="dlm-font-medium">{{ gw.title }}</div>
-                                                                <div v-if="gw.description" class="dlm-gateways-description">{{ gw.description }}</div>
-                                                            </td>
-                                                            <td>
-                                                                <span class="dlm-text-sm dlm-text-gray-600 dlm-italic">{{ gatewayFeatures(gw) }}</span>
-                                                            </td>
-                                                            <td>
-                                                                <span
-                                                                    class="dlm-badge"
-                                                                    :class="settingsValues[gwId + '_enabled'] === '1' ? 'dlm-badge-success' : 'dlm-badge-gray'"
-                                                                >
-                                                                    {{ settingsValues[gwId + '_enabled'] === '1' ? trans('settings.gateways.enabled') : trans('settings.gateways.disabled') }}
-                                                                </span>
-                                                            </td>
-                                                            <td>
-                                                                <button
-                                                                    type="button"
-                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm"
-                                                                    @click="openGatewayModal(gw)"
-                                                                >
-                                                                    {{ trans('settings.gateways.configure') }}
-                                                                </button>
+                                                                </template>
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
 
-                                                <!-- Gateway Settings Modal -->
+                                                <!-- Item Settings Modal -->
                                                 <Modal
-                                                    :show="gatewayModal.show"
-                                                    :title="gatewayModal.gateway?.title || ''"
+                                                    :show="itemModal.show && itemModal.fieldId === field.id"
+                                                    :title="itemModal.item?.title || ''"
                                                     size="lg"
-                                                    @close="closeGatewayModal"
+                                                    @close="closeItemModal"
                                                 >
-                                                    <div v-if="gatewayModal.gateway" class="dlm-gateway-modal-fields">
+                                                    <div v-if="itemModal.item" class="dlm-gateway-modal-fields">
                                                         <div
-                                                            v-for="subField in gatewayModal.gateway.fields"
+                                                            v-for="subField in itemModal.item.fields"
                                                             :key="subField.id"
                                                             class="dlm-form-group"
                                                         >
@@ -428,6 +313,46 @@
                                                                 ></textarea>
                                                                 <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
                                                             </template>
+                                                            <template v-else-if="subField.type === 'repeater'">
+                                                                <label>{{ subField.title }}</label>
+                                                                <p v-if="subField.explain" class="dlm-form-hint dlm-mb-2" v-html="subField.explain"></p>
+
+                                                                <div
+                                                                    v-for="(entry, index) in getRepeaterEntries(subField.id)"
+                                                                    :key="index"
+                                                                    class="dlm-notification-reminder-row"
+                                                                >
+                                                                    <template v-for="sf in subField.sub_fields" :key="sf.id">
+                                                                        <input
+                                                                            v-if="sf.type === 'number'"
+                                                                            :value="entry[sf.id]"
+                                                                            @input="updateRepeaterField(subField.id, index, sf.id, $event)"
+                                                                            type="number"
+                                                                            :min="sf.min || ''"
+                                                                            class="dlm-input dlm-input-sm"
+                                                                            style="width: 80px;"
+                                                                        />
+                                                                    </template>
+                                                                    <span v-if="subField.sub_fields.length === 1" class="dlm-text-sm dlm-text-gray-600">{{ subField.sub_fields[0].label }}</span>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="dlm-btn dlm-btn-danger dlm-btn-sm"
+                                                                        @click="removeRepeaterEntry(subField.id, index)"
+                                                                    >
+                                                                        {{ trans('global.actions.remove') }}
+                                                                    </button>
+                                                                </div>
+
+                                                                <button
+                                                                    v-if="getRepeaterEntries(subField.id).length < subField.max_items"
+                                                                    type="button"
+                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm dlm-mt-2"
+                                                                    @click="addRepeaterEntry(subField)"
+                                                                >
+                                                                    {{ subField.add_label }}
+                                                                </button>
+                                                                <p v-else class="dlm-form-hint dlm-mt-2">{{ subField.max_label }}</p>
+                                                            </template>
                                                         </div>
                                                     </div>
 
@@ -436,9 +361,9 @@
                                                             type="button"
                                                             class="dlm-btn dlm-btn-primary"
                                                             :disabled="saving"
-                                                            @click="saveAndCloseGatewayModal"
+                                                            @click="saveAndCloseItemModal"
                                                         >
-                                                            {{ saving ? trans('global.buttons.saving') : trans('settings.gateways.done') }}
+                                                            {{ saving ? trans('global.buttons.saving') : trans('settings.items_table.done') }}
                                                         </button>
                                                     </template>
                                                 </Modal>
@@ -866,74 +791,56 @@ const toolForms = reactive({})
 const migrationForm = reactive({ identifier: 'none', preserve_ids: false })
 const migrationStatus = ref('')
 
-// Gateway modal state
-const gatewayModal = reactive({ show: false, gateway: null })
+// Item modal state (generic for items_table fields)
+const itemModal = reactive({ show: false, fieldId: null, item: null })
 
-// Notification modal state
-const notificationModal = reactive({ show: false, notification: null })
-
-function openGatewayModal(gw) {
-    gatewayModal.gateway = gw
-    gatewayModal.show = true
+function openItemModal(field, item) {
+    itemModal.fieldId = field.id
+    itemModal.item = item
+    itemModal.show = true
 }
 
-function closeGatewayModal() {
-    gatewayModal.show = false
-    gatewayModal.gateway = null
+function closeItemModal() {
+    itemModal.show = false
+    itemModal.fieldId = null
+    itemModal.item = null
 }
 
-function gatewayFeatures(gw) {
-    const features = []
-    if (gw.supports_subscriptions) features.push(trans('settings.gateways.subscriptions'))
-    if (gw.supports_refunds) features.push(trans('settings.gateways.refunds'))
-    return features.length ? features.join(', ') : '\u2014'
-}
-
-async function saveAndCloseGatewayModal() {
+async function saveAndCloseItemModal() {
     await saveSettings()
-    closeGatewayModal()
+    closeItemModal()
 }
 
-function openNotificationModal(notif) {
-    notificationModal.notification = notif
-    notificationModal.show = true
-}
-
-function closeNotificationModal() {
-    notificationModal.show = false
-    notificationModal.notification = null
-}
-
-async function saveAndCloseNotificationModal() {
-    await saveSettings()
-    closeNotificationModal()
-}
-
-function getReminders(key) {
+function getRepeaterEntries(key) {
     if (!settingsValues[key] || !Array.isArray(settingsValues[key])) {
         return []
     }
     return settingsValues[key]
 }
 
-function addReminder(key) {
+function addRepeaterEntry(subField) {
+    const key = subField.id
     if (!settingsValues[key] || !Array.isArray(settingsValues[key])) {
         settingsValues[key] = []
     }
-    if (settingsValues[key].length < 10) {
-        settingsValues[key].push({ days: '' })
+    if (settingsValues[key].length < subField.max_items) {
+        const entry = {}
+        for (const sf of subField.sub_fields) {
+            entry[sf.id] = ''
+        }
+        settingsValues[key].push(entry)
     }
 }
 
-function removeReminder(key, index) {
+function removeRepeaterEntry(key, index) {
     if (Array.isArray(settingsValues[key])) {
         settingsValues[key].splice(index, 1)
     }
 }
 
-function updateReminderDays(key, index, event) {
+function updateRepeaterField(key, index, fieldId, event) {
     if (Array.isArray(settingsValues[key]) && settingsValues[key][index]) {
-        settingsValues[key][index].days = event.target.value
+        settingsValues[key][index][fieldId] = event.target.value
     }
 }
 
@@ -1104,23 +1011,17 @@ async function loadSettings() {
                                 const defaultVal = field.type === 'order_statuses' ? {} : ''
                                 settingsValues[field.id] = field.value != null ? field.value : defaultVal
 
-                                // For payment_gateways, also populate sub-field values
-                                if (field.type === 'payment_gateways' && field.gateways) {
-                                    for (const gw of Object.values(field.gateways)) {
-                                        if (gw.fields) {
-                                            for (const subField of gw.fields) {
-                                                settingsValues[subField.id] = subField.value != null ? subField.value : ''
+                                // For items_table, populate all item sub-field values
+                                if (field.type === 'items_table' && field.items) {
+                                    for (const item of Object.values(field.items)) {
+                                        if (item.fields) {
+                                            for (const subField of item.fields) {
+                                                if (subField.type === 'repeater') {
+                                                    settingsValues[subField.id] = Array.isArray(subField.value) ? subField.value : []
+                                                } else {
+                                                    settingsValues[subField.id] = subField.value != null ? subField.value : ''
+                                                }
                                             }
-                                        }
-                                    }
-                                }
-
-                                // For notifications, populate enabled and reminders values
-                                if (field.type === 'notifications' && field.notifications) {
-                                    for (const notif of Object.values(field.notifications)) {
-                                        settingsValues[notif.enabled_key] = notif.enabled != null ? notif.enabled : ''
-                                        if (notif.has_reminders && notif.reminders_key) {
-                                            settingsValues[notif.reminders_key] = Array.isArray(notif.reminders) ? notif.reminders : []
                                         }
                                     }
                                 }
@@ -1154,27 +1055,15 @@ async function saveSettings() {
                             tabValues[field.id] = settingsValues[field.id]
                         }
 
-                        // For payment_gateways, include all gateway sub-field values
-                        if (field.type === 'payment_gateways' && field.gateways) {
-                            for (const gw of Object.values(field.gateways)) {
-                                if (gw.fields) {
-                                    for (const subField of gw.fields) {
+                        // For items_table, include all item sub-field values
+                        if (field.type === 'items_table' && field.items) {
+                            for (const item of Object.values(field.items)) {
+                                if (item.fields) {
+                                    for (const subField of item.fields) {
                                         if (subField.id in settingsValues) {
                                             tabValues[subField.id] = settingsValues[subField.id]
                                         }
                                     }
-                                }
-                            }
-                        }
-
-                        // For notifications, include all notification sub-field values
-                        if (field.type === 'notifications' && field.notifications) {
-                            for (const notif of Object.values(field.notifications)) {
-                                if (notif.enabled_key in settingsValues) {
-                                    tabValues[notif.enabled_key] = settingsValues[notif.enabled_key]
-                                }
-                                if (notif.reminders_key && notif.reminders_key in settingsValues) {
-                                    tabValues[notif.reminders_key] = settingsValues[notif.reminders_key]
                                 }
                             }
                         }

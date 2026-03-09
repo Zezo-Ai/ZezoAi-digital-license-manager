@@ -922,10 +922,10 @@ class Ajax {
 									$field_type = 'order_statuses';
 								} elseif ( $method === 'fieldManageStock' ) {
 									$field_type = 'checkbox';
-								} elseif ( $method === 'fieldPaymentGateways' ) {
-									$field_type = 'payment_gateways';
-								} elseif ( $method === 'fieldNotifications' ) {
-									$field_type = 'notifications';
+								} elseif ( $method === 'fieldItemsTable' ) {
+									$field_type = 'items_table';
+								} elseif ( $method === 'fieldRepeater' ) {
+									$field_type = 'repeater';
 								} elseif ( $method === 'fieldColorPicker' ) {
 									$field_type = 'color';
 								}
@@ -954,27 +954,6 @@ class Ajax {
 							}
 							if ( ! empty( $args['size'] ) ) {
 								$field_data['size'] = $args['size'];
-							}
-
-							// For payment_gateways, pass gateway definitions through.
-							if ( ! empty( $args['gateways'] ) ) {
-								$field_data['gateways'] = $args['gateways'];
-							}
-
-							// For notifications, pass notification definitions and populate sub-field values.
-							if ( $field_type === 'notifications' && ! empty( $args['notifications'] ) ) {
-								$notifications = $args['notifications'];
-								foreach ( $notifications as $n_id => $n ) {
-									$enabled_key  = 'notification_' . $n_id . '_enabled';
-									$notifications[ $n_id ]['enabled_key'] = $enabled_key;
-									$notifications[ $n_id ]['enabled']     = array_key_exists( $enabled_key, $stored ) ? $stored[ $enabled_key ] : '';
-									if ( ! empty( $n['has_reminders'] ) ) {
-										$reminders_key = 'notification_' . $n_id . '_reminders';
-										$notifications[ $n_id ]['reminders_key'] = $reminders_key;
-										$notifications[ $n_id ]['reminders']     = array_key_exists( $reminders_key, $stored ) ? $stored[ $reminders_key ] : [];
-									}
-								}
-								$field_data['notifications'] = $notifications;
 							}
 
 							// For order_statuses, supply WC order statuses as options and hardcoded label/explain from the callback.
@@ -1042,59 +1021,81 @@ class Ajax {
 								$field_data['default_value'] = $args['default_value'];
 							}
 
-							// For payment_gateways, serialize each gateway's sub-fields into Vue-ready format.
-							if ( $field_type === 'payment_gateways' && ! empty( $field_data['gateways'] ) ) {
-								foreach ( $field_data['gateways'] as $gw_id => $gw ) {
-									if ( empty( $gw['fields'] ) ) {
-										continue;
+							// For items_table, serialize each item's sub-fields into Vue-ready format.
+							if ( $field_type === 'items_table' && ! empty( $args['items'] ) ) {
+								$field_data['columns'] = isset( $args['columns'] ) ? $args['columns'] : [];
+								$serialized_items      = [];
+								foreach ( $args['items'] as $item_id => $item ) {
+									$item_data = [
+										'id'          => isset( $item['id'] ) ? $item['id'] : $item_id,
+										'title'       => isset( $item['title'] ) ? $item['title'] : '',
+										'description' => isset( $item['description'] ) ? $item['description'] : '',
+										'status_key'  => isset( $item['status_key'] ) ? $item['status_key'] : '',
+									];
+									if ( isset( $item['info'] ) ) {
+										$item_data['info'] = $item['info'];
 									}
-									$serialized_fields = [];
-									foreach ( $gw['fields'] as $sub_field ) {
-										$sub_id = isset( $sub_field['id'] ) ? $sub_field['id'] : '';
-										if ( empty( $sub_id ) ) {
-											continue;
-										}
-										$sub_type = 'checkbox';
-										if ( isset( $sub_field['callback'][1] ) ) {
-											$sm = $sub_field['callback'][1];
-											if ( $sm === 'fieldText' ) {
-												$sub_type = 'text';
-											} elseif ( $sm === 'fieldSelect' ) {
-												$sub_type = 'select';
-											} elseif ( $sm === 'fieldPassword' ) {
-												$sub_type = 'password';
-											} elseif ( $sm === 'fieldTextarea' ) {
-												$sub_type = 'textarea';
+									if ( ! empty( $item['fields'] ) ) {
+										$serialized_fields = [];
+										foreach ( $item['fields'] as $sub_field ) {
+											$sub_id = isset( $sub_field['id'] ) ? $sub_field['id'] : '';
+											if ( empty( $sub_id ) ) {
+												continue;
 											}
+											$sub_type = 'checkbox';
+											if ( isset( $sub_field['callback'][1] ) ) {
+												$sm = $sub_field['callback'][1];
+												if ( $sm === 'fieldText' ) {
+													$sub_type = 'text';
+												} elseif ( $sm === 'fieldSelect' ) {
+													$sub_type = 'select';
+												} elseif ( $sm === 'fieldPassword' ) {
+													$sub_type = 'password';
+												} elseif ( $sm === 'fieldTextarea' ) {
+													$sub_type = 'textarea';
+												} elseif ( $sm === 'fieldRepeater' ) {
+													$sub_type = 'repeater';
+												}
+											}
+											$sub_args = isset( $sub_field['args'] ) ? $sub_field['args'] : [];
+											$sub_data = [
+												'id'    => $sub_id,
+												'title' => isset( $sub_field['title'] ) ? $sub_field['title'] : '',
+												'type'  => $sub_type,
+												'value' => array_key_exists( $sub_id, $stored ) ? $stored[ $sub_id ] : null,
+											];
+											if ( ! empty( $sub_args['label'] ) ) {
+												$sub_data['label'] = $sub_args['label'];
+											}
+											if ( ! empty( $sub_args['explain'] ) ) {
+												$sub_data['explain'] = $sub_args['explain'];
+											}
+											if ( ! empty( $sub_args['options'] ) ) {
+												$sub_data['options'] = array_map( function( $label ) {
+													return is_string( $label ) ? html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ) : $label;
+												}, $sub_args['options'] );
+											}
+											if ( ! empty( $sub_args['rows'] ) ) {
+												$sub_data['rows'] = (int) $sub_args['rows'];
+											}
+											if ( ! empty( $sub_args['placeholder'] ) ) {
+												$sub_data['placeholder'] = $sub_args['placeholder'];
+											}
+											// Repeater-specific args.
+											if ( $sub_type === 'repeater' ) {
+												foreach ( [ 'max_items', 'add_label', 'max_label', 'sub_fields' ] as $rk ) {
+													if ( isset( $sub_args[ $rk ] ) ) {
+														$sub_data[ $rk ] = $sub_args[ $rk ];
+													}
+												}
+											}
+											$serialized_fields[] = $sub_data;
 										}
-										$sub_args = isset( $sub_field['args'] ) ? $sub_field['args'] : [];
-										$sub_data = [
-											'id'    => $sub_id,
-											'title' => isset( $sub_field['title'] ) ? $sub_field['title'] : '',
-											'type'  => $sub_type,
-											'value' => array_key_exists( $sub_id, $stored ) ? $stored[ $sub_id ] : null,
-										];
-										if ( ! empty( $sub_args['label'] ) ) {
-											$sub_data['label'] = $sub_args['label'];
-										}
-										if ( ! empty( $sub_args['explain'] ) ) {
-											$sub_data['explain'] = $sub_args['explain'];
-										}
-										if ( ! empty( $sub_args['options'] ) ) {
-											$sub_data['options'] = array_map( function( $label ) {
-												return is_string( $label ) ? html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ) : $label;
-											}, $sub_args['options'] );
-										}
-										if ( ! empty( $sub_args['rows'] ) ) {
-											$sub_data['rows'] = (int) $sub_args['rows'];
-										}
-										if ( ! empty( $sub_args['placeholder'] ) ) {
-											$sub_data['placeholder'] = $sub_args['placeholder'];
-										}
-										$serialized_fields[] = $sub_data;
+										$item_data['fields'] = $serialized_fields;
 									}
-									$field_data['gateways'][ $gw_id ]['fields'] = $serialized_fields;
+									$serialized_items[ $item_id ] = $item_data;
 								}
+								$field_data['items'] = $serialized_items;
 							}
 
 							$section_data['fields'][] = $field_data;
@@ -1172,35 +1173,27 @@ class Ajax {
 							$textarea_fields[] = $field['id'];
 						}
 
-						// For payment_gateways, also register all gateway sub-field IDs.
-						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldPaymentGateways' ) {
-							$gw_args = isset( $field['args'] ) ? $field['args'] : [];
-							if ( ! empty( $gw_args['gateways'] ) ) {
-								foreach ( $gw_args['gateways'] as $gw ) {
-									if ( ! empty( $gw['fields'] ) ) {
-										foreach ( $gw['fields'] as $sub_field ) {
-											if ( ! empty( $sub_field['id'] ) ) {
-												$valid_fields[] = $sub_field['id'];
-												if ( isset( $sub_field['type'] ) && $sub_field['type'] === 'textarea' ) {
-													$textarea_fields[] = $sub_field['id'];
-												}
+						// For items_table, register all item sub-field IDs.
+						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldItemsTable' ) {
+							$it_args = isset( $field['args'] ) ? $field['args'] : [];
+							if ( ! empty( $it_args['items'] ) ) {
+								foreach ( $it_args['items'] as $item ) {
+									if ( empty( $item['fields'] ) ) {
+										continue;
+									}
+									foreach ( $item['fields'] as $sub_field ) {
+										if ( empty( $sub_field['id'] ) ) {
+											continue;
+										}
+										$valid_fields[] = $sub_field['id'];
+										if ( isset( $sub_field['callback'][1] ) ) {
+											if ( $sub_field['callback'][1] === 'fieldRepeater' ) {
+												$array_fields[] = $sub_field['id'];
+											}
+											if ( $sub_field['callback'][1] === 'fieldTextarea' ) {
+												$textarea_fields[] = $sub_field['id'];
 											}
 										}
-									}
-								}
-							}
-						}
-
-						// For notifications, register enabled and reminders sub-field IDs.
-						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldNotifications' ) {
-							$n_args = isset( $field['args'] ) ? $field['args'] : [];
-							if ( ! empty( $n_args['notifications'] ) ) {
-								foreach ( $n_args['notifications'] as $n_id => $n ) {
-									$valid_fields[] = 'notification_' . $n_id . '_enabled';
-									if ( ! empty( $n['has_reminders'] ) ) {
-										$reminders_key  = 'notification_' . $n_id . '_reminders';
-										$valid_fields[] = $reminders_key;
-										$array_fields[] = $reminders_key;
 									}
 								}
 							}
