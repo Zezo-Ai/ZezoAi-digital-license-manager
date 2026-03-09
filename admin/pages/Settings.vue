@@ -200,6 +200,120 @@
                                                 <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
                                             </template>
 
+                                            <!-- Notifications -->
+                                            <template v-else-if="field.type === 'notifications'">
+                                                <table class="dlm-gateways-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>{{ trans('settings.notifications.notification') }}</th>
+                                                            <th>{{ trans('settings.notifications.status') }}</th>
+                                                            <th>{{ trans('settings.notifications.actions') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(notif, notifId) in field.notifications" :key="notifId">
+                                                            <td>
+                                                                <div class="dlm-font-medium">{{ notif.title }}</div>
+                                                                <div v-if="notif.description" class="dlm-gateways-description">{{ notif.description }}</div>
+                                                            </td>
+                                                            <td>
+                                                                <span
+                                                                    class="dlm-badge"
+                                                                    :class="settingsValues[notif.enabled_key] === '1' ? 'dlm-badge-success' : 'dlm-badge-gray'"
+                                                                >
+                                                                    {{ settingsValues[notif.enabled_key] === '1' ? trans('settings.notifications.enabled') : trans('settings.notifications.disabled') }}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <button
+                                                                    type="button"
+                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm"
+                                                                    @click="openNotificationModal(notif)"
+                                                                >
+                                                                    {{ trans('settings.notifications.configure') }}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Notification Settings Modal -->
+                                                <Modal
+                                                    :show="notificationModal.show"
+                                                    :title="notificationModal.notification?.title || ''"
+                                                    size="lg"
+                                                    @close="closeNotificationModal"
+                                                >
+                                                    <div v-if="notificationModal.notification" class="dlm-gateway-modal-fields">
+                                                        <div class="dlm-form-group">
+                                                            <label>
+                                                                <input
+                                                                    v-model="settingsValues[notificationModal.notification.enabled_key]"
+                                                                    type="checkbox"
+                                                                    class="dlm-checkbox"
+                                                                    true-value="1"
+                                                                    false-value=""
+                                                                />
+                                                                {{ trans('settings.notifications.enable_notification') }}
+                                                            </label>
+                                                            <p class="dlm-form-hint">{{ notificationModal.notification.description }}</p>
+                                                        </div>
+
+                                                        <!-- Reminders repeater -->
+                                                        <template v-if="notificationModal.notification.has_reminders">
+                                                            <div class="dlm-form-group">
+                                                                <label>{{ notificationModal.notification.reminder_label }}</label>
+                                                                <p class="dlm-form-hint dlm-mb-2">{{ trans('settings.notifications.reminders_explain') }}</p>
+
+                                                                <div
+                                                                    v-for="(reminder, index) in getReminders(notificationModal.notification.reminders_key)"
+                                                                    :key="index"
+                                                                    class="dlm-notification-reminder-row"
+                                                                >
+                                                                    <input
+                                                                        :value="reminder.days"
+                                                                        @input="updateReminderDays(notificationModal.notification.reminders_key, index, $event)"
+                                                                        type="number"
+                                                                        min="1"
+                                                                        class="dlm-input dlm-input-sm"
+                                                                        style="width: 80px;"
+                                                                    />
+                                                                    <span class="dlm-text-sm dlm-text-gray-600">{{ trans('settings.notifications.days') }}</span>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="dlm-btn dlm-btn-danger dlm-btn-sm"
+                                                                        @click="removeReminder(notificationModal.notification.reminders_key, index)"
+                                                                    >
+                                                                        {{ trans('global.actions.remove') }}
+                                                                    </button>
+                                                                </div>
+
+                                                                <button
+                                                                    v-if="getReminders(notificationModal.notification.reminders_key).length < 10"
+                                                                    type="button"
+                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm dlm-mt-2"
+                                                                    @click="addReminder(notificationModal.notification.reminders_key)"
+                                                                >
+                                                                    {{ trans('settings.notifications.add_reminder') }}
+                                                                </button>
+                                                                <p v-else class="dlm-form-hint dlm-mt-2">{{ trans('settings.notifications.max_reminders') }}</p>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+
+                                                    <template #footer>
+                                                        <button
+                                                            type="button"
+                                                            class="dlm-btn dlm-btn-primary"
+                                                            :disabled="saving"
+                                                            @click="saveAndCloseNotificationModal"
+                                                        >
+                                                            {{ saving ? trans('global.buttons.saving') : trans('settings.notifications.done') }}
+                                                        </button>
+                                                    </template>
+                                                </Modal>
+                                            </template>
+
                                             <!-- Payment Gateways -->
                                             <template v-else-if="field.type === 'payment_gateways'">
                                                 <table class="dlm-gateways-table">
@@ -755,6 +869,9 @@ const migrationStatus = ref('')
 // Gateway modal state
 const gatewayModal = reactive({ show: false, gateway: null })
 
+// Notification modal state
+const notificationModal = reactive({ show: false, notification: null })
+
 function openGatewayModal(gw) {
     gatewayModal.gateway = gw
     gatewayModal.show = true
@@ -775,6 +892,49 @@ function gatewayFeatures(gw) {
 async function saveAndCloseGatewayModal() {
     await saveSettings()
     closeGatewayModal()
+}
+
+function openNotificationModal(notif) {
+    notificationModal.notification = notif
+    notificationModal.show = true
+}
+
+function closeNotificationModal() {
+    notificationModal.show = false
+    notificationModal.notification = null
+}
+
+async function saveAndCloseNotificationModal() {
+    await saveSettings()
+    closeNotificationModal()
+}
+
+function getReminders(key) {
+    if (!settingsValues[key] || !Array.isArray(settingsValues[key])) {
+        return []
+    }
+    return settingsValues[key]
+}
+
+function addReminder(key) {
+    if (!settingsValues[key] || !Array.isArray(settingsValues[key])) {
+        settingsValues[key] = []
+    }
+    if (settingsValues[key].length < 10) {
+        settingsValues[key].push({ days: '' })
+    }
+}
+
+function removeReminder(key, index) {
+    if (Array.isArray(settingsValues[key])) {
+        settingsValues[key].splice(index, 1)
+    }
+}
+
+function updateReminderDays(key, index, event) {
+    if (Array.isArray(settingsValues[key]) && settingsValues[key][index]) {
+        settingsValues[key][index].days = event.target.value
+    }
 }
 
 // Tab icons (Heroicons outline SVGs)
@@ -954,6 +1114,16 @@ async function loadSettings() {
                                         }
                                     }
                                 }
+
+                                // For notifications, populate enabled and reminders values
+                                if (field.type === 'notifications' && field.notifications) {
+                                    for (const notif of Object.values(field.notifications)) {
+                                        settingsValues[notif.enabled_key] = notif.enabled != null ? notif.enabled : ''
+                                        if (notif.has_reminders && notif.reminders_key) {
+                                            settingsValues[notif.reminders_key] = Array.isArray(notif.reminders) ? notif.reminders : []
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -993,6 +1163,18 @@ async function saveSettings() {
                                             tabValues[subField.id] = settingsValues[subField.id]
                                         }
                                     }
+                                }
+                            }
+                        }
+
+                        // For notifications, include all notification sub-field values
+                        if (field.type === 'notifications' && field.notifications) {
+                            for (const notif of Object.values(field.notifications)) {
+                                if (notif.enabled_key in settingsValues) {
+                                    tabValues[notif.enabled_key] = settingsValues[notif.enabled_key]
+                                }
+                                if (notif.reminders_key && notif.reminders_key in settingsValues) {
+                                    tabValues[notif.reminders_key] = settingsValues[notif.reminders_key]
                                 }
                             }
                         }
@@ -1696,6 +1878,11 @@ onMounted(() => {
 
 .dlm-gateways-description {
     @apply dlm-text-xs dlm-text-gray-500 dlm-mt-0.5;
+}
+
+// Notification reminder rows
+.dlm-notification-reminder-row {
+    @apply dlm-flex dlm-items-center dlm-gap-2 dlm-mb-2;
 }
 
 .dlm-font-medium {

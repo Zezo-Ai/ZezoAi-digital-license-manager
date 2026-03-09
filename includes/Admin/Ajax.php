@@ -924,6 +924,8 @@ class Ajax {
 									$field_type = 'checkbox';
 								} elseif ( $method === 'fieldPaymentGateways' ) {
 									$field_type = 'payment_gateways';
+								} elseif ( $method === 'fieldNotifications' ) {
+									$field_type = 'notifications';
 								} elseif ( $method === 'fieldColorPicker' ) {
 									$field_type = 'color';
 								}
@@ -957,6 +959,22 @@ class Ajax {
 							// For payment_gateways, pass gateway definitions through.
 							if ( ! empty( $args['gateways'] ) ) {
 								$field_data['gateways'] = $args['gateways'];
+							}
+
+							// For notifications, pass notification definitions and populate sub-field values.
+							if ( $field_type === 'notifications' && ! empty( $args['notifications'] ) ) {
+								$notifications = $args['notifications'];
+								foreach ( $notifications as $n_id => $n ) {
+									$enabled_key  = 'notification_' . $n_id . '_enabled';
+									$notifications[ $n_id ]['enabled_key'] = $enabled_key;
+									$notifications[ $n_id ]['enabled']     = array_key_exists( $enabled_key, $stored ) ? $stored[ $enabled_key ] : '';
+									if ( ! empty( $n['has_reminders'] ) ) {
+										$reminders_key = 'notification_' . $n_id . '_reminders';
+										$notifications[ $n_id ]['reminders_key'] = $reminders_key;
+										$notifications[ $n_id ]['reminders']     = array_key_exists( $reminders_key, $stored ) ? $stored[ $reminders_key ] : [];
+									}
+								}
+								$field_data['notifications'] = $notifications;
 							}
 
 							// For order_statuses, supply WC order statuses as options and hardcoded label/explain from the callback.
@@ -1168,6 +1186,21 @@ class Ajax {
 												}
 											}
 										}
+									}
+								}
+							}
+						}
+
+						// For notifications, register enabled and reminders sub-field IDs.
+						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldNotifications' ) {
+							$n_args = isset( $field['args'] ) ? $field['args'] : [];
+							if ( ! empty( $n_args['notifications'] ) ) {
+								foreach ( $n_args['notifications'] as $n_id => $n ) {
+									$valid_fields[] = 'notification_' . $n_id . '_enabled';
+									if ( ! empty( $n['has_reminders'] ) ) {
+										$reminders_key  = 'notification_' . $n_id . '_reminders';
+										$valid_fields[] = $reminders_key;
+										$array_fields[] = $reminders_key;
 									}
 								}
 							}
