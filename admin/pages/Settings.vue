@@ -680,7 +680,7 @@
                                                     </select>
                                                 </template>
                                                 <template v-else-if="field.type === 'checkbox'">
-                                                    <label>
+                                                    <label class="dlm-mt-1">
                                                         <input
                                                             v-model="toolForms[tool.slug][field.name]"
                                                             type="checkbox"
