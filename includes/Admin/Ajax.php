@@ -1688,7 +1688,7 @@ class Ajax {
 
 		$platform = $license->getPlatform();
 		if ( $platform === LicensePlatform::NATIVE ) {
-			return admin_url( 'admin.php?page=dlm-ecommerce#/products/' . (int) $product_id );
+			return get_edit_post_link( $product_id, 'raw' );
 		}
 
 		if ( empty( $platform ) || $platform === LicensePlatform::WOOCOMMERCE ) {
