@@ -126,9 +126,13 @@ trait SettingsFieldsTrait {
 		$placeholder = isset( $args['placeholder'] ) ? $args['placeholder'] : DLM_PLUGIN_URL . 'assets/img/logo-placeholder.jpg';
 
 		$html = '<fieldset>';
-		$html .= sprintf( '<label for="%s">%s</label>', esc_attr( $field ), esc_attr( $label ) );
 		$html .= $this->fieldImageUploadMarkup( $key, $field, $value, $placeholder );
-		$html .= sprintf( '<p class="description">%s</p>', wp_kses( $explain, SanitizeHelper::ksesAllowedHtmlTags() ) );
+		if ( ! empty( $label ) ) {
+			$html .= sprintf( '<p class="description">%s</p>', wp_kses( $label, SanitizeHelper::ksesAllowedHtmlTags() ) );
+		}
+		if ( ! empty( $explain ) ) {
+			$html .= sprintf( '<p class="description">%s</p>', wp_kses( $explain, SanitizeHelper::ksesAllowedHtmlTags() ) );
+		}
 		$html .= '</fieldset>';
 
 		echo $html;

@@ -191,7 +191,7 @@ class Settings {
 				'name'     => __( 'Help', 'digital-license-manager' ),
 				'slug'     => 'help',
 				'url'      => add_query_arg( 'tab', 'help', $baseUrl ),
-				'priority' => 40,
+				'priority' => 999,
 				'callback' => array( $this, 'renderHelpTab' )
 			),
 
