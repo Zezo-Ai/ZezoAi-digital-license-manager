@@ -106,3 +106,4 @@ export async function getToolStatus(identifier) {
 export async function undoTool(identifier) {
     return ajaxPost('dlm_admin_tool_undo', { identifier })
 }
+

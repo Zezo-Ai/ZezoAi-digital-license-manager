@@ -47,19 +47,25 @@
                                             :key="field.id"
                                             class="dlm-form-group"
                                         >
-                                            <!-- Checkbox -->
+                                            <!-- Checkbox (toggle switch) -->
                                             <template v-if="field.type === 'checkbox'">
-                                                <label>
-                                                    <input
-                                                        v-model="settingsValues[field.id]"
-                                                        type="checkbox"
-                                                        class="dlm-checkbox"
-                                                        true-value="1"
-                                                        false-value=""
-                                                    />
-                                                    {{ field.label || field.title }}
-                                                </label>
-                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <div>
+                                                    <label :for="field.id" class="dlm-switch-label">
+                                                        <span class="dlm-switch">
+                                                            <input
+                                                                :id="field.id"
+                                                                v-model="settingsValues[field.id]"
+                                                                type="checkbox"
+                                                                true-value="1"
+                                                                false-value=""
+                                                            />
+                                                            <span class="dlm-switch-slider"></span>
+                                                        </span>
+                                                        <span>{{ field.label || field.title }}</span>
+                                                    </label>
+                                                    <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                                </div>
                                             </template>
 
                                             <!-- Text -->
@@ -254,17 +260,23 @@
                                                             class="dlm-form-group"
                                                         >
                                                             <template v-if="subField.type === 'checkbox'">
-                                                                <label>
-                                                                    <input
-                                                                        v-model="settingsValues[subField.id]"
-                                                                        type="checkbox"
-                                                                        class="dlm-checkbox"
-                                                                        true-value="1"
-                                                                        false-value=""
-                                                                    />
-                                                                    {{ subField.label || subField.title }}
-                                                                </label>
-                                                                <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                                <label :for="subField.id">{{ subField.title }}</label>
+                                                                <div>
+                                                                    <label :for="subField.id" class="dlm-switch-label">
+                                                                        <span class="dlm-switch">
+                                                                            <input
+                                                                                :id="subField.id"
+                                                                                v-model="settingsValues[subField.id]"
+                                                                                type="checkbox"
+                                                                                true-value="1"
+                                                                                false-value=""
+                                                                            />
+                                                                            <span class="dlm-switch-slider"></span>
+                                                                        </span>
+                                                                        <span>{{ subField.label || subField.title }}</span>
+                                                                    </label>
+                                                                    <p v-if="subField.explain" class="dlm-form-hint" v-html="subField.explain"></p>
+                                                                </div>
                                                             </template>
                                                             <template v-else-if="subField.type === 'text'">
                                                                 <label :for="subField.id">{{ subField.title }}</label>
@@ -709,6 +721,14 @@
                             </template>
                         </div>
 
+                        <!-- External tabs (registered by extensions) -->
+                        <div
+                            v-for="tab in externalTabs"
+                            :key="tab.id"
+                            v-show="activeTab === tab.id"
+                            :id="'dlm-settings-tab-' + tab.id"
+                        ></div>
+
                         <!-- Help -->
                         <div v-show="activeTab === 'help'">
                             <div class="dlm-tools-card">
@@ -753,7 +773,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { trans } from '@digital-license-manager/ui/utils/useLang'
 import { useAlertStore } from '@digital-license-manager/ui/stores/alert'
@@ -856,7 +876,26 @@ const tabIcons = {
 const defaultIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>'
 
 function tabIcon(tabId) {
+    const tab = findTabData(tabId)
+    if (tab && tab.icon) return tab.icon
     return tabIcons[tabId] || defaultIcon
+}
+
+// External tabs: tabs registered by extensions with no sections and not built-in custom tabs
+const externalTabs = computed(() => {
+    return computedTabs.value.filter(tab => {
+        if (customTabs.has(tab.id)) return false
+        const data = findTabData(tab.id)
+        return data && (!data.sections || Object.keys(data.sections).length === 0)
+    })
+})
+
+function dispatchTabEvent(tabId) {
+    nextTick(() => {
+        document.dispatchEvent(new CustomEvent('dlm-settings-tab-activated', {
+            detail: { tab: tabId }
+        }))
+    })
 }
 
 const currentTabLabel = computed(() => {
@@ -881,16 +920,25 @@ const computedTabs = computed(() => {
 // Custom tabs that have hardcoded UI (not dynamic settings fields)
 const customTabs = new Set(['rest_api', 'tools', 'help'])
 
+// Find tab data by slug (PHP keys may differ from slugs)
+function findTabData(tabId) {
+    if (tabData.value[tabId]) return tabData.value[tabId]
+    for (const tab of Object.values(tabData.value)) {
+        if (tab.slug === tabId) return tab
+    }
+    return null
+}
+
 // Check if a tab is a dynamic settings tab (has sections/fields from PHP)
 function isSettingsTab(tabId) {
     if (customTabs.has(tabId)) return false
-    const tab = tabData.value[tabId]
+    const tab = findTabData(tabId)
     return tab && tab.sections && Object.keys(tab.sections).length > 0
 }
 
 // Get the active tab's data
 const activeTabData = computed(() => {
-    return tabData.value[activeTab.value] || null
+    return findTabData(activeTab.value)
 })
 
 // Count non-empty sections in a tab
@@ -990,6 +1038,7 @@ function changeTab(tabId) {
     if (tabId === 'tools') {
         loadTools()
     }
+    dispatchTabEvent(tabId)
 }
 
 async function loadSettings() {
@@ -1374,6 +1423,7 @@ watch(() => route.params.tab, (newTab) => {
         if (newTab === 'tools') {
             loadTools()
         }
+        dispatchTabEvent(newTab)
     }
 })
 
@@ -1386,6 +1436,7 @@ onMounted(() => {
     if (activeTab.value === 'tools') {
         loadTools()
     }
+    dispatchTabEvent(activeTab.value)
 })
 
 </script>
@@ -1488,8 +1539,8 @@ onMounted(() => {
         padding: 12px 0;
         border-bottom: 1px solid #f3f4f6;
 
-        // Horizontal grid for text/select inputs: label left, input right
-        &:has(.dlm-input) {
+        // Horizontal grid for text/select/switch inputs: label left, input right
+        &:has(.dlm-input), &:has(.dlm-switch) {
             display: grid;
             grid-template-columns: 200px 1fr;
             gap: 0 24px;
@@ -1508,10 +1559,6 @@ onMounted(() => {
             }
         }
 
-        // Checkbox rows: simple inline
-        label:has(.dlm-checkbox) {
-            @apply dlm-flex dlm-items-center dlm-gap-2.5;
-        }
     }
 
     .dlm-form-group:last-child {
@@ -1794,7 +1841,7 @@ onMounted(() => {
             padding-top: 0;
         }
 
-        &:has(.dlm-input) {
+        &:has(.dlm-input), &:has(.dlm-switch) {
             display: grid;
             grid-template-columns: 180px 1fr;
             gap: 0 16px;
@@ -1809,9 +1856,6 @@ onMounted(() => {
             }
         }
 
-        label:has(.dlm-checkbox) {
-            @apply dlm-flex dlm-items-center dlm-gap-2.5;
-        }
     }
 }
 
@@ -2007,7 +2051,7 @@ onMounted(() => {
         padding: 16px 20px;
 
         .dlm-form-group {
-            &:has(.dlm-input), &:has(.dlm-image-upload-field) {
+            &:has(.dlm-input), &:has(.dlm-image-upload-field), &:has(.dlm-switch) {
                 grid-template-columns: 1fr;
                 gap: 4px 0;
             }

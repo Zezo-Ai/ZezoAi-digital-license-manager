@@ -886,6 +886,7 @@ class Ajax {
 				'name'     => isset( $tab['name'] ) ? $tab['name'] : '',
 				'slug'     => $slug,
 				'priority' => isset( $tab['priority'] ) ? $tab['priority'] : 10,
+				'icon'     => isset( $tab['icon'] ) ? $tab['icon'] : '',
 				'sections' => [],
 			];
 
