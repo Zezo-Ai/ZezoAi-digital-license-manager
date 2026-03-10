@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Digital License Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 08:23+0000\n"
+"POT-Creation-Date: 2026-03-10 09:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,346 +16,354 @@ msgstr ""
 "X-Loco-Version: 2.5.5; wp-5.8.2\n"
 "X-Domain: digital-license-manager"
 
-#: includes/Controllers/Settings.php:287 includes/ListTables/ApiKeys.php:231
-#: templates/admin/settings/page-edit.php:189
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:296
 #, php-format
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: includes/ListTables/Activations.php:442
-#, php-format
-msgid "%d %s(s) updated successfully."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:850
+msgid "%d activation(s) deleted."
 msgstr ""
 
-#: includes/ListTables/Activations.php:529
-msgid "%d activation record(s) permanently deleted."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:841
+msgid "%d activation(s) disabled."
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:349
-msgid "%d API key(s) permanently deleted."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:833
+msgid "%d activation(s) enabled."
 msgstr ""
 
-#: includes/ListTables/Generators.php:383
-msgid "%d generator(s) permanently deleted."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:362
+msgid "%d license(s) activated."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:163
-msgid ""
-"%d key(s) have been imported, while %d key(s) were not imported and %d "
-"duplicate key(s) ignored."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:370
+msgid "%d license(s) deactivated."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:165
-msgid "%d key(s) have been imported, while %d key(s) were not imported."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:379
+msgid "%d license(s) deleted."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:148
-msgid "%d license(s) added successfully and %d duplicate key(s) ignored."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:151
-msgid "%d license(s) added successfully."
-msgstr ""
-
-#: includes/ListTables/Licenses.php:865
-msgid "%d license(s) permanently deleted."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:412
-msgid "%d license(s) skipped because they already exist."
-msgstr ""
-
-#: includes/ListTables/Licenses.php:834
-msgid "%d license(s) updated successfully."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:66
-#, php-format
-msgid "&copy; %s CodeVerve.com / Darko Gjorgjijoski"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:392
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1801
+msgid "%d license(s) exported."
 msgstr ""
 
 #. %s: Order ID.
-#: templates/woocommerce/dlm/emails/email-order-details.php:26
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/emails/email-order-details.php:26
 #, php-format
 msgid "(Order #%s)"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:208
-msgid "1 license(s) added successfully."
-msgstr ""
-
 #. %1$s: date format merge code, %2$s: time format merge code, %3$s: general settings URL, %4$s: link to date and time formatting documentation
-#: includes/Controllers/Settings.php:227
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:236
 #, php-format
 msgid ""
 "<code>%1$s</code> and <code>%2$s</code> will be replaced by formats from <a "
 "href=\"%3$s\">Administration > Settings > General</a>. %4$s"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:196
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:196
 msgid ""
 "<strong>Error:</strong> Please select valid License generator in \"License "
 "Manager\" options."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:286
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:286
 msgid ""
 "<strong>Error:</strong> Please select valid License generator in variation "
 "#%d Digital License Manager options."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:78
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:78
 msgid "[{site_title}]: Your licenses for order #{order_number}"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:48
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:48
 msgid "A manual email to send out license keys to the customer."
 msgstr ""
 
-#: templates/admin/generators/page-edit.php:73
-#: templates/admin/generators/page-add.php:52
-msgid "A short name to describe the generator."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:244
+msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:60
-msgid "About the Plugin"
-msgstr ""
-
-#: templates/frontend/licenses-table.php:44
-#: templates/woocommerce/dlm/my-account/licenses/index.php:112
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-table.php:44
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:66
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:112
 msgid "Actions"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:45
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:171
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:45
 msgid "Activate"
 msgstr ""
 
-#: includes/ListTables/Activations.php:66
-msgid "Activation"
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:112
+msgid "Activate license"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:115
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:804
+msgid "Activation deleted successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:115
 msgid "Activation History"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:694
-msgid "Activation Limit"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:781
+msgid "Activation not found."
 msgstr ""
 
-#: includes/Controllers/Admin.php:123 includes/ListTables/Activations.php:67
-#: includes/ListTables/Licenses.php:789
-#: templates/admin/activations/page-list.php:36
-#: templates/woocommerce/dlm/my-account/licenses/index.php:57
-#: templates/woocommerce/dlm/my-account/licenses/index.php:100
-#: templates/woocommerce/dlm/my-account/licenses/single.php:75
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:41
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:111
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:308
+#: ../../../../plugins/digital-license-manager/includes/Admin/Boot.php:111
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:57
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:100
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:75
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:41
 msgid "Activations"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:220
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:123
+msgid "Activations Limit"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:220
 msgid "Activations Limit should positive integer value larger than 0"
 msgstr ""
 
-#: includes/Controllers/Admin.php:234
-msgid "Activations per page"
-msgstr ""
-
-#: includes/Enums/LicensePrivateStatus.php:121
-#: includes/Enums/LicensePrivateStatus.php:205
-#: includes/Utils/DateFormatter.php:171 includes/ListTables/Activations.php:323
-#: includes/ListTables/Activations.php:492 includes/ListTables/Licenses.php:135
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:121
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:205
+#: ../../../../plugins/digital-license-manager/includes/Utils/DateFormatter.php:171
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:147
 msgid "Active"
 msgstr ""
 
-#: templates/admin/settings/page-list.php:36
-msgid "Add key"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:372
+msgid "Add API Key"
 msgstr ""
 
-#: templates/admin/licenses/page-list.php:34
-#: templates/admin/generators/page-list.php:43
-msgid "Add new"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:216
+msgid "Add Generator"
 msgstr ""
 
-#: templates/admin/generators/page-add.php:32
-msgid "Add new generator"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:100
+msgid "Add License"
 msgstr ""
 
-#: templates/admin/licenses/page-add.php:32
-msgid "Add new license"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:40
+msgid "Add New"
 msgstr ""
 
-#: templates/admin/settings/tools/add-order-item-licenses.php:34
-msgid "Add Order Item Licenses"
-msgstr ""
-
-#: templates/admin/migration.php:12
-msgid ""
-"Additionally, we have compatibility layer which once enabled will create the "
-"same REST API url structure as License Manager for WooCommerce for backwards "
-"compatibility."
-msgstr ""
-
-#: templates/admin/generators/page-edit.php:154
-msgid ""
-"Adds a character set at the end of a license key (separator <strong>"
-"not</strong> included), i.e. for <code>12-AB-34-CD-SUF</code> the suffix is "
-"<code>-SUF</code>."
-msgstr ""
-
-#: templates/admin/generators/page-edit.php:142
-msgid ""
-"Adds a character set at the start of a license key (separator <strong>"
-"not</strong> included), i.e. for <code>PRE-12-AB-34-CD</code> the prefix is "
-"<code>PRE-</code>."
-msgstr ""
-
-#: templates/admin/generators/page-add.php:133
-msgid ""
-"Adds a word at the end (separator <strong>not</strong> included), i.e. <kbd>"
-"12-AB-34-CD<strong>-SUF</strong></kbd>."
-msgstr ""
-
-#: templates/admin/generators/page-add.php:121
-msgid ""
-"Adds a word at the start (separator <strong>not</strong> included), i.e. "
-"<kbd><strong>PRE-</strong>12-AB-34-CD</kbd>."
-msgstr ""
-
-#: includes/ListTables/Generators.php:250
-msgid "After purchase"
-msgstr ""
-
-#: includes/Controllers/Blocks.php:72 includes/ListTables/Activations.php:481
-#: includes/ListTables/Licenses.php:102
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:72
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:146
 msgid "All"
 msgstr ""
 
-#: includes/Controllers/Settings.php:98
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:97
 msgid ""
 "All license keys will be hidden and only displayed when the 'Show' action is "
 "clicked."
 msgstr ""
 
-#: includes/Controllers/Settings.php:107
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:330
+msgid "All Sources"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:359
+msgid "Allow Duplicate License Keys"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:106
 msgid "Allow duplicate license keys inside the licenses database table."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:125
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:125
 msgid "Allow Manual Activations"
 msgstr ""
 
-#: templates/admin/generators/page-generate.php:69
-msgid "Amount"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:360
+msgid "Allow the same license key to exist multiple times in the database."
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1070
-#: includes/Core/Services/LicensesService.php:1147
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1084
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1162
 msgid "Amount is invalid."
 msgstr ""
 
-#: includes/Enums/ActivationSource.php:67
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:79
+msgid "An error occurred."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Enums/ActivationSource.php:67
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1992
 msgid "API"
 msgstr ""
 
-#: includes/Controllers/Settings.php:138
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:147
 msgid "API & SSL"
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:54
-msgid "API Key"
-msgstr ""
-
-#: includes/ListTables/ApiKeys.php:114
-msgid "API key"
-msgstr ""
-
-#: includes/Abstracts/AbstractRestController.php:199
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractRestController.php:199
 msgid "API Key could not be authenticated."
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:206
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1909
 msgid ""
-"API key generated successfully. Make sure to copy your new keys now as the "
-"secret key will be hidden once you leave this page."
+"API key created successfully. Copy your keys now — the secret will not be "
+"shown again."
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:131
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1937
+msgid "API key deleted successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1886
 msgid "API key updated successfully."
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:55
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:371
 msgid "API Keys"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:104
-#: templates/admin/licenses/page-edit.php:215
-msgid ""
-"Applies only for licenses purchased from stock. Total expiration time added "
-"after the license is purcahsed."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:48
+msgid "Apply"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/table-activations-row-actions.php:56
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:336
+msgid ""
+"Are you sure you want to delete this activation? The license will have one "
+"more available activation slot."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:265
+msgid ""
+"Are you sure you want to delete this generator? This will not affect already "
+"generated licenses."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:184
+msgid ""
+"Are you sure you want to delete this license? This action cannot be undone."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/table-activations-row-actions.php:56
 msgid "Are you sure you want to do this? This action can not be reverted."
 msgstr ""
 
-#: includes/Boot.php:425
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:420
 msgid ""
-"Are you sure you want to undo this migration? This will remove any imported "
-"licenses using this Database Migration tool. This action is useful only if "
-"you want to re-run the migration process, but in most cases is unecessary. "
-"And, if your database is huge, you may need to re-run this multiple times "
-"until it is done."
+"Are you sure you want to undo this migration? This will remove all migrated "
+"data."
 msgstr ""
 
-#: includes/Boot.php:314
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:77
+msgid "Are you sure?"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:284
 msgid "Are you sure? This action can not be reverted."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:47
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:408
+msgid ""
+"Are you sure? This will recreate all database tables. Your data will be "
+"preserved."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1869
+msgid "At least one endpoint must be selected."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:365
+msgid "Automatic"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:47
 msgid "Automatic delivery"
 msgstr ""
 
-#: includes/Controllers/Settings.php:115
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:362
+msgid "Automatically manage product stock based on available licenses."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:114
 msgid "Branding"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/single.php:108
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:64
+msgid "Bulk Actions"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:47
+msgid "Cancel"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:108
 msgid "Certificate"
 msgstr ""
 
-#: includes/ListTables/Generators.php:274
-#: templates/admin/generators/page-edit.php:81
-#: templates/admin/generators/page-add.php:60
-msgid "Character map"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:61
+msgid "Change"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:195
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:80
+msgid "Changes saved successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:253
+msgid "Character between chunks. Usually a dash (-)."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:231
+msgid "Character Set"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:590
+msgid "Character set is required."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:252
+msgid "Characters per chunk."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:250
+msgid ""
+"Characters used for key generation. Avoid confusing characters like 0/O, "
+"1/I/l."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:223
+msgid "Charset"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:195
 msgid "Charset can not be empty."
 msgstr ""
 
-#: includes/ListTables/Generators.php:276
-#: templates/admin/generators/page-edit.php:111
-#: templates/admin/generators/page-add.php:90
-msgid "Chunk length"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:225
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:233
+msgid "Chunk Length"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:120
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:120
 msgid "Chunk length should be between 2 and 99"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:112
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:224
+msgid "Chunks"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:112
 msgid "Chunks should be between 1 and 99"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:54
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:54
 msgid "Click to View"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:54
-msgid "Clipboard"
-msgstr ""
-
-#: templates/admin/licenses/modals/export.php:62
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:52
 msgid "Close"
 msgstr ""
 
@@ -363,243 +371,260 @@ msgstr ""
 msgid "CodeVerve"
 msgstr ""
 
-#: includes/Controllers/Settings.php:121
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:130
+msgid "Company Address"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:120
 msgid "Company Logo"
 msgstr ""
 
-#: templates/admin/settings/page-show.php:47
-msgid "Consumer key"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:347
+msgid "Configure"
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:75
-#: templates/admin/settings/page-edit.php:175
-msgid "Consumer key ending in"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:375
+msgid "Consumer Key"
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:219
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:229
 msgid "Consumer key is invalid."
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:204
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:214
 msgid "Consumer key or secret is missing."
 msgstr ""
 
-#: templates/admin/settings/page-show.php:56
-msgid "Consumer secret"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:376
+msgid "Consumer Secret"
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:231
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:241
 msgid "Consumer secret is invalid."
 msgstr ""
 
-#: includes/Boot.php:350
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:313
 msgid "Copied to clipboard"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/license-key.php:35
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:82
+msgid "Copied to clipboard!"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:293
+msgid "Copy All"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:170
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/license-key.php:35
 msgid "Copy to clipboard"
 msgstr ""
 
-#: templates/admin/licenses/page-add.php:128
-#: templates/admin/generators/page-add.php:164
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:176
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:374
+msgid "Copy your new keys now. The secret key will not be shown again."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:44
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:176
 msgid "Create"
 msgstr ""
 
-#: includes/ListTables/Activations.php:367
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:152
+msgid "Create generator"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:88
+msgid "Create license"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:113
 msgid "Created"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:698
-msgid "Created at"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:317
+msgid "Created At"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:702
-msgid "Created by"
-msgstr ""
-
-#: includes/ListTables/Licenses.php:788
-#: templates/admin/licenses/page-import.php:148
-#: templates/admin/licenses/page-edit.php:179
-#: templates/admin/licenses/page-add.php:114
-msgid "Customer"
-msgstr ""
-
-#: includes/Controllers/Settings.php:155
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:164
 msgid "Data safety"
 msgstr ""
 
-#: templates/admin/settings/tools/migration.php:32
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:411
 msgid "Database Migration"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:792
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:56
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:101
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:56
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:101
 msgid "Date"
 msgstr ""
 
-#: includes/ListTables/Generators.php:248
-msgid "day(s)"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:154
+msgid "Days"
 msgstr ""
 
-#: templates/admin/generators/page-generate.php:73
-msgid "Define how many license keys will be generated."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:257
+msgid "Days until generated licenses expire."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:116
-#: templates/admin/licenses/page-edit.php:113
-#: templates/admin/licenses/page-add.php:83
-#: templates/admin/generators/page-edit.php:166
-msgid ""
-"Define how many times the license can be marked as \"activated\". Leave "
-"blank for unlimited activations."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:172
+msgid "Deactivate"
 msgstr ""
 
-#: templates/admin/generators/page-add.php:145
-msgid ""
-"Define how many times the license key can be marked as \"activated\" by "
-"using the REST API. Leave blank if you do not use the API."
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:120
+msgid "Deactivate license"
 msgstr ""
 
-#: templates/admin/generators/page-generate.php:84
-msgid ""
-"Define in days how much time the license will be valid after purchase from "
-"stock. (Applies to orders from stock)"
-msgstr ""
-
-#: templates/admin/licenses/page-import.php:93
-#: templates/admin/licenses/page-edit.php:86
-#: templates/admin/licenses/page-add.php:60
-#: templates/admin/generators/page-generate.php:98
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:137
 msgid ""
 "Define the initial license status. Set \"Active\" to make this license "
 "available for stock purchases."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:480
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:480
 msgid "Defines the amount of license keys to be delivered upon purchase."
 msgstr ""
 
-#: includes/ListTables/Activations.php:243
-#: includes/ListTables/Activations.php:610
-#: includes/ListTables/Generators.php:147
-#: includes/ListTables/Generators.php:310 includes/ListTables/ApiKeys.php:135
-#: includes/ListTables/ApiKeys.php:146 includes/ListTables/ApiKeys.php:247
-#: includes/ListTables/Licenses.php:363 includes/ListTables/Licenses.php:633
-#: includes/Integrations/WooCommerce/Activations.php:81
-#: templates/admin/settings/page-edit.php:222
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:46
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:58
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:173
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:322
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Activations.php:81
 msgid "Delete"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:92
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:335
+msgid "Delete Activation"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:264
+msgid "Delete Generator"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:168
+msgid "Delete generator"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:183
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:92
 msgid "Delete License"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:574
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:104
+msgid "Delete license"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:576
 msgid "Deleted License #%d following Refund #%d."
 msgstr ""
 
-#: includes/Enums/LicensePrivateStatus.php:133
-#: includes/Enums/LicensePrivateStatus.php:197
-#: includes/ListTables/Licenses.php:124
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:133
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:197
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:150
 msgid "Delivered"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:334
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:336
 msgid "Delivered %d licenses with generator #%d."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:336
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:338
 msgid "Delivered %d of %d licenses with generator #%d."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:278
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:279
 msgid "Delivered in total %d licenses from stock."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:479
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:479
 msgid "Delivered quantity"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:267
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:268
 msgid "Delivering licenses from stock. (Current stock: %d | Required: %d)."
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:154
-msgid "Deprecated"
-msgstr ""
-
-#: includes/ListTables/ApiKeys.php:74 templates/admin/settings/page-edit.php:53
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:380
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:387
 msgid "Description"
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:84 includes/Controllers/ApiKeys.php:153
-msgid "Description is missing."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1857
+msgid "Description is required."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:54
+msgid "Deselect All"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:44
+msgid "Details of the license can be accessed from your dashboard page."
 msgstr ""
 
 #. Name of the plugin
-#: includes/Controllers/Admin.php:422 templates/admin/migration.php:1
-#: includes/Integrations/WooCommerce/Products.php:225
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:225
 msgid "Digital License Manager"
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:329
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:339
 msgid ""
 "Digital License Manager API. Use a consumer key in the username field and a "
 "consumer secret in the password field."
 msgstr ""
 
-#: templates/admin/settings/page-help.php:62
-msgid ""
-"Digital License Manager is a software licensing plugin that focuses on new "
-"features, stability and regular updates."
-msgstr ""
-
-#: templates/admin/welcome.php:42
-msgid ""
-"Digital License Manager is a WordPress plugin that allows you to <strong>"
-"sell</strong> your licence keys through WooCommerce."
-msgstr ""
-
-#: includes/ListTables/Activations.php:228
-#: includes/ListTables/Activations.php:607
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:321
 msgid "Disable"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:91
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:91
 msgid "Disable License"
 msgstr ""
 
-#: includes/Enums/LicensePublicStatus.php:76
-#: includes/Enums/LicensePrivateStatus.php:137
-#: includes/Enums/LicensePrivateStatus.php:221
-#: includes/ListTables/Licenses.php:157
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:81
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:137
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:221
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePublicStatus.php:76
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:151
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:326
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:346
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:364
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:81
 msgid "Disabled"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:572
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:574
 msgid "Disabled License #%d following Refund #%d."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:109
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:109
 msgid "Display the 'Licenses' section inside WooCommerce's 'My Account'."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:90
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:90
 msgid "Do Nothing"
 msgstr ""
 
-#: includes/Boot.php:470 templates/admin/welcome.php:45
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:362
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:36
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:426
 msgid "Documentation"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate-button.php:29
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:348
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:377
+msgid "Done"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-certificate-button.php:29
 msgid "Download"
 msgstr ""
 
-#: includes/Controllers/Settings.php:103
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:294
+msgid "Download CSV"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:102
 msgid "Duplicate licenses"
 msgstr ""
 
@@ -609,291 +634,336 @@ msgid ""
 "WooCommerce for selling licenses but also works without it."
 msgstr ""
 
-#: includes/ListTables/Generators.php:158 includes/ListTables/ApiKeys.php:131
-#: includes/ListTables/Licenses.php:332
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:57
 msgid "Edit"
 msgstr ""
 
-#: templates/admin/generators/page-edit.php:38
-msgid "Edit generator"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:373
+msgid "Edit API Key"
 msgstr ""
 
-#: templates/admin/licenses/page-edit.php:40
-msgid "Edit license"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:217
+msgid "Edit Generator"
 msgstr ""
 
-#: includes/ListTables/Activations.php:215
-#: includes/ListTables/Activations.php:604
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:101
+msgid "Edit License"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:320
 msgid "Enable"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:105
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:105
 msgid "Enable \"Licenses\""
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:135
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:135
 msgid "Enable \"PDF Certificates\""
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:226
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:967
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:226
 msgid "Enable automatic stock management for WooCommerce products."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:119
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:119
 msgid ""
 "Enable historical records that shows previous activations in the license "
 "page in My Account dashboard."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:467
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:467
 msgid "Enable license key delivery for this product"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:139
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:139
 msgid ""
 "Enable License PDF certificates in the single license page in My Account "
 "dashboard."
 msgstr ""
 
-#: includes/Controllers/Settings.php:142
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:151
 msgid "Enable the plugin API routes over insecure HTTP connections."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:51
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:51
 msgid ""
 "Enable this option to delivery License keys once specific product is "
 "purchased."
 msgstr ""
 
-#: includes/Controllers/Settings.php:159
-#: includes/Integrations/WooCommerce/Settings.php:61
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:168
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:61
 msgid ""
 "Enable this option to safe guard the data on plugin removal/uninstallation."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:129
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:129
 msgid ""
 "Enable this to allow manual license activation. Users will be able to create "
 "activations from the admin without using the REST API."
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:89
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:325
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:345
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:89
 msgid "Enabled"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Activations.php:82
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Activations.php:82
 msgid "Enables licenses deactivation to disable specific license activations."
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:116
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:391
 msgid "Endpoints"
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:96 includes/Controllers/ApiKeys.php:165
-msgid "Endpoints are missing.."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:242
+msgid "Enter generator name"
 msgstr ""
 
-#: includes/Tools/Migration/Migrators/LMFW.php:448
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:192
+msgid "Enter license keys, one per line..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:195
+msgid "Enter one license key per line. Duplicates will be skipped."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:127
+msgid "Enter or generate a license key"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Tools/Migration/Migrators/LMFW.php:439
 #, php-format
 msgid "Error: %s"
 msgstr ""
 
-#: includes/Controllers/Frontend.php:89
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:209
+msgid "Errors"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Frontend.php:89
 msgid "EXPIRED"
 msgstr ""
 
-#: includes/Enums/LicensePublicStatus.php:78
-#: includes/Enums/LicensePrivateStatus.php:166
-#: includes/Utils/DateFormatter.php:159 includes/Controllers/Blocks.php:74
-#: templates/woocommerce/dlm/my-account/orders/licenses.php:99
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:74
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:166
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePublicStatus.php:78
+#: ../../../../plugins/digital-license-manager/includes/Utils/DateFormatter.php:159
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/orders/licenses.php:99
 msgid "Expired"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:790
-#: templates/woocommerce/dlm/my-account/licenses/single.php:98
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:112
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:98
 msgid "Expires"
 msgstr ""
 
-#: templates/frontend/licenses-table.php:42
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-table.php:42
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:122
 msgid "Expires At"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:686
-#: templates/admin/licenses/page-edit.php:93
-#: templates/admin/licenses/page-add.php:66
-msgid "Expires at"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:238
+msgid "Expires In (days)"
 msgstr ""
 
-#: includes/ListTables/Generators.php:281
-#: templates/admin/generators/page-edit.php:173
-#: templates/admin/generators/page-add.php:152
-msgid "Expires in"
-msgstr ""
-
-#: includes/Core/Services/GeneratorsService.php:232
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:232
 msgid ""
 "Expires In shoudld be positive integer value larger than 1 that represents "
 "number of days"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:128
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:128
 msgid "Expires in should be numeric and positive value larger than 1"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Certificates.php:145
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:145
 msgid "Expiry Date"
 msgstr ""
 
-#: templates/admin/licenses/modals/export.php:61
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:174
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:179
 msgid "Export"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:637
-msgid "Export (CSV)"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:208
+msgid "Failed"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:638
-msgid "Export (PDF)"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1915
+msgid "Failed to create API key."
 msgstr ""
 
-#: templates/admin/licenses/modals/export.php:41
-msgid "Export Licenses"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:806
+msgid "Failed to delete activation."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:62
-msgid "File"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1939
+msgid "Failed to delete API key."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:327
-msgid "File not uploaded. Upload TXT and CSV to proceed."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:636
+msgid "Failed to delete generator."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:50
-msgid "File upload"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:335
+msgid "Failed to delete license."
 msgstr ""
 
-#: includes/ListTables/Activations.php:552 includes/ListTables/Licenses.php:175
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:605
+msgid "Failed to save generator."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1890
+msgid "Failed to update API key."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:50
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:331
 msgid "Filter"
 msgstr ""
 
-#: includes/ListTables/Activations.php:565
-msgid "Filter by license"
-msgstr ""
-
-#: includes/Boot.php:346 includes/ListTables/Licenses.php:192
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:309
 msgid "Filter by order"
 msgstr ""
 
-#: includes/Boot.php:347 includes/ListTables/Licenses.php:216
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:310
 msgid "Filter by product"
 msgstr ""
 
-#: includes/ListTables/Activations.php:583
-msgid "Filter by source"
-msgstr ""
-
-#: includes/Boot.php:348 includes/ListTables/Licenses.php:244
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:311
 msgid "Filter by user"
 msgstr ""
 
-#: templates/admin/welcome.php:61
-msgid "Found problem? Report it!"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:91
+msgid "First"
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:61
-msgid "Friendly name for identifying this key."
-msgstr ""
-
-#: includes/Controllers/Settings.php:80
-#: includes/Integrations/WooCommerce/Settings.php:41
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:79
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:351
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:41
 msgid "General"
 msgstr ""
 
-#: templates/admin/generators/page-generate.php:125
-#: templates/admin/generators/page-list.php:45
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:177
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:291
 msgid "Generate"
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:203
-msgid "Generate API key"
-msgstr ""
-
-#: templates/admin/generators/page-generate.php:40
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:260
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:269
 msgid "Generate Licenses"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:201
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:176
+msgid "Generate licenses"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:231
 msgid ""
 "Generated %d license(s) for order item #%d (product #%d) with generator #%d "
 "via the \"Past Orders License Generator\" tool."
 msgstr ""
 
-#: includes/ListTables/Generators.php:53
-#: templates/admin/generators/page-generate.php:54
-#: templates/admin/settings/tools/generate-past-order-licenses.php:36
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:300
+msgid "Generated Licenses"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:249
+msgid "Generated licenses will be assigned to these products."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:292
+msgid "Generating..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:161
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:271
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1990
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:65
 msgid "Generator"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:100
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:601
+msgid "Generator created successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:634
+msgid "Generator deleted successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:100
 msgid "Generator name is missing."
 msgstr ""
 
-#: includes/RestAPI/Controllers/Generators.php:436
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:586
+msgid "Generator name is required."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:555
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:667
+msgid "Generator not found."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:598
+msgid "Generator updated successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:436
 msgid "Generator with ID: %d could not be found."
 msgstr ""
 
-#: includes/Controllers/Admin.php:113 includes/ListTables/Generators.php:54
-#: templates/admin/generators/page-list.php:40
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:214
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:400
+#: ../../../../plugins/digital-license-manager/includes/Admin/Boot.php:110
 msgid "Generators"
 msgstr ""
 
-#: includes/Controllers/Admin.php:250
-msgid "Generators per page"
-msgstr ""
-
-#: templates/admin/settings/page-help.php:34
-msgid "Get in touch"
-msgstr ""
-
-#: templates/admin/settings/page-help.php:31
-msgid ""
-"Get in touch with us and will be more than happy to help you and possibly "
-"discover a room for improvement along the way."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:40
-msgid "Get in touch with us, do not hesitate to do that."
-msgstr ""
-
-#: includes/Boot.php:479
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:371
 msgid "Get PRO Version"
 msgstr ""
 
-#: includes/Boot.php:465
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:144
+msgid "Get single generator"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:80
+msgid "Get single license"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:433
+msgid "Get Support"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:357
 msgid "GitHub"
 msgstr ""
 
-#: includes/Controllers/Settings.php:182
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:191
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:354
 msgid "Help"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:28
-msgid "Help / Support"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:169
+msgid "Hide License Key"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:346
-msgid "Hide"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:357
+msgid "Hide License Keys"
 msgstr ""
 
-#: includes/Controllers/Settings.php:97
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:96
 msgid "Hide license keys in the admin dashboard."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:77
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:77
 msgid "Hide license keys in the public facing pages like \"Order Received\"."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:621
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:623
 msgid "Hide license(s)"
 msgstr ""
 
@@ -905,920 +975,921 @@ msgstr ""
 msgid "https://codeverve.com/product/digital-license-manager-pro/"
 msgstr ""
 
-#: templates/admin/generators/page-add.php:67
-msgid "i.e. for \"12-AB-34-CD\" the character map is <kbd>ABCD1234</kbd>."
-msgstr ""
-
-#: templates/admin/generators/page-add.php:97
-msgid "i.e. for \"12-AB-34-CD\" the chunk length is <kbd>2</kbd>."
-msgstr ""
-
-#: templates/admin/generators/page-add.php:82
-msgid "i.e. for \"12-AB-34-CD\" the number of chunks is <kbd>4</kbd>."
-msgstr ""
-
-#: templates/admin/generators/page-add.php:109
-msgid "i.e. for \"12-AB-34-CD\" the separator is <kbd>-</kbd>."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:473 includes/Controllers/Licenses.php:666
-#: templates/admin/licenses/page-edit.php:55
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:65
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:105
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:220
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:310
 msgid "ID"
 msgstr ""
 
-#: includes/ListTables/Activations.php:202
-#: includes/ListTables/Generators.php:138 includes/ListTables/ApiKeys.php:127
-#: includes/ListTables/Licenses.php:316
-msgid "ID: %d"
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Settings.php:52
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:52
 msgid ""
 "If enabled the customer will receive License keys once they purchase "
 "specific product, based on the product configuration."
 msgstr ""
 
-#: includes/Controllers/Settings.php:108
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:107
 msgid ""
 "If enabled the system will store new license keys in the database, even if "
 "the same key exist."
 msgstr ""
 
-#: includes/Controllers/Settings.php:160
-#: includes/Integrations/WooCommerce/Settings.php:62
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:169
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:62
 msgid ""
 "If enabled your data will NOT be removed once this plugin is uninstalled. "
 "This is usually prefered option in case you want to use the plugin again in "
 "future."
 msgstr ""
 
-#: includes/Controllers/Settings.php:126
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:125
 msgid ""
 "If no logo provided, it will attempt to use the website logo that is set in "
 "'Customize' section."
 msgstr ""
 
-#: templates/admin/settings/page-help.php:39
-msgid "If you found bug or issue..."
-msgstr ""
-
-#: templates/admin/welcome.php:44
-msgid ""
-"If you found this plugin <strong>useful</strong> for your business, we will "
-"greatly appreciate if you take a minute to <a target=\"_blank\" title=\"Give "
-"this plugin a good five star rating :)\" href=\"https://wordpress."
-"org/support/plugin/digital-license-manager/reviews/#new-post\">rate it. "
-"&#9733;&#9733;&#9733;&#9733;&#9733;</a>"
-msgstr ""
-
-#: templates/admin/settings/page-help.php:30
-msgid "If you have a question..."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:49
-msgid "If you have an idea / feature request..."
-msgstr ""
-
-#: includes/Controllers/Admin.php:421
-#, php-format
-msgid ""
-"If you like %1$s please leave us a %2$s rating. A massive thanks in advance!"
-msgstr ""
-
-#: templates/admin/settings/tools/add-order-item-licenses.php:37
-msgid ""
-"If you used Digital License Manager before the version 1.7.1 we strongly "
-"recommend to run this tool, otherwise no action is required."
-msgstr ""
-
-#: templates/admin/licenses/page-import.php:162
-#: templates/admin/licenses/page-list.php:37
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:160
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:178
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1991
 msgid "Import"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:33
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:488
+msgid "Import completed. %d imported, %d skipped, %d failed."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:102
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:198
 msgid "Import Licenses"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:66
-#: templates/admin/licenses/page-import.php:78
-msgid "Important"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:205
+msgid "Import Results"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:566
-msgid "In stock, not sold yet"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:206
+msgid "Imported"
 msgstr ""
 
-#: includes/Enums/LicensePrivateStatus.php:125
-#: includes/Enums/LicensePrivateStatus.php:213
-#: includes/ListTables/Activations.php:318
-#: includes/ListTables/Activations.php:503 includes/ListTables/Licenses.php:146
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:199
+msgid "Importing..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:125
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:213
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:148
 msgid "Inactive"
 msgstr ""
 
-#: templates/admin/settings/tools/generate-past-order-licenses.php:50
-#: templates/admin/settings/tools/migration.php:54
-#: templates/admin/settings/tools/add-order-item-licenses.php:44
-msgid "Initializing..."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:775
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:798
+msgid "Invalid activation ID."
 msgstr ""
 
-#: includes/RestAPI/Controllers/Generators.php:450
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:450
 msgid "Invalid amount"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:210
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1931
+msgid "Invalid API key ID."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:216
 msgid "Invalid expires at date format"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:374
-msgid "Invalid file content."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:549
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:628
+msgid "Invalid generator ID."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:350
-msgid "Invalid file type, only TXT and CSV allowed."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:236
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:327
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:414
+msgid "Invalid license ID."
 msgstr ""
 
-#: includes/Controllers/Admin.php:290
-msgid "Invalid license key ID"
-msgstr ""
-
-#: includes/Core/Services/LicensesService.php:1062
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1076
 msgid "Invalid order provided."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:267 includes/Controllers/Licenses.php:296
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Licenses.php:65
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Licenses.php:94
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:87
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:351
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:822
 msgid "Invalid request."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:231
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:125
+msgid "Invalid security token."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:971
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:231
 msgid "Inventory &rarr; Manage stock?"
 msgstr ""
 
-#: includes/ListTables/Activations.php:365
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:314
 msgid "IP Address"
 msgstr ""
 
-#: includes/Core/Generators/StandardGenerator.php:49
+#: ../../../../plugins/digital-license-manager/includes/Core/Generators/StandardGenerator.php:49
 msgid ""
 "It's not possible to generate that many keys with the given parameters, "
 "there are not enough combinations. Please review your inputs."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/MyAccount.php:150
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:81
+msgid "Item deleted successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:383
+msgid "Key"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:150
 msgid "Key copied to clipboard."
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:40
-#: templates/admin/settings/page-show.php:36
-msgid "Key details"
-msgstr ""
-
-#: includes/ListTables/Activations.php:361
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:53
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:66
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:168
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:312
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:53
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:66
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:168
 msgid "Label"
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:78
-#: templates/admin/settings/page-edit.php:183
-msgid "Last access"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:94
+msgid "Last"
 msgstr ""
 
-#: includes/ListTables/Activations.php:362
-#: templates/frontend/licenses-table.php:39
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:384
+msgid "Last Access"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:246
+msgid "Leave empty for no expiration"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:132
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:245
+msgid "Leave empty for unlimited"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:136
+msgid "Leave empty to auto-generate, or enter your own key."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:283
+msgid "Leave empty to use generator default"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-table.php:39
 msgid "License"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/single.php:60
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:60
 #, php-format
 msgid "License #%s"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Activations.php:158
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Activations.php:158
 msgid "License activated successfully!"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Activations.php:121
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Activations.php:121
 msgid "License activation deleted successfully."
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:37
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:37
 msgid "License Certificate"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:276
-#: includes/Integrations/WooCommerce/Orders.php:339
-#: includes/Integrations/WooCommerce/Orders.php:342
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:304
+msgid "License created successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:333
+msgid "License deleted successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:277
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:341
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:344
 #, php-format
 msgid "License delivery failed: %s."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:301
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:302
 msgid "License delivery failed: No generator assigned for product #%d."
 msgstr ""
 
-#: includes/Controllers/Settings.php:221
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:230
 msgid "License expiration format"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Certificates.php:137
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:137
 msgid "License ID"
 msgstr ""
 
-#: templates/frontend/licenses-check.php:49
-#: includes/Integrations/WooCommerce/Certificates.php:141
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-check.php:49
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:106
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:116
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:311
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:329
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:141
 msgid "License Key"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:476 includes/Controllers/Licenses.php:682
-#: includes/ListTables/Licenses.php:785
-#: templates/admin/licenses/page-edit.php:65
-#: templates/admin/licenses/page-add.php:44
-#: templates/woocommerce/dlm/my-account/licenses/index.php:56
-#: templates/woocommerce/dlm/my-account/licenses/index.php:93
-#: templates/woocommerce/dlm/my-account/licenses/single.php:65
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:56
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:93
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:65
 msgid "License key"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:74
-msgid "License keys"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:189
+msgid "License Keys"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1139
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1154
 msgid "License Keys are invalid."
 msgstr ""
 
-#: includes/Controllers/Admin.php:102 includes/Controllers/Admin.php:171
-#: includes/Controllers/Admin.php:172
-#: includes/Integrations/WooCommerce/Products.php:107
+#: ../../../../plugins/digital-license-manager/includes/Admin/Boot.php:99
+#: ../../../../plugins/digital-license-manager/includes/Admin/Boot.php:100
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:107
 msgid "License Manager"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:233
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:973
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:233
 msgid ""
 "License Manager &rarr; Licenses source &rarr; Provide licenses from stock"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:232
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:972
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:232
 msgid "License Manager &rarr; Sell Licenses"
 msgstr ""
 
-#: includes/Controllers/Admin.php:122
-msgid "License Manager - Activations"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:242
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:420
+msgid "License not found."
 msgstr ""
 
-#: includes/Controllers/Admin.php:112
-msgid "License Manager - Generators"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:297
+msgid "License updated successfully."
 msgstr ""
 
-#: includes/Controllers/Admin.php:132
-msgid "License Manager - Settings"
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Certificates.php:152
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:152
 msgid "Licensee"
 msgstr ""
 
-#: includes/Controllers/Settings.php:87 includes/Controllers/Admin.php:103
-#: includes/ListTables/Licenses.php:73 includes/ListTables/Licenses.php:74
-#: includes/Integrations/WooCommerce/MyAccount.php:164
-#: includes/Integrations/WooCommerce/MyAccount.php:179
-#: templates/admin/licenses/page-list.php:32
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:86
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:98
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:399
+#: ../../../../plugins/digital-license-manager/includes/Admin/Boot.php:109
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:164
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:179
 msgid "Licenses"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:513
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:303
+msgid "Licenses copied to clipboard!"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:513
 msgid "Licenses generator"
 msgstr ""
 
-#: includes/Controllers/Admin.php:217
-msgid "Licenses per page"
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Products.php:497
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:497
 msgid "Licenses source"
 msgstr ""
 
-#: includes/Controllers/Blocks.php:58 includes/Controllers/Blocks.php:66
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:58
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:66
 msgid "Licenses Table"
 msgstr ""
 
-#: includes/Controllers/Blocks.php:67
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:67
 msgid "Licenses Table Settings"
 msgstr ""
 
-#: includes/Integrations/WCPIPS/Controller.php:94
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WCPIPS/Controller.php:94
 msgid "Licenses:"
 msgstr ""
 
-#: includes/Boot.php:224
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:136
+msgid "List all generators"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:72
+msgid "List all licenses"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:206
 msgid "Loading more results..."
 msgstr ""
 
-#: templates/admin/welcome.php:52
-msgid "Looking to migrate from License Manager for WooCommerce?"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:76
+msgid "Loading..."
 msgstr ""
 
-#: includes/ListTables/Licenses.php:629
-msgid "Mark as delivered"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:358
+msgid "Mask license keys in the admin list table until clicked."
 msgstr ""
 
-#: includes/ListTables/Licenses.php:627
-msgid "Mark as disabled"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:226
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:237
+msgid "Max Activations"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:628
-msgid "Mark as sold"
-msgstr ""
-
-#: templates/admin/licenses/page-import.php:111
-#: templates/admin/licenses/page-edit.php:107
-#: templates/admin/licenses/page-add.php:78
-#: templates/admin/generators/page-edit.php:161
-#: templates/admin/generators/page-add.php:140
-msgid "Max activations"
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Products.php:529
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:529
 msgid "Max Activations Behavior"
 msgstr ""
 
-#: includes/ListTables/Generators.php:277
-msgid "Maximum activation count"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:286
+msgid "Maximum 1000 licenses per batch."
 msgstr ""
 
-#: templates/admin/settings/tools/migration.php:59
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:256
+msgid "Maximum activations for generated licenses."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:368
+msgid "Media ID"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:416
 msgid "Migrate"
 msgstr ""
 
-#: templates/admin/migration.php:16
-msgid "Migrate now"
-msgstr ""
-
-#: includes/Enums/ActivationSource.php:69
+#: ../../../../plugins/digital-license-manager/includes/Enums/ActivationSource.php:69
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:162
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1993
 msgid "Migration"
 msgstr ""
 
-#: includes/Controllers/Settings.php:651
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:660
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1488
 #, php-format
 msgid "Migration completed on: %s."
 msgstr ""
 
-#: includes/Tools/Migration/Migration.php:52
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:421
+msgid "Migration has been undone successfully."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Tools/Migration/Migration.php:52
 msgid "Migration tool that makes it possible to easily move from other plugins"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:99
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:156
+msgid "Months"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:99
 msgid "My Account"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:109
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:112
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:109
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:112
 msgid "N/A"
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:227
-msgid "N/a"
-msgstr ""
-
-#: includes/ListTables/Generators.php:273
-#: templates/admin/generators/page-edit.php:66
-#: templates/admin/generators/page-add.php:45
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:221
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:229
 msgid "Name"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:187
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:187
 msgid "Name can not be empty."
 msgstr ""
 
-#: templates/admin/welcome.php:69
-msgid "Need more features? try the PRO version!"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:432
+msgid "Need help? Contact our support team."
 msgstr ""
 
-#: includes/Utils/DateFormatter.php:139
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:85
+msgid "Network error. Please try again."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Utils/DateFormatter.php:139
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:165
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:378
 msgid "Never"
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:161
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:161
 msgid "New Activation"
 msgstr ""
 
-#: includes/Abstracts/AbstractListTable.php:142
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:93
+msgid "Next"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractListTable.php:142
 #, php-format
 msgid "No %s found."
 msgstr ""
 
-#: includes/Abstracts/AbstractListTable.php:131
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractListTable.php:131
 #, php-format
 msgid "No %s were selected."
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:143
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:143
 msgid "No activations found."
 msgstr ""
 
-#: includes/Tools/Migration/Migrators/LMFW.php:585
+#: ../../../../plugins/digital-license-manager/includes/Tools/Migration/Migrators/LMFW.php:659
 msgid ""
 "No data found from the plugin \"License Manager for WooCommerce\" to migrate."
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:82
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:82
 msgid "No generators found for your query"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:156
-msgid ""
-"No licence key(s) imported successfully, %d failed to import and %d "
-"duplicate key(s) were found."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:158
-msgid "No licence key(s) imported successfully, %d failed to import."
-msgstr ""
-
-#: includes/Core/Services/LicensesService.php:144
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:145
 msgid "No licence keys found for your query."
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/index.php:142
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:454
+msgid "No license keys provided."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:142
 msgid "No licenses available yet"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:221
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:251
 msgid "No licenses generated for this page."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:647
-msgid "No licenses were selected."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1789
+msgid "No licenses selected."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:112
-#: includes/Integrations/WooCommerce/Tools/AddOrderItemLicenses/AddOrderItemLicenses.php:86
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:141
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/AddOrderItemLicenses/AddOrderItemLicenses.php:86
 msgid "No orders found without licenses."
 msgstr ""
 
-#: includes/RestAPI/Controllers/Generators.php:374
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:374
 msgid "No parameters were provided."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:113
-msgid "No valid license keys found from import."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:75
+msgid "No records found."
 msgstr ""
 
-#: includes/Controllers/Licenses.php:144
-msgid "No valid license keys were found to be imported."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1132
+msgid "No settings provided."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:130
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:130
 msgid ""
 "Normally activations should be done through the REST API from your apps, "
 "however this is more a psychological feature to give the users a feeling "
 "that they can activate the product."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/MyAccount.php:243
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:243
 msgid "Not found"
 msgstr ""
 
-#: templates/woocommerce/dlm/emails/email-order-details.php:80
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/emails/email-order-details.php:80
 msgid "Note"
 msgstr ""
 
-#: templates/admin/settings/page-show.php:67
-msgid "Nothing to see here..."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:64
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:251
 msgid ""
-"Nowadays, the forked code has been almost completely rewritten to enable us "
-"to support the plugin, remove \"code smell\" and add new features."
+"Number of character groups in the key (e.g., 4 chunks = XXXX-XXXX-XXXX-XXXX)."
 msgstr ""
 
-#: includes/ListTables/Generators.php:275
-#: templates/admin/generators/page-edit.php:96
-#: templates/admin/generators/page-add.php:75
-msgid "Number of chunks"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:232
+msgid "Number of Chunks"
 msgstr ""
 
-#: includes/ListTables/Generators.php:133
-msgid ""
-"Number of products assigned to this generator. This generator can not be "
-"deleted as long as products are assigned."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:133
+msgid "Number of days"
 msgstr ""
 
-#: includes/Controllers/Settings.php:93
-#: includes/Integrations/WooCommerce/Settings.php:73
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:92
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:73
 msgid "Obscure licenses"
 msgstr ""
 
-#: templates/admin/migration.php:14
-msgid ""
-"Once you finish with the migration, you can deactivate <strong>License "
-"Manager for WooCommerce</strong> safely."
-msgstr ""
-
-#: templates/admin/licenses/page-import.php:67
-#: templates/admin/licenses/page-import.php:79
-msgid "One line per license key."
-msgstr ""
-
-#: includes/Core/Services/GeneratorsService.php:116
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:116
 msgid "Only integer values allowed for chunk length."
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:108
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:108
 msgid "Only integer values allowed for chunks."
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:211
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:211
 msgid "Only integer values between 1 and 99 are allowed for chunk_length."
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:203
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:203
 msgid "Only integer values between 1 and 99 are allowed for chunks."
 msgstr ""
 
-#: includes/Abstracts/AbstractTool.php:327
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractTool.php:341
 msgid "Operation complete."
 msgstr ""
 
-#: includes/Abstracts/AbstractTool.php:294
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1520
+msgid "Operation Error."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractTool.php:308
 msgid "Operation not initialized properly."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:103
-#: templates/admin/licenses/page-import.php:115
-#: templates/admin/licenses/page-import.php:128
-#: templates/admin/licenses/page-import.php:140
-#: templates/admin/licenses/page-import.php:152
-#: templates/admin/licenses/page-edit.php:98
-#: templates/admin/licenses/page-edit.php:112
-#: templates/admin/licenses/page-edit.php:141
-#: templates/admin/licenses/page-edit.php:170
-#: templates/admin/licenses/page-edit.php:200
-#: templates/admin/licenses/page-edit.php:214
-#: templates/admin/licenses/page-add.php:70
-#: templates/admin/licenses/page-add.php:82
-#: templates/admin/licenses/page-add.php:94
-#: templates/admin/licenses/page-add.php:106
-#: templates/admin/licenses/page-add.php:118
-#: templates/admin/generators/page-edit.php:129
-#: templates/admin/generators/page-edit.php:141
-#: templates/admin/generators/page-edit.php:153
-#: templates/admin/generators/page-edit.php:165
-#: templates/admin/generators/page-edit.php:177
-#: templates/admin/generators/page-add.php:108
-#: templates/admin/generators/page-add.php:120
-#: templates/admin/generators/page-add.php:132
-#: templates/admin/generators/page-add.php:144
-#: templates/admin/generators/page-add.php:156
-msgid "Optional."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:142
+msgid ""
+"Optional. Expiration period added after the license is purchased from stock."
 msgstr ""
 
-#: includes/ListTables/Licenses.php:786
-#: templates/admin/licenses/page-import.php:136
-#: templates/admin/licenses/page-edit.php:150
-#: templates/admin/licenses/page-add.php:102
-#: templates/admin/generators/page-generate.php:114
-#: templates/woocommerce/dlm/my-account/licenses/index.php:83
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:141
+msgid "Optional. Leave blank if the license does not expire."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:143
+msgid "Optional. Leave empty for unlimited activations."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:139
+msgid "Optional. The order to which the license will be assigned."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:138
+msgid "Optional. The product to which the license will be assigned."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:140
+msgid "Optional. The user to which the license will be assigned."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:282
+msgid "Optional: Assign to order"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:281
+msgid "Optional: Assign to product"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:109
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:118
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:274
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:83
 msgid "Order"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Certificates.php:166
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:166
 msgid "Order Date"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:474 includes/Controllers/Licenses.php:670
-#: includes/Integrations/WooCommerce/Certificates.php:162
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:162
 msgid "Order ID"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1143
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1158
 msgid "Order ID is invalid."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:47
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:47
 msgid "Order License Keys"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:150
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:150
 msgid "Order licenses resent to customer."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:57
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:57
 msgid "Order status delivery"
 msgstr ""
 
-#: includes/Enums/ActivationSource.php:71 includes/Controllers/Settings.php:149
-#: includes/ListTables/Activations.php:297
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:158
+#: ../../../../plugins/digital-license-manager/includes/Enums/ActivationSource.php:71
 msgid "Other"
 msgstr ""
 
-#: templates/frontend/licenses-check.php:40
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:288
+msgid "Override the generator's default expiration period (in days)."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:287
+msgid "Override the generator's default product assignment."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-check.php:40
 msgid "Owner Email"
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:89
-msgid "Owner of these keys."
-msgstr ""
-
-#: templates/admin/settings/tools/generate-past-order-licenses.php:32
-msgid "Past Orders License Generator"
-msgstr ""
-
-#: includes/Controllers/Frontend.php:86
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Frontend.php:86
 msgid "Permanent Activation"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/MyAccount.php:296
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:296
 msgid "Permission denied"
 msgstr ""
 
-#: includes/Abstracts/AbstractListTable.php:113
-#: includes/Controllers/Frontend.php:55
-#: includes/Integrations/WooCommerce/Certificates.php:210
-#: includes/Integrations/WooCommerce/Certificates.php:218
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractListTable.php:113
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Frontend.php:55
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:210
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:218
 msgid "Permission denied."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Activations.php:161
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Activations.php:161
 msgid "Permission denied. User does not have access to activate this license."
 msgstr ""
 
-#: includes/Controllers/Generators.php:71
-#: includes/Controllers/Generators.php:102
-#: includes/Controllers/Generators.php:132 includes/Controllers/ApiKeys.php:80
-#: includes/Controllers/ApiKeys.php:149 includes/Controllers/Licenses.php:84
-#: includes/Controllers/Licenses.php:184 includes/Controllers/Licenses.php:225
-#: templates/admin/page-generators.php:40
-#: templates/admin/page-generators.php:46
-#: templates/admin/page-generators.php:52 templates/admin/page-licenses.php:39
-#: templates/admin/page-licenses.php:45 templates/admin/page-licenses.php:51
-msgid "Permission denied. You don't have access to perform this action."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:640
-msgid "Permission denied. You don't have access to this resource."
-msgstr ""
-
-#: includes/ListTables/ApiKeys.php:77 templates/admin/settings/page-edit.php:95
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:382
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:390
 msgid "Permissions"
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:92 includes/Controllers/ApiKeys.php:161
-msgid "Permissions are missing."
-msgstr ""
-
-#: includes/Tools/Migration/Migrators/LMFW.php:573
+#: ../../../../plugins/digital-license-manager/includes/Tools/Migration/Migrators/LMFW.php:647
 msgid "Please activate WooCommerce before starting with migration"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:393
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:202
+msgid "Please enter at least one license key."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:393
 msgid "Please select a generator"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:105
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:134
 msgid "Please select a generator that will be used to generate the licenses."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:622
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:297
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:657
+msgid "Please select a generator."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:413
+msgid "Please select a plugin to migrate from."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:624
 msgid "Please wait..."
 msgstr ""
 
-#: includes/Tools/Migration/Migrators/LMFW.php:595
+#: ../../../../plugins/digital-license-manager/includes/Tools/Migration/Migrators/LMFW.php:669
 msgid ""
 "Plugin data found, but no encryption secrets found. Unable to decrypt "
 "license keys."
 msgstr ""
 
-#: includes/ListTables/Generators.php:279
-#: templates/admin/generators/page-edit.php:137
-#: templates/admin/generators/page-add.php:116
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:235
 msgid "Prefix"
 msgstr ""
 
-#: templates/admin/settings/tools/migration.php:47
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:414
 msgid ""
 "Preserve old IDs. If checked, your existing Digital License Manager database "
 "will be wiped to remove/free used IDs. Use this ONLY if you are absolutely "
-"sure what you are doing and if your app depend on the existing "
+"sure what you are doing and if your app depends on the existing "
 "license/generator IDs."
 msgstr ""
 
-#: templates/woocommerce/dlm/emails/email-order-details.php:43
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:239
+msgid "Preview"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:92
+msgid "Previous"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/emails/email-order-details.php:43
 msgid "Price"
 msgstr ""
 
-#: templates/admin/settings/tools/generate-past-order-licenses.php:56
-#: templates/admin/settings/tools/add-order-item-licenses.php:50
-msgid "Process"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:418
+msgid "Process finished."
 msgstr ""
 
-#: includes/Boot.php:426
-msgid "Process finished"
-msgstr ""
-
-#: includes/Abstracts/AbstractTool.php:310
-#: includes/Abstracts/AbstractTool.php:315
-#: includes/Abstracts/AbstractTool.php:321
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractTool.php:324
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractTool.php:329
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractTool.php:335
 #, php-format
 msgid "Processing \"%s\" - Page: %d/%d"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:787
-#: templates/admin/licenses/page-import.php:124
-#: templates/admin/licenses/page-edit.php:121
-#: templates/admin/licenses/page-add.php:90
-#: templates/admin/generators/page-generate.php:104
-#: templates/woocommerce/dlm/emails/email-order-details.php:41
-#: templates/woocommerce/dlm/my-account/licenses/index.php:49
-#: templates/woocommerce/dlm/my-account/licenses/single.php:53
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:107
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:117
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:273
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/emails/email-order-details.php:41
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:49
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:53
 msgid "Product"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:475 includes/Controllers/Licenses.php:674
-msgid "Product ID"
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Certificates.php:173
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:173
 msgid "Product Name"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:534
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:534
 msgid ""
 "Product Quantity - Always deliver single license and set activations limit "
 "based on product quantity"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Certificates.php:177
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:177
 msgid "Product URL"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:504
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:222
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:230
+msgid "Products"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:504
 msgid "Provide licenses by using generator"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:503
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:503
 msgid "Provide licenses from stock (%d available)"
 msgstr ""
 
-#: templates/woocommerce/dlm/emails/email-order-details.php:42
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:272
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/emails/email-order-details.php:42
 msgid "Quantity"
 msgstr ""
 
-#: includes/Controllers/Settings.php:300
-#: includes/Core/Services/ApiKeysService.php:84
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:661
+msgid "Quantity must be between 1 and 1000."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:309
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:394
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/ApiKeysService.php:84
 msgid "Read"
 msgstr ""
 
-#: includes/Core/Services/ApiKeysService.php:86
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/ApiKeysService.php:86
 msgid "Read & Write"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:33
-msgid "Read Docs"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:427
+msgid "Read the documentation to learn how to use Digital License Manager."
 msgstr ""
 
-#: templates/admin/migration.php:17
-msgid "Read more"
-msgstr ""
-
-#: includes/Controllers/Settings.php:302
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:311
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:396
 msgid "Read/Write"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:83
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:407
+msgid "Rebuild"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:405
+msgid "Rebuild Database Tables"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:406
+msgid ""
+"Recreate database tables. Use this if you experience database-related issues."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:83
 msgid "Refund behavior"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:43
-msgid "Report on Github"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:60
+msgid "Remove"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:44
-msgid "Report on WP.org"
-msgstr ""
-
-#: includes/Controllers/Blocks.php:59
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:59
 msgid "Require email"
 msgstr ""
 
-#: includes/Controllers/Blocks.php:60
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:60
 msgid "Require license owner email to confirm if user owns the license"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1076
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1090
 msgid "Required amout of %d licenses was not found in stock."
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:60
-#: templates/admin/settings/page-edit.php:88
-#: templates/admin/settings/page-edit.php:109
-#: templates/admin/settings/page-edit.php:163
-#: templates/admin/generators/page-edit.php:72
-#: templates/admin/generators/page-edit.php:87
-#: templates/admin/generators/page-edit.php:102
-#: templates/admin/generators/page-edit.php:117
-#: templates/admin/generators/page-add.php:51
-#: templates/admin/generators/page-add.php:66
-#: templates/admin/generators/page-add.php:81
-#: templates/admin/generators/page-add.php:96
-msgid "Required."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Orders.php:465
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:467
 msgid "Resend license(s) to customer"
 msgstr ""
 
-#: includes/Controllers/Settings.php:132
-#: templates/admin/settings/page-list.php:34
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:51
+msgid "Reset"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:141
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:352
 msgid "REST API"
 msgstr ""
 
-#: includes/Controllers/Settings.php:169
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:178
 msgid "Rest API"
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:205
-msgid "Save changes"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:417
+msgid "Run"
 msgstr ""
 
-#: templates/admin/activations/page-list.php:44
-msgid "Search activations"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:41
+msgid "Save"
 msgstr ""
 
-#: templates/admin/settings/tools/generate-past-order-licenses.php:71
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:42
+msgid "Save Changes"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:277
+msgid "Save to Database"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:43
+msgid "Saving..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:49
+msgid "Search"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:68
 msgid "Search by generator"
 msgstr ""
 
-#: includes/Boot.php:394
-msgid "Search by license ID"
-msgstr ""
-
-#: includes/Boot.php:373
-msgid "Search by order ID or customer email"
-msgstr ""
-
-#: includes/Boot.php:343
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:306
 msgid "Search by order ID or email"
 msgstr ""
 
-#: includes/Boot.php:344
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:307
 msgid "Search by product ID or name"
 msgstr ""
 
-#: includes/Boot.php:374
-msgid "Search by product ID or product name"
-msgstr ""
-
-#: includes/Boot.php:395
-msgid "Search by source"
-msgstr ""
-
-#: includes/Boot.php:315 includes/Boot.php:345
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:285
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:308
 msgid "Search by user login, name or email"
 msgstr ""
 
-#: templates/admin/settings/page-list.php:45
-#: templates/admin/generators/page-list.php:54
-msgid "Search key"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:128
+msgid "Search for a product..."
 msgstr ""
 
-#: templates/admin/licenses/page-list.php:44
-msgid "Search licenses"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:130
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:389
+msgid "Search for a user..."
 msgstr ""
 
-#: templates/admin/settings/tools/migration.php:36
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:129
+msgid "Search for an order..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:71
+msgid "Search..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:280
+msgid "Select a generator..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:53
+msgid "Select All"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:131
+msgid "Select expiration date"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:412
 msgid "Select plugin"
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:110
-msgid "Select the access type of these keys."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:243
+msgid "Select products..."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:530
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:530
 msgid ""
 "Select the behavior of the max activations for the new licenses whether it "
 "to be based on quantity or the generator default value\"."
 msgstr ""
 
-#: templates/admin/settings/page-edit.php:164
-msgid ""
-"Select the endpoints that this key has access to.<br/> The complete <strong>"
-"API documentation</strong> can be found <a href=\"https://docs.codeverve."
-"com/digital-license-manager/rest-api/authentication/\" target=\"_blank\" "
-"rel=\"noopener\">here</a>."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Products.php:514
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:514
 msgid ""
 "Select the Generator that will be used to generate and deliver keys for this "
 "product. Required only if source is set to \"Provide licenses by using "
 "generator\"."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:498
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:498
 msgid ""
 "Select the source of the license keys. If you want them to be generated with "
 "a generator select \"Provide licenses by using generator\" and then specify "
@@ -1826,682 +1897,510 @@ msgid ""
 "you have a stock of license that are marked as ACTIVE."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:88
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:88
 msgid ""
 "Select what happens to the License once the line item that generated the "
 "License is refunded."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:466
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:72
+msgid "Select..."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:466
 msgid "Sell Licenses"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:176
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:68
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:176
 msgid "Send"
 msgstr ""
 
-#: includes/ListTables/Generators.php:278
-#: templates/admin/generators/page-edit.php:125
-#: templates/admin/generators/page-add.php:104
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:234
 msgid "Separator"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:244
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:244
 msgid "Separator should be only one character"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:87
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:87
 msgid ""
 "Set the plugin behavior when a refund for line item that contains license is "
 "issued"
 msgstr ""
 
-#: includes/Boot.php:494 includes/Controllers/Admin.php:133
+#: ../../../../plugins/digital-license-manager/includes/Boot.php:386
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:341
+#: ../../../../plugins/digital-license-manager/includes/Admin/Boot.php:116
 msgid "Settings"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:341
-msgid "Show"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1235
+msgid "Settings saved successfully."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Orders.php:624
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:168
+msgid "Show License Key"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:626
 msgid "Show license(s)"
 msgstr ""
 
-#: includes/Enums/LicensePrivateStatus.php:129
-#: includes/ListTables/Licenses.php:113
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:90
+msgid "Showing :from to :to of :total results"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:207
+msgid "Skipped"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:129
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:149
 msgid "Sold"
 msgstr ""
 
-#: includes/Enums/LicensePrivateStatus.php:189
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:189
 msgid "Sold&nbsp;&nbsp;&nbsp;"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:65
-msgid ""
-"Some notable changes: Better license activation tracking and download "
-"tracking (for upcoming Reporting features), flexible permissions per rest "
-"api credentials (not global), Improved UI, API, Business logic."
-msgstr ""
-
-#: includes/Abstracts/AbstractRestController.php:209
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractRestController.php:209
 msgid "Sorry, you don't have access to this resource."
 msgstr ""
 
-#: includes/ListTables/Activations.php:364
-#: templates/admin/licenses/page-import.php:46
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:55
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:96
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:124
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:313
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:55
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:96
 msgid "Source"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Products.php:533
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:533
 msgid "Standard - Based on the Generator's \"Max Activations\""
 msgstr ""
 
-#: includes/Controllers/Blocks.php:68 includes/Controllers/Licenses.php:690
-#: includes/ListTables/Activations.php:366 includes/ListTables/Licenses.php:791
-#: templates/frontend/licenses-table.php:41
-#: templates/admin/licenses/page-import.php:86
-#: templates/admin/licenses/page-edit.php:76
-#: templates/admin/licenses/page-add.php:53
-#: templates/admin/generators/page-generate.php:90
-#: templates/woocommerce/dlm/my-account/licenses/index.php:58
-#: templates/woocommerce/dlm/my-account/licenses/index.php:105
-#: templates/woocommerce/dlm/my-account/licenses/single.php:85
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:54
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:75
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-table.php:41
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:68
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:67
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:110
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:120
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:275
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:316
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:58
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/index.php:105
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:85
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:54
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-table-activations.php:75
 msgid "Status"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:175
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:175
 msgid "Statuses"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:67
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:361
+msgid "Stock Management"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:67
 msgid "Stock management"
 msgstr ""
 
-#: templates/frontend/licenses-check.php:56
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-check.php:56
 msgid "Submit"
 msgstr ""
 
-#: includes/Controllers/Generators.php:191
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:78
+msgid "Success!"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:705
 msgid "Successfully generated %d license(s)."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:265
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:265
 msgid "Successfully updated the stock of %d WooCommerce products."
 msgstr ""
 
-#: includes/ListTables/Generators.php:280
-#: templates/admin/generators/page-edit.php:149
-#: templates/admin/generators/page-add.php:128
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:236
 msgid "Suffix"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:54
-msgid "Suggest on Github"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:37
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:431
+msgid "Support"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:55
-msgid "Suggest on WP.org"
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Settings.php:242
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:242
 msgid "Synchronize"
 msgstr ""
 
-#: includes/Controllers/Admin.php:423
-msgid "Thanks :)"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:255
+msgid "Text appended to every key."
 msgstr ""
 
-#: templates/admin/welcome.php:41
-msgid ""
-"Thanks for installing <strong class=\"green\">Digital License "
-"Manager</strong>"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:254
+msgid "Text prepended to every key."
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:65
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:65
 msgid ""
 "Thanks for using our services. If you have any questions feel free to reach "
 "out and ask."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:244
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:244
 msgid ""
 "The \"Synchronize\" button can be used to manually synchronize the product "
 "stock."
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:267
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:277
 msgid "The API key provided does not have read permissions."
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:279
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:289
 msgid "The API key provided does not have write permissions."
 msgstr ""
 
-#: templates/admin/generators/page-edit.php:118
-msgid ""
-"The character length of an individual chunk, i.e. for <code>12-AB-34-"
-"CD</code> the chunk length is <code>2</code>."
-msgstr ""
-
-#: templates/admin/generators/page-edit.php:88
-msgid ""
-"The characters which will be used for generating a license key, i.e. for "
-"<code>12-AB-34-CD</code> the character map is <code>ABCD1234</code>."
-msgstr ""
-
-#: includes/Core/Services/GeneratorsService.php:104
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:104
 msgid "The charset is invalid."
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:141
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:151
 msgid "The connection is not secure, therefore the API cannot be used."
 msgstr ""
 
-#: templates/admin/licenses/page-edit.php:99
-#: templates/admin/licenses/page-add.php:71
-msgid ""
-"The exact date at midnight UTC that this license key expires on. Leave blank "
-"if the license key does not expire."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Orders.php:758
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:760
 msgid "The following licenses have been generated for this order item"
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:157
-#: includes/Core/Services/GeneratorsService.php:271
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:157
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:271
 msgid "The generator could not be created."
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:53
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:53
 msgid "The generator could not be found."
 msgstr ""
 
-#: includes/Controllers/Generators.php:116
-msgid "The generator has been updated successfully."
-msgstr ""
-
-#: includes/RestAPI/Controllers/Generators.php:366
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:366
 msgid "The Generator ID is missing from the request."
 msgstr ""
 
-#: includes/Controllers/Generators.php:85
-msgid "The generator was created successfully."
-msgstr ""
-
-#: includes/Core/Services/GeneratorsService.php:294
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:294
 msgid "The generator(s) could not be deleted."
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:101
-#: includes/Core/Services/LicensesService.php:121
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:102
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:122
 #, php-format
 msgid "The license id '%s' could not be found"
 msgstr ""
 
-#: templates/frontend/licenses-check-results.php:37
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-check-results.php:37
 #, php-format
 msgid "The license is %s. Expiry date: %s"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:205
-#: includes/Core/Services/LicensesService.php:428
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:211
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:437
 #, php-format
 msgid "The license key '%s' already exists"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:239
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:246
 #, php-format
 msgid "The license key '%s' could not be added"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:80
-#: includes/Core/Services/LicensesService.php:381
-#: includes/Core/Services/LicensesService.php:552
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:81
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:390
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:566
 #, php-format
 msgid "The license key '%s' could not be found"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:523
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:537
 #, php-format
 msgid "The license key '%s' could not be found."
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:475
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:489
 #, php-format
 msgid "The license key '%s' could not be updated."
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:78
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:79
 msgid "The license key could not be found"
 msgstr ""
 
 #. %s: expiration date
-#: includes/Core/Services/LicensesService.php:862
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:876
 #, php-format
 msgid "The license key expired at %s."
 msgstr ""
 
-#: templates/admin/licenses/page-edit.php:69
-#: templates/admin/licenses/page-add.php:47
-msgid ""
-"The license key will be encrypted before it is stored inside the database."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Settings.php:78
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:78
 msgid ""
 "The license keys will be masked with stars on the public facing pages for "
 "security purposes."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/MyAccount.php:244
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:244
 msgid "The license you are looking for is not found."
 msgstr ""
 
-#: includes/Abstracts/AbstractListTable.php:118
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractListTable.php:118
 msgid "The nonce is invalid or has expired."
 msgstr ""
 
-#: templates/admin/generators/page-edit.php:178
-#: templates/admin/generators/page-add.php:157
-msgid ""
-"The number of days for which the license key is valid after purchase. Leave "
-"blank if it doesn't expire."
-msgstr ""
-
-#: templates/admin/generators/page-edit.php:103
-msgid ""
-"The number of separated character sets, i.e. for <code>12-AB-34-CD</code> "
-"the number of chunks is <code>4</code>."
-msgstr ""
-
-#: includes/RestAPI/Controllers/Generators.php:396
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:396
 msgid "The order does not exist."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:141
-#: templates/admin/licenses/page-edit.php:171
-#: templates/admin/licenses/page-add.php:107
-msgid ""
-"The order to which the license keys will be assigned, useful if you want to "
-"assign license to order after purchase."
-msgstr ""
-
-#: templates/admin/generators/page-generate.php:118
-msgid "The order to which the license keys will be assigned."
-msgstr ""
-
-#: templates/admin/welcome.php:43
-msgid ""
-"The plugin supports various features like email notifications, separate "
-"activations table, pdf certifications, import/export, WooCommerce HPOS and "
-"more."
-msgstr ""
-
-#: includes/RestAPI/Controllers/Generators.php:410
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:410
 msgid "The product does not exist."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:129
-#: templates/admin/licenses/page-edit.php:142
-#: templates/admin/licenses/page-add.php:95
-msgid ""
-"The product to which the license keys will be assigned and will be delivered "
-"once that product is purchased."
-msgstr ""
-
-#: templates/admin/generators/page-generate.php:108
-msgid "The product to which the license keys will be assigned."
-msgstr ""
-
-#: includes/Controllers/Generators.php:147
-msgid "The selected generator does not exist."
-msgstr ""
-
-#: templates/admin/generators/page-generate.php:63
-msgid ""
-"The selected generator's rules will be used to generate the license keys."
-msgstr ""
-
-#: includes/Controllers/Generators.php:160
-msgid "The selected order does not exist."
-msgstr ""
-
-#: includes/Controllers/Generators.php:165
-msgid "The selected product does not exist."
-msgstr ""
-
-#: templates/admin/generators/page-edit.php:130
-msgid ""
-"The special character separating the individual chunks, i.e. for <code>12-AB-"
-"34-CD</code> the separator is <code>-</code>."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Settings.php:272
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:272
 msgid "The stock of all WooCommerce products is already synchronized."
 msgstr ""
 
-#: templates/admin/migration.php:9
-msgid ""
-"The tool allows you to automate your migration process. It will convert "
-"license data, generator data, activation data, rest api keys, product "
-"settings, plugin settings, and much more."
-msgstr ""
-
-#: templates/admin/settings/tools/add-order-item-licenses.php:38
-msgid ""
-"The tool should be used only once! No need to repat the feature multiple "
-"times."
-msgstr ""
-
-#: includes/Core/Services/LicensesService.php:488
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:502
 msgid "The updated license key could not be found."
 msgstr ""
 
-#: includes/RestAPI/Controllers/Generators.php:423
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Controllers/Generators.php:423
 msgid "The user does not exist."
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:153
-#: templates/admin/licenses/page-edit.php:201
-#: templates/admin/licenses/page-add.php:119
-msgid "The user to which the license keys will be assigned."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:205
-msgid "There was a problem adding the license key."
-msgstr ""
-
-#: includes/Controllers/Generators.php:81
-msgid "There was a problem creating the generator."
-msgstr ""
-
-#: includes/ListTables/ApiKeys.php:351
-msgid "There was a problem deleting the API key(s)."
-msgstr ""
-
-#: includes/ListTables/Generators.php:386
-msgid "There was a problem deleting the generators."
-msgstr ""
-
-#: includes/Controllers/ApiKeys.php:210
-msgid "There was a problem generating the API key."
-msgstr ""
-
-#: includes/Controllers/Licenses.php:106
-msgid ""
-"There was a problem importing the license keys. Invalid format provided."
-msgstr ""
-
-#: includes/Controllers/ApiKeys.php:133
-msgid "There was a problem updating the API key."
-msgstr ""
-
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:40
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:40
 msgid "This document certifies the purchase of license key for: "
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/partials/single-certificate.php:44
-msgid "Details of the license can be accessed from your dashboard page."
-msgstr ""
-
-#: templates/admin/generators/page-edit.php:43
-msgid "This generator is assigned to the following product(s)"
-msgstr ""
-
-#: templates/admin/settings/tools/migration.php:33
-msgid ""
-"This is one-click migration tool that makes it possible to migrate from "
-"other plugins easily. Please take database backups before starting this "
-"operation."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:63
-msgid ""
-"This plugin is early fork of the \"License Manager for WooCommerce\", "
-"initially we used it on the site codeverve.com, however because of lack of "
-"support and missing features we decided to create our own version and later "
-"released in public."
-msgstr ""
-
-#: includes/Controllers/Settings.php:143
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:152
 msgid "This should only be activated for development purposes."
 msgstr ""
 
-#: templates/admin/settings/tools/generate-past-order-licenses.php:33
-msgid ""
-"This tool generates licenses for all past orders that doesn't have license "
-"assigned. Useful if you already have established shop and want to assign "
-"licenses to your existing orders."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/Products.php:128
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Products.php:128
 msgid ""
 "Those options are only available on the <strong>Edit</strong> screen. Please "
 "pick product type and then create the product in order to access those "
 "options."
 msgstr ""
 
-#: includes/Core/Services/GeneratorsService.php:137
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/GeneratorsService.php:137
 msgid "Time activated max should be numeric and positive value larger than 0"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:230
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:970
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:230
 msgid ""
 "To use this feature, you also need to enable the following settings at a "
 "product level:"
 msgstr ""
 
-#: includes/ListTables/Activations.php:363
-msgid "Token"
-msgstr ""
-
-#: includes/Controllers/Settings.php:175
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:184
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:353
 msgid "Tools"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:624
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:638
 msgid "Unable to activate key"
 msgstr ""
 
-#: includes/Utils/CryptoHelper.php:222
+#: ../../../../plugins/digital-license-manager/includes/Utils/CryptoHelper.php:222
 #, php-format
 msgid "Unable to decrypt value: %s"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Activations.php:123
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Activations.php:123
 msgid "Unable to delete license activation."
 msgstr ""
 
-#: includes/Abstracts/AbstractTool.php:300
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/AbstractTool.php:314
 msgid "Unable to determine next step"
 msgstr ""
 
-#: includes/Utils/CryptoHelper.php:207
+#: ../../../../plugins/digital-license-manager/includes/Utils/CryptoHelper.php:207
 #, php-format
 msgid "Unable to encrypt value: %s"
 msgstr ""
 
-#: includes/Controllers/Generators.php:113
-msgid "Unable to update generator."
-msgstr ""
-
-#: includes/Boot.php:424
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:419
 msgid "Undo"
 msgstr ""
 
-#: includes/Controllers/Frontend.php:76
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Frontend.php:76
 msgid "Unfortunately this license does not belong you (1)."
 msgstr ""
 
-#: includes/Controllers/Frontend.php:80
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Frontend.php:80
 msgid "Unfortunately this license does not belong you (2)."
 msgstr ""
 
-#: includes/ListTables/Activations.php:181
-msgid "Unique activation token"
-msgstr ""
-
-#: includes/Enums/LicensePublicStatus.php:80
-#: includes/Enums/LicensePrivateStatus.php:228
-#: templates/frontend/licenses-table.php:56
-#: templates/admin/settings/page-edit.php:194
+#: ../../../../plugins/digital-license-manager/templates/frontend/licenses-table.php:56
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePrivateStatus.php:228
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePublicStatus.php:80
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1998
 msgid "Unknown"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1199
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:397
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:854
+msgid "Unknown action."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1214
 msgid "Unknown license"
 msgstr ""
 
-#: includes/RestAPI/Authentication.php:290
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Authentication.php:300
 msgid "Unknown request method."
 msgstr ""
 
-#: includes/ListTables/Licenses.php:514
-msgid "Unlimited Activations"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1417
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1448
+msgid "Unknown tool selected."
 msgstr ""
 
-#: includes/ListTables/Activations.php:197
-#: includes/Tools/Migration/Migrators/LMFW.php:268
+#: ../../../../plugins/digital-license-manager/includes/Tools/Migration/Migrators/LMFW.php:556
 msgid "Untitled"
 msgstr ""
 
-#: templates/admin/licenses/page-edit.php:227
-#: templates/admin/generators/page-edit.php:185
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:45
 msgid "Update"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:706
-msgid "Updated at"
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:160
+msgid "Update generator"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:710
-msgid "Updated by"
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:96
+msgid "Update license"
 msgstr ""
 
-#: includes/Abstracts/SettingsFieldsTrait.php:162
+#: ../../../../plugins/digital-license-manager/includes/Abstracts/SettingsFieldsTrait.php:166
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:367
 msgid "Upload"
 msgstr ""
 
-#: includes/Controllers/Settings.php:125
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:124
 msgid "Upload a company logo that will be displayed in the certification PDF."
 msgstr ""
 
-#: templates/admin/settings/tools/generate-past-order-licenses.php:43
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:73
 msgid ""
-"Use product settings where possible, e.g some products have their own "
-"licensing configuration settings."
+"Use product licensing configuration where possible. If checked, the tool "
+"will use the generator assigned to the product instead of the selected "
+"generator above."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:140
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:140
 msgid ""
 "Use this option if you want to allow customers to download License "
 "certificate from the single license page."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:120
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:120
 msgid ""
 "Use this option to display table that shows list of activations and labels."
 msgstr ""
 
-#: includes/ListTables/ApiKeys.php:76 templates/admin/settings/page-edit.php:67
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:108
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:119
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:381
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:388
 msgid "User"
 msgstr ""
 
-#: includes/Controllers/Licenses.php:678
-msgid "User ID"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:315
+msgid "User Agent"
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:88 includes/Controllers/ApiKeys.php:157
-msgid "User is missing."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:1861
+msgid "User is required."
 msgstr ""
 
-#: includes/Setup.php:370
+#: ../../../../plugins/digital-license-manager/includes/Setup.php:373
 msgctxt "User role"
 msgid "License manager"
 msgstr ""
 
-#: includes/Setup.php:363
+#: ../../../../plugins/digital-license-manager/includes/Setup.php:366
 msgctxt "User role"
 msgid "Licensing agent"
 msgstr ""
 
-#: includes/Controllers/Frontend.php:96
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Frontend.php:96
 msgid "VALID"
 msgstr ""
 
-#: includes/Enums/LicensePublicStatus.php:74 includes/Controllers/Blocks.php:73
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Blocks.php:73
+#: ../../../../plugins/digital-license-manager/includes/Enums/LicensePublicStatus.php:74
 msgid "Valid"
 msgstr ""
 
-#: templates/admin/generators/page-generate.php:80
-msgid "Valid for"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:121
+msgid "Valid For"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:99
-#: templates/admin/licenses/page-edit.php:209
-msgid "Valid for (days)"
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:276
+msgid "Valid For (days)"
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1170
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1185
 msgid "Valid for invalid."
 msgstr ""
 
-#: includes/Core/Services/LicensesService.php:1090
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/LicensesService.php:1104
 msgid "Valid for is not set or invalid."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Certificates.php:131
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Certificates.php:131
 msgid "Valid Permanently"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails.php:122
-#: includes/Integrations/WooCommerce/Emails.php:139
-#: includes/Integrations/WooCommerce/Emails.php:235
-#: includes/Integrations/WooCommerce/Emails.php:252
-#: includes/Integrations/WooCommerce/Orders.php:443
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:445
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:122
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:139
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:235
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:252
 msgid "Valid until"
 msgstr ""
 
-#: includes/Controllers/Dropdowns.php:428
+#: ../../../../plugins/digital-license-manager/includes/RestAPI/Setup.php:128
+msgid "Validate activation"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Dropdowns.php:428
 msgid "Variable"
 msgstr ""
 
-#: includes/Controllers/Dropdowns.php:430
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Dropdowns.php:430
 msgid "Variation"
 msgstr ""
 
-#: includes/ListTables/Licenses.php:429
-msgid "Variation of"
-msgstr ""
-
-#: templates/admin/settings/tools/add-order-item-licenses.php:35
-#, php-format
-msgid ""
-"Version 1.7.1 introduces %s meta key for every order line item that contains "
-"License generated from that order. This is not as widely used now in the "
-"Digital License Manager's source code, expect for handling refunds, however "
-"it will be in the future."
-msgstr ""
-
-#: includes/Integrations/WooCommerce/MyAccount.php:278
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:59
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:278
 msgid "View"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/MyAccount.php:279
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:428
+msgid "View Documentation"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/MyAccount.php:279
 msgid "View more details about this license."
 msgstr ""
 
-#: templates/woocommerce/dlm/my-account/licenses/single.php:130
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/my-account/licenses/single.php:130
 msgid "View Order"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:116
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Tools/GeneratePastOrderLicenses/GeneratePastOrderLicenses.php:145
 msgid ""
 "WARNING - Looks like you modified the data query of the tool by a filter. We "
 "noticed that no check against the dlm_order_complete meta is present that is "
@@ -2512,98 +2411,80 @@ msgid ""
 "dlm_order_complete meta check."
 msgstr ""
 
-#: includes/Boot.php:427
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:415
 msgid ""
-"WARNING - Please take backups before running this tool. It can cause a "
-"damage to your database if not used properly."
+"WARNING - Please take a database backup before proceeding. Are you sure you "
+"want to continue?"
 msgstr ""
 
-#: templates/admin/settings/page-help.php:50
-msgid ""
-"We appreciate suggestions/ideas/feature requests, this is what makes the "
-"plugin better. Do not hesitate."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:51
-msgid ""
-"We are looking to implement any ideas that make sense and will be useful in "
-"this plugin after our evaluation."
-msgstr ""
-
-#: templates/admin/migration.php:4
-msgid ""
-"We detected that you used <strong>License Manager for WooCommerce</strong> "
-"previously. If you are looking to migrate to <strong>Digital License "
-"Manager</strong>, we built a tool specifically for this."
-msgstr ""
-
-#: templates/admin/settings/tools/add-order-item-licenses.php:36
-#, php-format
-msgid ""
-"We recommend running this tool to assign the %s meta data for every "
-"historical order line item that contains License generated by Digital "
-"License Manager."
-msgstr ""
-
-#: templates/admin/settings/page-help.php:41
-msgid ""
-"We strive to make this plugin as useful/stable as possible and we need "
-"people to report any issues/bugs."
-msgstr ""
-
-#: includes/Enums/ActivationSource.php:65
+#: ../../../../plugins/digital-license-manager/includes/Enums/ActivationSource.php:65
 msgid "Web"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:35
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:155
+msgid "Weeks"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:35
 msgid "WooCommerce"
 msgstr ""
 
-#: includes/Controllers/Settings.php:301
-#: includes/Core/Services/ApiKeysService.php:85
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:310
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:395
+#: ../../../../plugins/digital-license-manager/includes/Core/Services/ApiKeysService.php:85
 msgid "Write"
 msgstr ""
 
-#: templates/admin/licenses/page-import.php:56
-msgid ""
-"You can either upload a file containing the license keys, or copy-paste them "
-"into a text field."
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:157
+msgid "Years"
 msgstr ""
 
-#: includes/Controllers/ApiKeys.php:111 includes/Controllers/ApiKeys.php:180
-msgid "You do not have permission to assign API keys to the selected user."
-msgstr ""
-
-#: includes/Controllers/Settings.php:263
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:272
 msgid "You do not have permission to edit this API Key"
 msgstr ""
 
-#: includes/Controllers/Settings.php:308 includes/Controllers/Settings.php:319
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:86
+#: ../../../../plugins/digital-license-manager/includes/Admin/Ajax.php:129
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:317
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:328
 msgid "You do not have permission to view this API Key"
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Settings.php:110
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Settings.php:110
 msgid "You might need to save your permalinks after enabling this option."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails.php:121
-#: includes/Integrations/WooCommerce/Emails.php:138
-#: includes/Integrations/WooCommerce/Emails.php:234
-#: includes/Integrations/WooCommerce/Emails.php:251
-#: includes/Integrations/WooCommerce/Orders.php:442
-msgid "Your license(s)"
+#: ../../../../plugins/digital-license-manager/includes/Controllers/Settings.php:134
+msgid ""
+"Your company address displayed on PDF documents. Enter each line separately "
+"(company name, street, city, country)."
 msgstr ""
 
-#: includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:68
-msgid "Your License(s) - Order #{order_number}"
-msgstr ""
-
-#: includes/Controllers/Licenses.php:248
-msgid "Your license key has been updated successfully."
-msgstr ""
-
-#: templates/woocommerce/dlm/emails/email-order-license-notice.php:22
+#: ../../../../plugins/digital-license-manager/templates/woocommerce/dlm/emails/email-order-license-notice.php:22
 msgid ""
 "Your license keys will shortly be delivered. It can take up to 24 hours, but "
 "usually doesn't take longer than a few minutes. Thank you for your patience."
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Orders.php:444
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:121
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:138
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:234
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails.php:251
+msgid "Your license(s)"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Integrations/WooCommerce/Emails/ResendOrderLicenses.php:68
+msgid "Your License(s) - Order #{order_number}"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:343
+msgid "— None —"
+msgstr ""
+
+#: ../../../../plugins/digital-license-manager/includes/Admin/Strings.php:342
+msgid "— Select a page —"
 msgstr ""

@@ -2073,7 +2073,7 @@ onMounted(() => {
     width: 32px;
     height: 32px;
     border: 3px solid #e5e7eb;
-    border-top-color: #6366f1;
+    border-top-color: #4DB8C4;
     border-radius: 50%;
     animation: dlm-spin 0.8s linear infinite;
 }
