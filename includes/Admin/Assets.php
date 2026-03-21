@@ -105,6 +105,10 @@ class Assets {
 			return;
 		}
 
+		// Hide all WordPress admin notices on DLM pages — they break the Vue SPA layout.
+		remove_all_actions( 'admin_notices' );
+		remove_all_actions( 'all_admin_notices' );
+
 		// Enqueue WordPress media library (needed for image upload fields)
 		wp_enqueue_media();
 
