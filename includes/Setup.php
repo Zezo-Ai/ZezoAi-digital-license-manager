@@ -35,6 +35,7 @@ use IdeoLogix\DigitalLicenseManager\Database\Schema;
 use IdeoLogix\DigitalLicenseManager\Enums\DatabaseTable;
 use IdeoLogix\DigitalLicenseManager\RestAPI\Setup as RestAPISetup;
 use IdeoLogix\DigitalLicenseManager\Utils\CompatibilityHelper;
+use IdeoLogix\DigitalLicenseManager\Utils\FileSystem;
 use WP_Roles;
 
 defined( 'ABSPATH' ) || exit;
@@ -204,102 +205,58 @@ class Setup {
 		$fileLog      = $mainDir . '/debug.log';
 		$fileStatus   = array( 'htaccess' => null, 'defuse' => null, 'secret' => null, 'log' => null );
 
+		$fs       = FileSystem::instance();
 		$oldUmask = umask( 0 );
 
 		// wp-contents/dlm-files/
-		if ( ! file_exists( $mainDir ) ) {
-			@mkdir( $mainDir, 0775, true );
+		if ( ! $fs->exists( $mainDir ) ) {
+			$fs->mkdir( $mainDir, 0775 );
 		} else {
-			$mainDirPerms = substr( sprintf( '%o', fileperms( $mainDir ) ), - 4 );
-
-			if ( $mainDirPerms != '0775' ) {
-				@chmod( $mainDirPerms, 0775 );
-			}
+			$fs->chmod( $mainDir, 0775 );
 		}
 
 		// wp-contents/dlm-files/.htaccess
-		if ( ! file_exists( $fileHtaccess ) ) {
-			$fileHandle = @fopen( $fileHtaccess, 'w' );
-
-			if ( $fileHandle ) {
-				fwrite( $fileHandle, 'deny from all' );
-				fclose( $fileHandle );
+		if ( ! $fs->exists( $fileHtaccess ) ) {
+			if ( $fs->putContents( $fileHtaccess, 'deny from all', 0664 ) ) {
 				$fileStatus['htaccess'] = $fileHtaccess;
 			}
-
-			@chmod( $fileHtaccess, 0664 );
 		} else {
-			$permsFileHtaccess = substr( sprintf( '%o', fileperms( $fileHtaccess ) ), - 4 );
-
-			if ( $permsFileHtaccess != '0664' ) {
-				@chmod( $permsFileHtaccess, 0664 );
-			}
+			$fs->chmod( $fileHtaccess, 0664 );
 			$fileStatus['htaccess'] = $fileHtaccess;
 		}
 
 		if ( ! $cryptoConst ) {
 			// wp-contents/dlm-files/defuse.txt
-			if ( ! file_exists( $fileDefuse ) ) {
-				$defuse     = DefuseCryptoKey::createNewRandomKey();
-				$fileHandle = @fopen( $fileDefuse, 'w' );
-
-				if ( $fileHandle ) {
-					fwrite( $fileHandle, $defuse->saveToAsciiSafeString() );
-					fclose( $fileHandle );
+			if ( ! $fs->exists( $fileDefuse ) ) {
+				$defuse = DefuseCryptoKey::createNewRandomKey();
+				if ( $fs->putContents( $fileDefuse, $defuse->saveToAsciiSafeString(), 0664 ) ) {
 					$fileStatus['defuse'] = $fileDefuse;
 				}
-
-				@chmod( $fileDefuse, 0664 );
 			} else {
-				$permsFileDefuse = substr( sprintf( '%o', fileperms( $fileDefuse ) ), - 4 );
-
-				if ( $permsFileDefuse != '0664' ) {
-					@chmod( $permsFileDefuse, 0664 );
-				}
+				$fs->chmod( $fileDefuse, 0664 );
 				$fileStatus['defuse'] = $fileDefuse;
 			}
 
 			// wp-contents/dlm-files/secret.txt
-			if ( ! file_exists( $fileSecret ) ) {
-				$fileHandle = @fopen( $fileSecret, 'w' );
-
-				if ( $fileHandle ) {
-					fwrite( $fileHandle, bin2hex( openssl_random_pseudo_bytes( 32 ) ) );
-					fclose( $fileHandle );
+			if ( ! $fs->exists( $fileSecret ) ) {
+				if ( $fs->putContents( $fileSecret, bin2hex( openssl_random_pseudo_bytes( 32 ) ), 0664 ) ) {
 					$fileStatus['secret'] = $fileSecret;
 				}
-
-				@chmod( $fileSecret, 0664 );
 			} else {
-				$permsFileSecret = substr( sprintf( '%o', fileperms( $fileSecret ) ), - 4 );
-
-				if ( $permsFileSecret != '0664' ) {
-					@chmod( $permsFileSecret, 0664 );
-				}
+				$fs->chmod( $fileSecret, 0664 );
 				$fileStatus['secret'] = $fileSecret;
 			}
 		}
 
 		// wp-contents/dlm-files/debug.log
-		if ( ! file_exists( $fileLog ) ) {
-			$fileHandle = @fopen( $fileLog, 'w+' );
-
-			if ( $fileHandle ) {
-				fclose( $fileHandle );
+		if ( ! $fs->exists( $fileLog ) ) {
+			if ( $fs->putContents( $fileLog, '', 0664 ) ) {
 				$fileStatus['log'] = $fileLog;
 			}
-
-			@chmod( $fileLog, 0664 );
 		} else {
-			$permsFileSecret = substr( sprintf( '%o', fileperms( $fileLog ) ), - 4 );
-
-			if ( $permsFileSecret != '0664' ) {
-				@chmod( $permsFileSecret, 0664 );
-			}
-
+			$fs->chmod( $fileLog, 0664 );
 			$fileStatus['log'] = $fileLog;
 		}
-
 
 		umask( $oldUmask );
 

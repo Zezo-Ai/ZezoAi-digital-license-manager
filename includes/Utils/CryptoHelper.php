@@ -105,8 +105,9 @@ class CryptoHelper {
 			return;
 		}
 
-		if ( file_exists( $this->uploads_dir . self::DEFUSE_FILE ) ) {
-			$this->keyAscii = file_get_contents( $this->uploads_dir . self::DEFUSE_FILE );
+		$defusePath = $this->uploads_dir . self::DEFUSE_FILE;
+		if ( FileSystem::instance()->exists( $defusePath ) ) {
+			$this->keyAscii = FileSystem::instance()->getContents( $defusePath );
 		}
 	}
 
@@ -121,8 +122,9 @@ class CryptoHelper {
 			return;
 		}
 
-		if ( file_exists( $this->uploads_dir . self::SECRET_FILE ) ) {
-			$this->keySecret = file_get_contents( $this->uploads_dir . self::SECRET_FILE );
+		$secretPath = $this->uploads_dir . self::SECRET_FILE;
+		if ( FileSystem::instance()->exists( $secretPath ) ) {
+			$this->keySecret = FileSystem::instance()->getContents( $secretPath );
 		}
 	}
 
