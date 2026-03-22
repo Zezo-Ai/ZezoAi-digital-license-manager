@@ -64,6 +64,7 @@ class Assets {
 	protected function init() {
 		add_action( 'admin_enqueue_scripts', [ $this, 'register' ], 10 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ], 11 );
+		add_action( 'in_admin_header', [ $this, 'hide_notices' ], PHP_INT_MAX );
 	}
 
 	/**
@@ -105,10 +106,6 @@ class Assets {
 			return;
 		}
 
-		// Hide all WordPress admin notices on DLM pages — they break the Vue SPA layout.
-		remove_all_actions( 'admin_notices' );
-		remove_all_actions( 'all_admin_notices' );
-
 		// Enqueue WordPress media library (needed for image upload fields)
 		wp_enqueue_media();
 
@@ -131,6 +128,22 @@ class Assets {
 	 */
 	protected function should_enqueue( $hook ) {
 		return strpos( $hook, Boot::PAGE_SLUG ) !== false;
+	}
+
+	/**
+	 * Hide all WordPress admin notices on DLM pages.
+	 *
+	 * Hooked on `in_admin_header` at max priority to ensure all notice
+	 * callbacks are already registered before we remove them.
+	 *
+	 * @return void
+	 */
+	public function hide_notices() {
+		$screen = get_current_screen();
+		if ( $screen && strpos( $screen->id, Boot::PAGE_SLUG ) !== false ) {
+			remove_all_actions( 'admin_notices' );
+			remove_all_actions( 'all_admin_notices' );
+		}
 	}
 
 	/**
