@@ -41,6 +41,7 @@ assets/etc/defuse.txt
 assets/etc/secret.txt
 logs/debug.log
 logs/error.log
+assets/admin
 blocks/dist
 blocks/node_modules
 blocks/package-lock.json
