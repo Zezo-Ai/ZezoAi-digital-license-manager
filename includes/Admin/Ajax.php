@@ -896,6 +896,12 @@ class Ajax {
 						'name'   => isset( $section['name'] ) ? $section['name'] : '',
 						'fields' => [],
 					];
+					if ( ! empty( $section['toggle'] ) ) {
+						$section_data['toggle'] = $section['toggle'];
+					}
+					if ( ! empty( $section['depends_on'] ) ) {
+						$section_data['depends_on'] = $section['depends_on'];
+					}
 
 					if ( isset( $section['fields'] ) && is_array( $section['fields'] ) ) {
 						foreach ( $section['fields'] as $field ) {

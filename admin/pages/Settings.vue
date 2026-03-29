@@ -37,6 +37,7 @@
                                         v-for="(section, sectionKey) in activeTabData.sections"
                                         :key="sectionKey"
                                         class="dlm-settings-section"
+                                        v-show="!section.depends_on || settingsValues[section.depends_on] === '1'"
                                     >
                                         <h3 v-if="section.name && sectionCount(activeTabData) > 1">
                                             {{ section.name }}
@@ -46,6 +47,7 @@
                                             v-for="field in section.fields"
                                             :key="field.id"
                                             class="dlm-form-group"
+                                            v-show="!section.toggle || section.toggle === field.id || settingsValues[section.toggle] === '1'"
                                         >
                                             <!-- Checkbox (toggle switch) -->
                                             <template v-if="field.type === 'checkbox'">
