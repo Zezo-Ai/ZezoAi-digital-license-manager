@@ -1,8 +1,32 @@
 {
   "name": "gdarko/digital-license-manager",
-  "description": "A WordPress plugin for managing and selling digital licenses",
+  "description": "Efficiently sell and manage software license keys on WordPress. Works standalone or integrates with WooCommerce for selling licenses.",
+  "version": "2.0.0-beta.15",
   "type": "wordpress-plugin",
-  "license": "GPL-2.0-only",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "wordpress-plugin",
+    "woocommerce",
+    "license-manager",
+    "license-keys",
+    "digital-licenses",
+    "software-licensing",
+    "ecommerce"
+  ],
+  "homepage": "https://codeverve.com/product/digital-license-manager-pro/",
+  "authors": [
+    {
+      "name": "CodeVerve",
+      "homepage": "https://codeverve.com/",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "info@codeverve.com",
+    "issues": "https://wordpress.org/support/plugin/digital-license-manager/",
+    "source": "https://wordpress.org/plugins/digital-license-manager/"
+  },
   "autoload": {
     "psr-4": {
       "IdeoLogix\\DigitalLicenseManager\\": "includes/"
@@ -21,6 +45,9 @@
     "spipu/html2pdf": "^5.2",
     "tecnickcom/tcpdf": "^6.10"
   },
+  "require-dev": {
+    "yoast/phpunit-polyfills": "^1.0"
+  },
   "config": {
     "optimize-autoloader": true
   },
@@ -34,8 +61,5 @@
     "post-update-cmd": [
       "@clean-up"
     ]
-  },
-  "require-dev": {
-    "yoast/phpunit-polyfills": "^1.0"
   }
 }

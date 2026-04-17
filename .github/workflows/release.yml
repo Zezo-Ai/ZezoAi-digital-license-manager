@@ -38,11 +38,15 @@ jobs:
           # Extract version from readme.txt
           README_VERSION=$(grep -Po "Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+" readme.txt)
 
+          # Extract version from composer.json (must match tag exactly, including any pre-release suffix)
+          COMPOSER_VERSION=$(jq -r '.version // empty' composer.json)
+
           echo "Tag version: $TAG_VERSION"
           echo "Base version (for comparison): $BASE_VERSION"
           echo "PHP header version: $PHP_HEADER_VERSION"
           echo "PHP constant version: $PHP_CONSTANT_VERSION"
           echo "Readme version: $README_VERSION"
+          echo "composer.json version: $COMPOSER_VERSION"
 
           # Check if this is a pre-release and output for later steps
           if [ "$TAG_VERSION" != "$BASE_VERSION" ]; then
@@ -68,7 +72,12 @@ jobs:
             exit 1
           fi
 
-          echo "✅ All versions match: $BASE_VERSION"
+          if [ "$TAG_VERSION" != "$COMPOSER_VERSION" ]; then
+            echo "::error::Version mismatch: Tag ($TAG_VERSION) != composer.json ($COMPOSER_VERSION)"
+            exit 1
+          fi
+
+          echo "✅ All versions match: $BASE_VERSION (composer: $COMPOSER_VERSION)"
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
