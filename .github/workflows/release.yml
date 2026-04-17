@@ -123,25 +123,34 @@ jobs:
           name: digital-license-manager-${{ steps.get_version.outputs.VERSION }}
           path: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
 
-      - name: Check SVN deployment eligibility
+      - name: Determine SVN deployment mode
         id: check-svn
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
-          # Only deploy to WordPress.org for stable and RC tags
-          # Skip: -test, -alpha, -alphaN, -alpha.N, -beta, -betaN, -beta.N
-          if [[ "${{ github.ref_name }}" =~ -(test|alpha|beta) ]]; then
+          # Deployment modes:
+          #   none         — no SVN deployment (skipped prereleases or missing creds)
+          #   rc-tag-only  — create tags/$VERSION/ on WP.org SVN but DO NOT touch trunk
+          #                  (keeps current Stable tag intact so RC doesn't trigger
+          #                  auto-updates; users can download via Previous Versions)
+          #   full         — standard 10up deploy: rsync to trunk + create tag
+          if [ -z "$SVN_USERNAME" ] || [ -z "$SVN_PASSWORD" ]; then
+            echo "Skipping WordPress.org deployment: SVN credentials not set"
+            echo "mode=none" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" =~ -(test|alpha|beta) ]]; then
             echo "Skipping WordPress.org deployment for pre-release: ${{ github.ref_name }}"
-            echo "available=false" >> $GITHUB_OUTPUT
-          elif [ -n "$SVN_USERNAME" ] && [ -n "$SVN_PASSWORD" ]; then
-            echo "available=true" >> $GITHUB_OUTPUT
+            echo "mode=none" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" =~ -rc ]]; then
+            echo "RC tag: will create SVN tag only (trunk untouched)"
+            echo "mode=rc-tag-only" >> $GITHUB_OUTPUT
           else
-            echo "available=false" >> $GITHUB_OUTPUT
+            echo "Stable tag: full WordPress.org deployment"
+            echo "mode=full" >> $GITHUB_OUTPUT
           fi
 
-      - name: Deploy to WordPress.org
-        if: steps.check-svn.outputs.available == 'true'
+      - name: Deploy to WordPress.org (full)
+        if: steps.check-svn.outputs.mode == 'full'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
           generate-zip: false
@@ -150,6 +159,54 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: digital-license-manager
           BUILD_DIR: dist/digital-license-manager
+
+      - name: Deploy RC tag to WordPress.org (SVN tag only, trunk untouched)
+        if: steps.check-svn.outputs.mode == 'rc-tag-only'
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+          SLUG: digital-license-manager
+        run: |
+          set -eo pipefail
+          SVN_DIR="$HOME/svn-$SLUG"
+
+          if ! command -v svn >/dev/null 2>&1; then
+            sudo apt-get update -y && sudo apt-get install -y subversion
+          fi
+
+          echo "➤ Checking out SVN (tags dir only)..."
+          svn checkout --depth immediates "https://plugins.svn.wordpress.org/$SLUG/" "$SVN_DIR"
+          svn update --set-depth immediates "$SVN_DIR/tags"
+
+          if [ -d "$SVN_DIR/tags/$VERSION" ]; then
+            echo "ℹ︎ tags/$VERSION already exists on WP.org SVN — nothing to do."
+            exit 0
+          fi
+
+          echo "➤ Creating tags/$VERSION from dist/..."
+          mkdir -p "$SVN_DIR/tags/$VERSION"
+          rsync -rc "$GITHUB_WORKSPACE/dist/$SLUG/" "$SVN_DIR/tags/$VERSION/"
+
+          # Keep the tagged dir's readme.txt self-consistent — tagged version
+          # readme should advertise itself, not an older internal beta tag.
+          # (This does NOT affect what WP.org serves; only trunk's Stable tag
+          # pointer drives downloads/updates, and trunk is untouched here.)
+          if [ -f "$SVN_DIR/tags/$VERSION/readme.txt" ]; then
+            sed -i "s/^Stable tag:.*/Stable tag: $VERSION/" "$SVN_DIR/tags/$VERSION/readme.txt"
+          fi
+
+          cd "$SVN_DIR"
+          svn add "tags/$VERSION"
+
+          echo "➤ Committing SVN tag only (trunk unchanged)..."
+          svn commit -m "Tag $VERSION (pre-release; trunk untouched)" \
+            --no-auth-cache --non-interactive \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+
+          echo "✓ RC tag $VERSION published. Available via:"
+          echo "  - Plugin page → Advanced View → Previous Versions"
+          echo "  - https://downloads.wordpress.org/plugin/$SLUG.$VERSION.zip"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

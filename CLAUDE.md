@@ -1,18 +1,38 @@
 # CLAUDE.md — Digital License Manager (Free)
 
-## Release Checklist
+## Release modes & version bump checklist
 
-When bumping the plugin version, update **all four** of these in the same commit. CI will fail the release if any of them drifts from the git tag.
+Every release flows through a single workflow (`.github/workflows/release.yml`) but behaves differently based on the tag's pre-release suffix. CI fails the release if the tag and source files disagree.
 
-1. `digital-license-manager.php` — the `Version:` header comment
-2. `digital-license-manager.php` — the `DLM_PLUGIN_VERSION` constant
-3. `readme.txt` — the `Stable tag:` line
-4. `composer.json` — the `"version"` field (must match the full tag, including any pre-release suffix)
+### Stable — e.g. `v2.0.0`, `v2.1.3`
 
-Then tag the release as `v<version>` (e.g. `v2.0.1`, `v2.1.0-beta.1`).
+Bumps go in **four** places:
 
-Pre-release suffixes allowed: `-test`, `-alpha[.N]`, `-beta[.N]`, `-rc[.N]`. The tag's base version (everything before the suffix) is what the PHP header, the version constant, and `readme.txt` must match; `composer.json`'s `version` must match the full tag verbatim.
+1. `digital-license-manager.php` — `Version:` header comment
+2. `digital-license-manager.php` — `DLM_PLUGIN_VERSION` constant
+3. `readme.txt` — `Stable tag:` line
+4. `composer.json` — `"version"` field
 
-## Why composer.json is in the checklist
+Deploys to WordPress.org via the standard 10up action: rewrites `trunk/` and creates `tags/<version>/`. Also uploads a ZIP to the GitHub Release.
 
-The plugin is distributed via a private Composer repository in addition to WordPress.org. The release ZIP ships `composer.json` at the root, and its `version` field is the version consumers see via `composer show` / `composer require`. It must match the tag.
+### Release Candidate — e.g. `v2.0.0-rc.1`, `v2.0.0-rc.2`
+
+Bumps go in **three** places — `readme.txt`'s `Stable tag` is NOT touched:
+
+1. `digital-license-manager.php` — `Version:` header comment
+2. `digital-license-manager.php` — `DLM_PLUGIN_VERSION` constant
+3. `composer.json` — `"version"` field (must match the full tag, including the `-rc.N` suffix)
+
+Deploys to WordPress.org SVN as **tag-only**: creates `tags/<version>/` but leaves `trunk/` and the advertised `Stable tag` alone. Existing users are NOT auto-updated. RC is available to users who go to Advanced View → Previous Versions, or hit `https://downloads.wordpress.org/plugin/digital-license-manager.<version>.zip` directly.
+
+### Beta / Alpha / Test — e.g. `v2.0.0-beta.15`, `v2.0.0-alpha.3`, `v2.0.0-test`
+
+Same three-place bump as RC. **No** WordPress.org deployment (skipped in the eligibility step). GitHub Release only, marked as pre-release.
+
+### Base-version matching rule
+
+The CI consistency check compares the tag's base `X.Y.Z` (suffix stripped) against the `X.Y.Z` portion extracted from the PHP header, `DLM_PLUGIN_VERSION`, and `readme.txt`'s `Stable tag`. The pre-release suffix on those is allowed to drift (it's what makes RC/beta tag-only flows possible). `composer.json`'s `version` is compared against the **full** tag verbatim, including suffix.
+
+## Why composer.json is in every checklist
+
+The plugin is published to a private Composer repository in addition to WordPress.org. The release ZIP ships `composer.json` at the root, and its `version` is what consumers see via `composer show` / `composer require`. It must match the tag.
