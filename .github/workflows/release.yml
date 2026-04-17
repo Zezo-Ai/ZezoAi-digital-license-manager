@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Checkout UI library
         run: git clone --depth 1 https://x-access-token:${{ secrets.UI_REPO_TOKEN }}@github.com/digital-license-manager/ui.git ../../libraries/dlm-ui
@@ -118,7 +118,7 @@ jobs:
           zip -r digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip digital-license-manager
 
       - name: Upload ZIP artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: digital-license-manager-${{ steps.get_version.outputs.VERSION }}
           path: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
@@ -209,7 +209,7 @@ jobs:
           echo "  - https://downloads.wordpress.org/plugin/$SLUG.$VERSION.zip"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/digital-license-manager-${{ steps.get_version.outputs.VERSION }}.zip
           generate_release_notes: true
