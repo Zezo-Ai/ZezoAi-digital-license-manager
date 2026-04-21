@@ -31,6 +31,7 @@ use IdeoLogix\DigitalLicenseManager\Abstracts\SettingsFieldsTrait;
 use IdeoLogix\DigitalLicenseManager\Database\Models\ApiKey;
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\ApiKeys;
 use IdeoLogix\DigitalLicenseManager\Admin\Boot as AdminBoot;
+use IdeoLogix\DigitalLicenseManager\Tools\DatabaseRepair;
 use IdeoLogix\DigitalLicenseManager\Tools\Migration\Migration;
 use IdeoLogix\DigitalLicenseManager\Traits\Singleton;
 use IdeoLogix\DigitalLicenseManager\Utils\ArrayFormatter;
@@ -49,7 +50,8 @@ class Settings {
 	 * @var string[]
 	 */
 	protected $tools = [
-		'migration' => Migration::class,
+		'migration'       => Migration::class,
+		'database_repair' => DatabaseRepair::class,
 	];
 
 
