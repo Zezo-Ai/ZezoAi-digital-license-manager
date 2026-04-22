@@ -935,6 +935,10 @@ class Ajax {
 									$field_type = 'repeater';
 								} elseif ( $method === 'fieldColorPicker' ) {
 									$field_type = 'color';
+								} elseif ( $method === 'fieldNumber' ) {
+									$field_type = 'number';
+								} elseif ( $method === 'fieldAbandonedCheckoutSequence' ) {
+									$field_type = 'abandoned_checkout_sequence';
 								}
 							}
 
@@ -1026,6 +1030,19 @@ class Ajax {
 							// For color fields, supply default_value for reset button.
 							if ( $field_type === 'color' && ! empty( $args['default_value'] ) ) {
 								$field_data['default_value'] = $args['default_value'];
+							}
+
+							// For number fields, pass min/max/step through.
+							if ( $field_type === 'number' ) {
+								if ( isset( $args['min'] ) )  { $field_data['min']  = (float) $args['min']; }
+								if ( isset( $args['max'] ) )  { $field_data['max']  = (float) $args['max']; }
+								if ( isset( $args['step'] ) ) { $field_data['step'] = (float) $args['step']; }
+							}
+
+							// For abandoned-checkout sequence, pass max-items cap and merge-tag descriptors to the Vue editor.
+							if ( $field_type === 'abandoned_checkout_sequence' ) {
+								$field_data['max_items']  = isset( $args['max_items'] ) ? (int) $args['max_items'] : 10;
+								$field_data['merge_tags'] = isset( $args['merge_tags'] ) ? $args['merge_tags'] : [];
 							}
 
 							// For items_table, serialize each item's sub-fields into Vue-ready format.
@@ -1152,6 +1169,7 @@ class Ajax {
 		$valid_fields        = [];
 		$array_fields        = [];
 		$textarea_fields     = [];
+		$field_defs          = [];
 
 		// Find the matching tab by slug.
 		foreach ( $tabs as $tab_key => $tab ) {
@@ -1168,7 +1186,8 @@ class Ajax {
 				}
 				foreach ( $sec['fields'] as $field ) {
 					if ( ! empty( $field['id'] ) ) {
-						$valid_fields[] = $field['id'];
+						$valid_fields[]              = $field['id'];
+						$field_defs[ $field['id'] ]  = $field;
 
 						// Detect fields that store array values (e.g. order_delivery_statuses).
 						if ( isset( $field['callback'][1] ) && $field['callback'][1] === 'fieldLicenseKeyDeliveryOptions' ) {
@@ -1192,7 +1211,8 @@ class Ajax {
 										if ( empty( $sub_field['id'] ) ) {
 											continue;
 										}
-										$valid_fields[] = $sub_field['id'];
+										$valid_fields[]                  = $sub_field['id'];
+										$field_defs[ $sub_field['id'] ] = $sub_field;
 										if ( isset( $sub_field['callback'][1] ) ) {
 											if ( $sub_field['callback'][1] === 'fieldRepeater' ) {
 												$array_fields[] = $sub_field['id'];
@@ -1218,6 +1238,17 @@ class Ajax {
 			if ( ! in_array( $key, $valid_fields, true ) ) {
 				continue;
 			}
+
+			// Allow extensions to claim a field ID and provide their own sanitizer.
+			// Filter receives null by default; returning anything other than null
+			// claims the field and that value is stored as-is.
+			$field   = isset( $field_defs[ $key ] ) ? $field_defs[ $key ] : [];
+			$claimed = apply_filters( 'dlm_settings_field_sanitize', null, $key, $field, $value );
+			if ( $claimed !== null ) {
+				$stored[ $key ] = $claimed;
+				continue;
+			}
+
 			if ( in_array( $key, $array_fields, true ) ) {
 				// Array field: sanitize each nested value.
 				$stored[ $key ] = is_array( $value ) ? array_map( function( $item ) {

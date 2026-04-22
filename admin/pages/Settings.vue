@@ -70,6 +70,21 @@
                                                 </div>
                                             </template>
 
+                                            <!-- Number -->
+                                            <template v-else-if="field.type === 'number'">
+                                                <label :for="field.id">{{ field.title }}</label>
+                                                <input
+                                                    :id="field.id"
+                                                    v-model.number="settingsValues[field.id]"
+                                                    type="number"
+                                                    class="dlm-input"
+                                                    :min="field.min"
+                                                    :max="field.max"
+                                                    :step="field.step"
+                                                />
+                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                            </template>
+
                                             <!-- Text -->
                                             <template v-else-if="field.type === 'text'">
                                                 <label :for="field.id">{{ field.title }}</label>
@@ -381,6 +396,20 @@
                                                         </button>
                                                     </template>
                                                 </Modal>
+                                            </template>
+
+                                            <!-- Abandoned Checkout Sequence -->
+                                            <template v-else-if="field.type === 'abandoned_checkout_sequence'">
+                                                <label>{{ field.title }}</label>
+                                                <div class="dlm-acs-cell">
+                                                    <p v-if="field.explain" class="dlm-form-hint dlm-mb-2" v-html="field.explain"></p>
+                                                    <AbandonedCheckoutSequence
+                                                        :model-value="settingsValues[field.id]"
+                                                        @update:model-value="settingsValues[field.id] = $event"
+                                                        :max-items="field.max_items || 10"
+                                                        :merge-tags="field.merge_tags || []"
+                                                    />
+                                                </div>
                                             </template>
                                         </div>
                                     </div>
@@ -785,6 +814,7 @@ import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelec
 import ImageUpload from '@digital-license-manager/ui/components/input/ImageUpload.vue'
 import TextInput from '@digital-license-manager/ui/components/input/TextInput.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
+import AbandonedCheckoutSequence from './settings/AbandonedCheckoutSequence.vue'
 
 const props = defineProps({
     tab: {
@@ -1059,7 +1089,9 @@ async function loadSettings() {
                     for (const [, section] of Object.entries(tab.sections)) {
                         if (section.fields) {
                             for (const field of section.fields) {
-                                const defaultVal = field.type === 'order_statuses' ? {} : ''
+                                let defaultVal = ''
+                                if (field.type === 'order_statuses') defaultVal = {}
+                                else if (field.type === 'abandoned_checkout_sequence') defaultVal = []
                                 settingsValues[field.id] = field.value != null ? field.value : defaultVal
 
                                 // For items_table, populate all item sub-field values

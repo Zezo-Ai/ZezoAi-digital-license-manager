@@ -88,15 +88,21 @@ class Migrator {
 	public function up() {
 		$migrationMode = Migrator::MODE_UP;
 		foreach ( glob( $this->path ) as $fileName ) {
-			if ( preg_match( '/(\d{14})_(.*?)_(.*?)\.php/', $fileName, $match ) ) {
-				$fileBasename    = $match[0];
-				$fileDateTime    = $match[1];
-				$fileVersion     = $match[2];
-				$fileDescription = $match[3];
-				if ( ( (int) $fileVersion <= $this->new_version ) && (int) $fileVersion > $this->current_version ) {
-					require_once $fileName;
-					update_option( $this->db_option, $fileVersion );
-				}
+			// Two accepted filename forms:
+			//   - Legacy timestamped: 20260422000000_104_some_description.php
+			//   - Simple:             migration-0104.php (zero-padded version)
+			$basename = basename( $fileName );
+			if ( preg_match( '/^(\d{14})_(\d+)(?:_.*?)?\.php$/', $basename, $match ) ) {
+				$fileVersion = $match[2];
+			} elseif ( preg_match( '/^migration-(\d+)\.php$/', $basename, $match ) ) {
+				$fileVersion = $match[1];
+			} else {
+				continue;
+			}
+			$fileVersion = (int) $fileVersion;
+			if ( $fileVersion <= (int) $this->new_version && $fileVersion > (int) $this->current_version ) {
+				require_once $fileName;
+				update_option( $this->db_option, $fileVersion );
 			}
 		}
 	}
