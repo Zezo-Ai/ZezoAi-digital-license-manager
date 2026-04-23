@@ -9,7 +9,7 @@
             <div class="dlm-card-body">
                 <!-- Filters Row -->
                 <div class="dlm-filters">
-                    <div class="filter-item">
+                    <div class="dlm-filter-item">
                         <input
                             v-model="filterLicenseKey"
                             type="text"
@@ -18,13 +18,13 @@
                             @keyup.enter="applyFilters"
                         />
                     </div>
-                    <div class="filter-item">
+                    <div class="dlm-filter-item">
                         <select v-model="filterSource" class="dlm-select">
                             <option value="">{{ trans('activations.filters.all_sources') }}</option>
                             <option v-for="(label, value) in sourceOptions" :key="value" :value="value">{{ label }}</option>
                         </select>
                     </div>
-                    <div class="filter-item">
+                    <div class="dlm-filter-item">
                         <button
                             class="dlm-btn dlm-btn-secondary dlm-btn-sm"
                             @click="applyFilters"
@@ -32,7 +32,7 @@
                             {{ trans('activations.filters.filter') }}
                         </button>
                     </div>
-                    <div class="filter-item">
+                    <div class="dlm-filter-item">
                         <select v-model="perPage" class="dlm-select" @change="applyFilters">
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -40,7 +40,7 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <div class="filter-item ml-auto">
+                    <div class="dlm-filter-item dlm-ml-auto">
                         <select v-model="bulkAction" class="dlm-select">
                             <option value="">{{ trans('global.labels.bulk_actions') }}</option>
                             <option value="enable">{{ trans('activations.actions.enable') }}</option>
@@ -73,7 +73,7 @@
                         <LicenseKey :license="{ id: row.license_id, license_key_partial: row.license_key_partial }" show-link />
                     </template>
                     <template #cell-source="{ row }">
-                        <code class="text-xs bg-gray-100 px-2 py-1 rounded">
+                        <code class="dlm-text-xs dlm-bg-gray-100 dlm-px-2 dlm-py-1 dlm-rounded">
                             {{ row.source_label }}
                         </code>
                     </template>
@@ -92,12 +92,12 @@
                         <div class="dlm-row-actions">
                             <button
                                 class="dlm-action-link"
-                                :class="row.deactivated_at ? 'text-success-600' : 'text-warning-600'"
+                                :class="row.deactivated_at ? 'dlm-text-success-600' : 'dlm-text-warning-600'"
                                 @click="toggleActivation(row)"
                             >
                                 {{ row.deactivated_at ? trans('activations.actions.enable') : trans('activations.actions.disable') }}
                             </button>
-                            <button class="dlm-action-link text-danger-600" @click="confirmDelete(row)">
+                            <button class="dlm-action-link dlm-text-danger-600" @click="confirmDelete(row)">
                                 {{ trans('global.actions.delete') }}
                             </button>
                         </div>
@@ -328,15 +328,18 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dlm-filter-item {
-    @apply flex items-center gap-2;
+    @apply dlm-flex dlm-items-center dlm-gap-2;
 }
 
 .dlm-row-actions {
-    @apply flex items-center gap-3;
+    @apply dlm-flex dlm-items-center dlm-gap-3;
 }
 
 .dlm-action-link {
-    @apply text-sm cursor-pointer bg-transparent border-0 p-0;
+    @apply dlm-text-sm dlm-cursor-pointer dlm-bg-transparent dlm-border-0 dlm-p-0;
 }
 
+.dlm-font-mono {
+    font-family: monospace;
+}
 </style>

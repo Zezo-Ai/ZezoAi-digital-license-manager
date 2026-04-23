@@ -235,11 +235,11 @@
                                                         <tr v-for="(item, itemId) in field.items" :key="itemId">
                                                             <td v-for="col in field.columns" :key="col.key">
                                                                 <template v-if="col.key === 'name'">
-                                                                    <div class="font-medium">{{ item.title }}</div>
+                                                                    <div class="dlm-font-medium">{{ item.title }}</div>
                                                                     <div v-if="item.description" class="dlm-gateways-description">{{ item.description }}</div>
                                                                 </template>
                                                                 <template v-else-if="col.key === 'info'">
-                                                                    <span class="text-sm text-gray-600 italic">{{ item.info || '\u2014' }}</span>
+                                                                    <span class="dlm-text-sm dlm-text-gray-600 dlm-italic">{{ item.info || '\u2014' }}</span>
                                                                 </template>
                                                                 <template v-else-if="col.key === 'status'">
                                                                     <span
@@ -344,7 +344,7 @@
                                                             </template>
                                                             <template v-else-if="subField.type === 'repeater'">
                                                                 <label>{{ subField.title }}</label>
-                                                                <p v-if="subField.explain" class="dlm-form-hint mb-2" v-html="subField.explain"></p>
+                                                                <p v-if="subField.explain" class="dlm-form-hint dlm-mb-2" v-html="subField.explain"></p>
 
                                                                 <div
                                                                     v-for="(entry, index) in getRepeaterEntries(subField.id)"
@@ -362,7 +362,7 @@
                                                                             style="width: 80px;"
                                                                         />
                                                                     </template>
-                                                                    <span v-if="subField.sub_fields.length === 1" class="text-sm text-gray-600">{{ subField.sub_fields[0].label }}</span>
+                                                                    <span v-if="subField.sub_fields.length === 1" class="dlm-text-sm dlm-text-gray-600">{{ subField.sub_fields[0].label }}</span>
                                                                     <button
                                                                         type="button"
                                                                         class="dlm-btn dlm-btn-danger dlm-btn-sm"
@@ -375,12 +375,12 @@
                                                                 <button
                                                                     v-if="getRepeaterEntries(subField.id).length < subField.max_items"
                                                                     type="button"
-                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm mt-2"
+                                                                    class="dlm-btn dlm-btn-secondary dlm-btn-sm dlm-mt-2"
                                                                     @click="addRepeaterEntry(subField)"
                                                                 >
                                                                     {{ subField.add_label }}
                                                                 </button>
-                                                                <p v-else class="dlm-form-hint mt-2">{{ subField.max_label }}</p>
+                                                                <p v-else class="dlm-form-hint dlm-mt-2">{{ subField.max_label }}</p>
                                                             </template>
                                                         </div>
                                                     </div>
@@ -402,7 +402,7 @@
                                             <template v-else-if="field.type === 'abandoned_checkout_sequence'">
                                                 <label>{{ field.title }}</label>
                                                 <div class="dlm-acs-cell">
-                                                    <p v-if="field.explain" class="dlm-form-hint mb-2" v-html="field.explain"></p>
+                                                    <p v-if="field.explain" class="dlm-form-hint dlm-mb-2" v-html="field.explain"></p>
                                                     <AbandonedCheckoutSequence
                                                         :model-value="settingsValues[field.id]"
                                                         @update:model-value="settingsValues[field.id] = $event"
@@ -427,7 +427,7 @@
                         <div v-show="activeTab === 'rest_api'">
                             <!-- API Keys Management -->
                             <div class="dlm-api-keys-section">
-                                <div class="flex items-center justify-between mb-4">
+                                <div class="dlm-flex dlm-items-center dlm-justify-between dlm-mb-4">
                                     <h3>{{ trans('settings.rest_api.api_keys_title') }}</h3>
                                     <button
                                         class="dlm-btn dlm-btn-primary dlm-btn-sm"
@@ -438,7 +438,7 @@
                                 </div>
 
                                 <!-- Newly created key credentials -->
-                                <div v-if="newCredentials" class="dlm-credentials-box mb-4">
+                                <div v-if="newCredentials" class="dlm-credentials-box dlm-mb-4">
                                     <div class="dlm-credentials-header">
                                         <svg class="dlm-credentials-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
@@ -508,7 +508,7 @@
                                             />
                                         </div>
 
-                                        <div class="dlm-form-group mt-4">
+                                        <div class="dlm-form-group dlm-mt-4">
                                             <label>{{ trans('settings.rest_api.fields.endpoints') }} *</label>
 
                                             <div class="dlm-endpoint-groups-grid">
@@ -523,7 +523,7 @@
                                                         <button type="button" class="dlm-btn-link" @click="selectAllInGroup(groupKey)">
                                                             {{ trans('global.buttons.select_all') }}
                                                         </button>
-                                                        <span class="text-gray-400">|</span>
+                                                        <span class="dlm-text-gray-400">|</span>
                                                         <button type="button" class="dlm-btn-link" @click="deselectAllInGroup(groupKey)">
                                                             {{ trans('global.buttons.deselect_all') }}
                                                         </button>
@@ -575,7 +575,7 @@
                                                 <td><code>...{{ key.truncated_key }}</code></td>
                                                 <td>{{ key.last_access || trans('settings.rest_api.never') }}</td>
                                                 <td>
-                                                    <div class="flex gap-2">
+                                                    <div class="dlm-flex dlm-gap-2">
                                                         <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="editApiKey(key)">
                                                             {{ trans('global.actions.edit') }}
                                                         </button>
@@ -588,7 +588,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <p v-else-if="!loadingApiKeys" class="text-gray-500">
+                                <p v-else-if="!loadingApiKeys" class="dlm-text-gray-500">
                                     {{ trans('global.messages.no_records') }}
                                 </p>
                             </div>
@@ -608,7 +608,7 @@
                                         <p>{{ tool.description }}</p>
 
                                         <!-- Plugin select -->
-                                        <div class="dlm-form-group mb-3">
+                                        <div class="dlm-form-group dlm-mb-3">
                                             <label>{{ trans('settings.tools.dynamic.select_plugin_label') }}</label>
                                             <select
                                                 v-model="migrationForm.identifier"
@@ -625,7 +625,7 @@
                                         </div>
 
                                         <!-- Preserve IDs checkbox -->
-                                        <div class="dlm-form-group mt-4 mb-3">
+                                        <div class="dlm-form-group dlm-mt-4 dlm-mb-3">
                                             <label>
                                                 <input
                                                     v-model="migrationForm.preserve_ids"
@@ -683,7 +683,7 @@
                                             <div
                                                 v-for="field in tool.form_fields"
                                                 :key="field.name"
-                                                class="dlm-form-group mb-3"
+                                                class="dlm-form-group dlm-mb-3"
                                             >
                                                 <template v-if="field.type === 'ajax_select' || field.type === 'ajax_multiselect'">
                                                     <AsyncSelect
@@ -711,7 +711,7 @@
                                                     </select>
                                                 </template>
                                                 <template v-else-if="field.type === 'checkbox'">
-                                                    <label class="mt-1">
+                                                    <label class="dlm-mt-1">
                                                         <input
                                                             v-model="toolForms[tool.slug][field.name]"
                                                             type="checkbox"
@@ -1478,46 +1478,46 @@ onMounted(() => {
 <style lang="scss" scoped>
 // Layout: sidebar + content
 .dlm-settings-layout {
-    @apply flex gap-6;
+    @apply dlm-flex dlm-gap-6;
     min-height: 500px;
 }
 
 .dlm-settings-nav {
-    @apply shrink-0;
+    @apply dlm-flex-shrink-0;
     width: 240px;
 }
 
 .dlm-settings-nav-list {
-    @apply list-none m-0 p-0;
+    @apply dlm-list-none dlm-m-0 dlm-p-0;
     position: sticky;
     top: 46px;
 
     li {
-        @apply m-0 p-0;
+        @apply dlm-m-0 dlm-p-0;
     }
 }
 
 .dlm-settings-nav-item {
-    @apply flex items-center gap-3 w-full px-4 py-3;
-    @apply text-sm font-medium text-gray-600;
-    @apply bg-transparent border-0 rounded-lg cursor-pointer;
+    @apply dlm-flex dlm-items-center dlm-gap-3 dlm-w-full dlm-px-4 dlm-py-3;
+    @apply dlm-text-sm dlm-font-medium dlm-text-gray-600;
+    @apply dlm-bg-transparent dlm-border-0 dlm-rounded-lg dlm-cursor-pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
 
     &:hover {
-        @apply bg-gray-100 text-gray-900;
+        @apply dlm-bg-gray-100 dlm-text-gray-900;
     }
 
     &--active {
-        @apply bg-primary-50 text-primary-700;
+        @apply dlm-bg-primary-50 dlm-text-primary-700;
 
         .dlm-settings-nav-icon {
-            @apply text-primary-600;
+            @apply dlm-text-primary-600;
         }
     }
 }
 
 .dlm-settings-nav-icon {
-    @apply shrink-0;
+    @apply dlm-flex-shrink-0;
     width: 20px;
     height: 20px;
 
@@ -1528,7 +1528,7 @@ onMounted(() => {
 }
 
 .dlm-settings-content {
-    @apply flex-1;
+    @apply dlm-flex-1;
     min-width: 0;
 
     // Neutralize the outer .dlm-card wrapper so sections render against page background
@@ -1546,10 +1546,10 @@ onMounted(() => {
 }
 
 .dlm-settings-panel-header {
-    @apply mb-6;
+    @apply dlm-mb-6;
 
     h2 {
-        @apply text-lg font-semibold text-gray-900 m-0;
+        @apply dlm-text-lg dlm-font-semibold dlm-text-gray-900 dlm-m-0;
     }
 }
 
@@ -1559,17 +1559,17 @@ onMounted(() => {
 }
 
 .dlm-settings-section {
-    @apply mb-5 bg-white rounded-lg border border-gray-200;
+    @apply dlm-mb-5 dlm-bg-white dlm-rounded-lg dlm-border dlm-border-gray-200;
     padding: 24px 28px;
 
     h3 {
-        @apply font-semibold text-gray-900 uppercase tracking-wide mb-5 pb-3;
+        @apply dlm-font-semibold dlm-text-gray-900 dlm-uppercase dlm-tracking-wide dlm-mb-5 dlm-pb-3;
         font-size: 0.65rem;
         border-bottom: 1px solid #e5e7eb;
     }
 
     .dlm-form-group {
-        @apply mb-0;
+        @apply dlm-mb-0;
         padding: 12px 0;
         border-bottom: 1px solid #f3f4f6;
 
@@ -1607,25 +1607,25 @@ onMounted(() => {
 
 // REST API tab card
 .dlm-api-keys-section {
-    @apply bg-white rounded-lg border border-gray-200;
+    @apply dlm-bg-white dlm-rounded-lg dlm-border dlm-border-gray-200;
     padding: 24px 28px;
 }
 
 // Order statuses table
 .dlm-order-statuses-table {
-    @apply w-full text-sm;
+    @apply dlm-w-full dlm-text-sm;
     max-width: 560px;
 
     th {
-        @apply text-left p-2 border-b border-gray-200 font-medium text-gray-600;
+        @apply dlm-text-left dlm-p-2 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
     }
 
     td {
-        @apply p-2 border-b border-gray-100;
+        @apply dlm-p-2 dlm-border-b dlm-border-gray-100;
     }
 
     tr:nth-child(even) {
-        @apply bg-gray-50;
+        @apply dlm-bg-gray-50;
     }
 }
 
@@ -1661,21 +1661,28 @@ onMounted(() => {
 
 // Footer for save button
 .dlm-settings-footer {
-    @apply mt-6 pt-4;
+    @apply dlm-mt-6 dlm-pt-4;
 }
 
+.dlm-mt-4 {
+    margin-top: 1rem;
+}
+
+.dlm-mb-4 {
+    margin-bottom: 1rem;
+}
 
 // Tools & Help cards
 .dlm-tools-card {
-    @apply flex gap-4 p-5 rounded-lg border border-gray-200 bg-white;
+    @apply dlm-flex dlm-gap-4 dlm-p-5 dlm-rounded-lg dlm-border dlm-border-gray-200 dlm-bg-white;
 
     & + & {
-        @apply mt-4;
+        @apply dlm-mt-4;
     }
 }
 
 .dlm-tools-card-icon {
-    @apply shrink-0 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500;
+    @apply dlm-flex-shrink-0 dlm-rounded-lg dlm-bg-gray-100 dlm-flex dlm-items-center dlm-justify-center dlm-text-gray-500;
     width: 40px;
     height: 40px;
 
@@ -1686,18 +1693,18 @@ onMounted(() => {
 }
 
 .dlm-tools-card-content {
-    @apply flex-1;
+    @apply dlm-flex-1;
 
     h3 {
-        @apply text-base font-semibold mb-2 mt-0;
+        @apply dlm-text-base dlm-font-semibold dlm-mb-2 dlm-mt-0;
     }
 
     p {
-        @apply text-sm text-gray-600 mb-4;
+        @apply dlm-text-sm dlm-text-gray-600 dlm-mb-4;
     }
 
     .dlm-btn {
-        @apply mt-4;
+        @apply dlm-mt-4;
     }
 }
 
@@ -1709,18 +1716,18 @@ onMounted(() => {
 }
 
 .dlm-api-key-form-actions {
-    @apply flex gap-2 mt-5 pt-4;
+    @apply dlm-flex dlm-gap-2 dlm-mt-5 dlm-pt-4;
     border-top: 1px solid #f3f4f6;
 }
 
 .dlm-credentials-box {
-    @apply rounded-lg overflow-hidden;
+    @apply dlm-rounded-lg dlm-overflow-hidden;
     border: 1px solid #fbbf24;
     background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 }
 
 .dlm-credentials-header {
-    @apply flex items-start gap-3 p-4;
+    @apply dlm-flex dlm-items-start dlm-gap-3 dlm-p-4;
     background: rgba(251, 191, 36, 0.15);
     border-bottom: 1px solid rgba(251, 191, 36, 0.3);
 }
@@ -1734,13 +1741,13 @@ onMounted(() => {
 }
 
 .dlm-credentials-title {
-    @apply font-semibold m-0;
+    @apply dlm-font-semibold dlm-m-0;
     color: #92400e;
     font-size: 0.9rem;
 }
 
 .dlm-credentials-keys {
-    @apply p-4;
+    @apply dlm-p-4;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -1748,7 +1755,7 @@ onMounted(() => {
 
 .dlm-credentials-key-row {
     label {
-        @apply block text-xs font-medium mb-1;
+        @apply dlm-block dlm-text-xs dlm-font-medium dlm-mb-1;
         color: #92400e;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -1756,10 +1763,10 @@ onMounted(() => {
 }
 
 .dlm-credentials-key-value {
-    @apply flex items-center gap-2;
+    @apply dlm-flex dlm-items-center dlm-gap-2;
 
     code {
-        @apply flex-1 p-3 bg-white rounded-md font-mono text-sm;
+        @apply dlm-flex-1 dlm-p-3 dlm-bg-white dlm-rounded-md dlm-font-mono dlm-text-sm;
         border: 1px solid #e5e7eb;
         word-break: break-all;
         color: #1f2937;
@@ -1767,7 +1774,7 @@ onMounted(() => {
 }
 
 .dlm-credentials-copy {
-    @apply flex items-center justify-center p-2 rounded-md cursor-pointer;
+    @apply dlm-flex dlm-items-center dlm-justify-center dlm-p-2 dlm-rounded-md dlm-cursor-pointer;
     background: white;
     border: 1px solid #e5e7eb;
     color: #6b7280;
@@ -1791,7 +1798,7 @@ onMounted(() => {
 
 // Responsive table wrapper
 .dlm-table-responsive {
-    @apply w-full;
+    @apply dlm-w-full;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -1801,57 +1808,61 @@ onMounted(() => {
 }
 
 .dlm-table {
-    @apply w-full text-sm;
+    @apply dlm-w-full dlm-text-sm;
 
     th {
-        @apply text-left p-2 border-b border-gray-200 font-medium text-gray-600;
+        @apply dlm-text-left dlm-p-2 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
     }
 
     td {
-        @apply p-2 border-b border-gray-100;
+        @apply dlm-p-2 dlm-border-b dlm-border-gray-100;
     }
 }
 
 .dlm-badge {
-    @apply inline-block px-2 py-0.5 text-xs font-medium rounded bg-gray-100 text-gray-700;
+    @apply dlm-inline-block dlm-px-2 dlm-py-0.5 dlm-text-xs dlm-font-medium dlm-rounded dlm-bg-gray-100 dlm-text-gray-700;
 }
 
 .dlm-badge-success {
-    @apply bg-green-100 text-green-700;
+    @apply dlm-bg-green-100 dlm-text-green-700;
 }
 
 .dlm-badge-gray {
-    @apply bg-gray-100 text-gray-500;
+    @apply dlm-bg-gray-100 dlm-text-gray-500;
 }
 
 // Payment Gateways table
 .dlm-gateways-table {
-    @apply w-full text-sm;
+    @apply dlm-w-full dlm-text-sm;
 
     th {
-        @apply text-left p-3 border-b border-gray-200 font-medium text-gray-600;
+        @apply dlm-text-left dlm-p-3 dlm-border-b dlm-border-gray-200 dlm-font-medium dlm-text-gray-600;
     }
 
     td {
-        @apply p-3 border-b border-gray-100;
+        @apply dlm-p-3 dlm-border-b dlm-border-gray-100;
         vertical-align: middle;
     }
 
 }
 
 .dlm-gateways-description {
-    @apply text-xs text-gray-500 mt-0.5;
+    @apply dlm-text-xs dlm-text-gray-500 dlm-mt-0.5;
 }
 
 // Notification reminder rows
 .dlm-notification-reminder-row {
-    @apply flex items-center gap-2 mb-2;
+    @apply dlm-flex dlm-items-center dlm-gap-2 dlm-mb-2;
+}
+
+.dlm-font-medium {
+    font-weight: 500;
 }
 
 // Gateway modal fields
 .dlm-gateway-modal-fields {
     .dlm-form-group {
-        @apply mb-0;
+        @apply dlm-mb-0;
         padding: 12px 0;
         border-bottom: 1px solid #f3f4f6;
 
@@ -1894,7 +1905,7 @@ onMounted(() => {
 }
 
 .dlm-endpoint-group {
-    @apply rounded-lg overflow-hidden;
+    @apply dlm-rounded-lg dlm-overflow-hidden;
     border: 1px solid #e5e7eb;
     border-top: 3px solid;
 
@@ -1926,12 +1937,12 @@ onMounted(() => {
 }
 
 .dlm-endpoint-group-header {
-    @apply flex items-center justify-between px-3 py-2;
+    @apply dlm-flex dlm-items-center dlm-justify-between dlm-px-3 dlm-py-2;
     border-bottom: 1px solid #e5e7eb;
 }
 
 .dlm-endpoint-group-title {
-    @apply flex items-center gap-2 font-semibold text-gray-700;
+    @apply dlm-flex dlm-items-center dlm-gap-2 dlm-font-semibold dlm-text-gray-700;
     font-size: 0.8rem;
 }
 
@@ -1942,11 +1953,11 @@ onMounted(() => {
 }
 
 .dlm-endpoint-group-actions {
-    @apply flex items-center gap-1;
+    @apply dlm-flex dlm-items-center dlm-gap-1;
 }
 
 .dlm-btn-link {
-    @apply bg-transparent border-0 p-0 cursor-pointer;
+    @apply dlm-bg-transparent dlm-border-0 dlm-p-0 dlm-cursor-pointer;
     color: #6b7280;
     font-size: 0.7rem;
 
@@ -1961,7 +1972,7 @@ onMounted(() => {
 }
 
 .dlm-endpoint-item {
-    @apply flex items-center gap-3 rounded;
+    @apply dlm-flex dlm-items-center dlm-gap-3 dlm-rounded;
     padding: 4px 6px;
     font-size: 0.75rem;
     transition: background-color 0.15s ease;
@@ -1978,24 +1989,24 @@ onMounted(() => {
 }
 
 .dlm-endpoint-route {
-    @apply font-mono;
+    @apply dlm-font-mono;
     font-size: 0.7rem;
     color: #374151;
 }
 
 .dlm-endpoint-method {
-    @apply inline-block text-center font-bold rounded text-white;
+    @apply dlm-inline-block dlm-text-center dlm-font-bold dlm-rounded dlm-text-white;
     width: 38px;
     padding: 1px 4px;
     font-size: 0.6rem;
     flex-shrink: 0;
 
     &.dlm-method-get {
-        @apply bg-green-500;
+        @apply dlm-bg-green-500;
     }
 
     &.dlm-method-post {
-        @apply bg-blue-500;
+        @apply dlm-bg-blue-500;
     }
 
     &.dlm-method-put {
@@ -2003,54 +2014,58 @@ onMounted(() => {
     }
 
     &.dlm-method-delete {
-        @apply bg-red-500;
+        @apply dlm-bg-red-500;
     }
 }
 
 .dlm-btn-danger {
-    @apply bg-red-600 text-white;
+    @apply dlm-bg-red-600 dlm-text-white;
 
     &:hover {
-        @apply bg-red-700;
+        @apply dlm-bg-red-700;
     }
 }
 
 // Tool progress bar
 .dlm-tool-progress {
-    @apply mt-3 mb-3;
+    @apply dlm-mt-3 dlm-mb-3;
 }
 
 .dlm-tool-progress-bar {
-    @apply w-full bg-gray-200 rounded-full overflow-hidden;
+    @apply dlm-w-full dlm-bg-gray-200 dlm-rounded-full dlm-overflow-hidden;
     height: 8px;
 }
 
 .dlm-tool-progress-bar-inner {
-    @apply bg-primary-600 rounded-full;
+    @apply dlm-bg-primary-600 dlm-rounded-full;
     height: 100%;
     transition: width 0.3s ease;
 }
 
 .dlm-tool-progress-info {
-    @apply text-sm text-gray-600 mt-1;
+    @apply dlm-text-sm dlm-text-gray-600 dlm-mt-1;
 }
 
 .dlm-tool-status {
-    @apply mb-3;
+    @apply dlm-mb-3;
 
     a {
-        @apply text-primary-600 cursor-pointer ml-2;
+        @apply dlm-text-primary-600 dlm-cursor-pointer dlm-ml-2;
 
         &:hover {
-            @apply underline;
+            @apply dlm-underline;
         }
     }
+}
+
+.dlm-mb-3 {
+    margin-bottom: 0.75rem;
 }
 
 // Responsive: stack vertically on narrow screens
 @media (max-width: 768px) {
     .dlm-settings-layout {
-        @apply flex-col;
+        @apply dlm-flex-col;
     }
 
     .dlm-settings-nav {
@@ -2058,11 +2073,11 @@ onMounted(() => {
     }
 
     .dlm-settings-nav-list {
-        @apply flex overflow-x-auto gap-1 pb-2;
+        @apply dlm-flex dlm-overflow-x-auto dlm-gap-1 dlm-pb-2;
         position: static;
 
         li {
-            @apply shrink-0;
+            @apply dlm-flex-shrink-0;
         }
     }
 
@@ -2084,7 +2099,7 @@ onMounted(() => {
 
 // Loading state
 .dlm-loading-container {
-    @apply flex items-center justify-center;
+    @apply dlm-flex dlm-items-center dlm-justify-center;
     min-height: 300px;
 }
 
