@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { configure } from '@digital-license-manager/ui/setup'
 import menuFix from '@digital-license-manager/ui/utils/admin-menu-fix.js'
-import '@digital-license-manager/ui/styles/main.scss'
+import './tailwind-entry.css'
 import App from './App.vue'
 import router from './router/router.js'
 

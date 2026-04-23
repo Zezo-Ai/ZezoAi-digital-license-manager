@@ -500,7 +500,9 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@reference "../tailwind-entry.css";
+
 .dlm-row-actions {
     @apply flex items-center gap-3;
 }

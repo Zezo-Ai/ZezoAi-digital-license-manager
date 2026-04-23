@@ -200,7 +200,9 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@reference "../tailwind-entry.css";
+
 .dlm-filter-item {
     @apply flex items-center gap-2;
 }

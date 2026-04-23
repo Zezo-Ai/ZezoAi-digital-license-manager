@@ -1,0 +1,7 @@
+/* Tailwind entry for the free admin SPA.
+   Declares our scan roots from the plugin's base dir, then imports the
+   shared UI-lib SCSS (which pulls in @import "tailwindcss/..." + @theme). */
+@source "./";
+@source "../node_modules/@digital-license-manager/ui/components";
+
+@import "@digital-license-manager/ui/styles/main.scss";

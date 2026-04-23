@@ -157,7 +157,9 @@ async function copyKey() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@reference "../tailwind-entry.css";
+
 .dlm-license-key-cell {
     @apply flex items-center gap-2;
 }

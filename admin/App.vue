@@ -28,7 +28,7 @@ function getRouteKey(route) {
 }
 </script>
 
-<style lang="scss">
+<style>
 .dlm-app {
     margin-top: 15px;
 }

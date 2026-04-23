@@ -344,7 +344,9 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@reference "../tailwind-entry.css";
+
 .dlm-status-filters {
     @apply flex flex-wrap gap-2 border-b border-gray-200 pb-3;
 }

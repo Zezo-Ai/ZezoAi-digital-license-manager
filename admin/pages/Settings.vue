@@ -1475,8 +1475,10 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
-// Layout: sidebar + content
+<style scoped>
+@reference "../tailwind-entry.css";
+
+/* Layout: sidebar + content */
 .dlm-settings-layout {
     @apply flex gap-6;
     min-height: 500px;
@@ -1531,8 +1533,8 @@ onMounted(() => {
     @apply flex-1;
     min-width: 0;
 
-    // Neutralize the outer .dlm-card wrapper so sections render against page background
-    // Use child combinator to protect nested .dlm-card (e.g. REST API key form)
+    /* Neutralize the outer .dlm-card wrapper so sections render against page background */
+    /* Use child combinator to protect nested .dlm-card (e.g. REST API key form) */
     > .dlm-card {
         background: transparent !important;
         border: none !important;
@@ -1553,7 +1555,7 @@ onMounted(() => {
     }
 }
 
-// General tab form
+/* General tab form */
 .dlm-settings-form {
     max-width: none;
 }
@@ -1573,7 +1575,7 @@ onMounted(() => {
         padding: 12px 0;
         border-bottom: 1px solid #f3f4f6;
 
-        // Horizontal grid for text/select/switch inputs: label left, input right
+        /* Horizontal grid for text/select/switch inputs: label left, input right */
         &:has(.dlm-input), &:has(.dlm-switch) {
             display: grid;
             grid-template-columns: 200px 1fr;
@@ -1581,7 +1583,7 @@ onMounted(() => {
             align-items: start;
 
             > label {
-                padding-top: 7px; // vertical-align with input
+                padding-top: 7px; /* vertical-align with input */
             }
 
             .dlm-input {
@@ -1605,13 +1607,13 @@ onMounted(() => {
     }
 }
 
-// REST API tab card
+/* REST API tab card */
 .dlm-api-keys-section {
     @apply bg-white rounded-lg border border-gray-200;
     padding: 24px 28px;
 }
 
-// Order statuses table
+/* Order statuses table */
 .dlm-order-statuses-table {
     @apply w-full text-sm;
     max-width: 560px;
@@ -1629,7 +1631,7 @@ onMounted(() => {
     }
 }
 
-// Color picker field
+/* Color picker field */
 .dlm-color-field {
     display: flex;
     align-items: center;
@@ -1651,7 +1653,7 @@ onMounted(() => {
     font-family: monospace;
 }
 
-// Textarea styling
+/* Textarea styling */
 .dlm-textarea {
     resize: vertical;
     min-height: 60px;
@@ -1659,13 +1661,13 @@ onMounted(() => {
     font-family: inherit;
 }
 
-// Footer for save button
+/* Footer for save button */
 .dlm-settings-footer {
     @apply mt-6 pt-4;
 }
 
 
-// Tools & Help cards
+/* Tools & Help cards */
 .dlm-tools-card {
     @apply flex gap-4 p-5 rounded-lg border border-gray-200 bg-white;
 
@@ -1701,7 +1703,7 @@ onMounted(() => {
     }
 }
 
-// API key form layout
+/* API key form layout */
 .dlm-api-key-form-fields {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -1789,7 +1791,7 @@ onMounted(() => {
     margin: 0 16px 16px 16px;
 }
 
-// Responsive table wrapper
+/* Responsive table wrapper */
 .dlm-table-responsive {
     @apply w-full;
     overflow-x: auto;
@@ -1824,7 +1826,7 @@ onMounted(() => {
     @apply bg-gray-100 text-gray-500;
 }
 
-// Payment Gateways table
+/* Payment Gateways table */
 .dlm-gateways-table {
     @apply w-full text-sm;
 
@@ -1843,12 +1845,12 @@ onMounted(() => {
     @apply text-xs text-gray-500 mt-0.5;
 }
 
-// Notification reminder rows
+/* Notification reminder rows */
 .dlm-notification-reminder-row {
     @apply flex items-center gap-2 mb-2;
 }
 
-// Gateway modal fields
+/* Gateway modal fields */
 .dlm-gateway-modal-fields {
     .dlm-form-group {
         @apply mb-0;
@@ -1882,7 +1884,7 @@ onMounted(() => {
     }
 }
 
-// Endpoint groups - 2-column grid layout
+/* Endpoint groups - 2-column grid layout */
 .dlm-endpoint-groups-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1898,7 +1900,7 @@ onMounted(() => {
     border: 1px solid #e5e7eb;
     border-top: 3px solid;
 
-    // Licenses group - green accent
+    /* Licenses group - green accent */
     &[data-group="licenses"] {
         border-top-color: #10b981;
 
@@ -1911,7 +1913,7 @@ onMounted(() => {
         }
     }
 
-    // Generators group - purple accent
+    /* Generators group - purple accent */
     &[data-group="generators"] {
         border-top-color: #8b5cf6;
 
@@ -2015,7 +2017,7 @@ onMounted(() => {
     }
 }
 
-// Tool progress bar
+/* Tool progress bar */
 .dlm-tool-progress {
     @apply mt-3 mb-3;
 }
@@ -2047,7 +2049,7 @@ onMounted(() => {
     }
 }
 
-// Responsive: stack vertically on narrow screens
+/* Responsive: stack vertically on narrow screens */
 @media (max-width: 768px) {
     .dlm-settings-layout {
         @apply flex-col;
@@ -2082,7 +2084,7 @@ onMounted(() => {
     }
 }
 
-// Loading state
+/* Loading state */
 .dlm-loading-container {
     @apply flex items-center justify-center;
     min-height: 300px;

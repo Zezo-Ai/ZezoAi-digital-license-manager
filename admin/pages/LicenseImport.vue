@@ -169,7 +169,9 @@ async function importLicenses() {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@reference "../tailwind-entry.css";
+
 .dlm-import-stats {
     @apply flex gap-8;
 }

@@ -277,7 +277,9 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@reference "../tailwind-entry.css";
+
 .dlm-license-preview {
     @apply p-4 bg-gray-100 rounded-md font-mono text-lg text-center;
 }
