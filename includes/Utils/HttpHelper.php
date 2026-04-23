@@ -35,36 +35,62 @@ defined( 'ABSPATH' ) || exit;
 class HttpHelper {
 
 	/**
-	 * Return the client ip address
-	 * @return array|false|string|null
+	 * Return the real client IP address.
+	 *
+	 * Reads proxy-forwarded headers from `$_SERVER` (not `getenv()`, which
+	 * under PHP-FPM doesn't receive HTTP_* headers by default), prefers the
+	 * first public IP in a forwarded chain (so private proxy hops like k8s
+	 * pod IPs are skipped), and validates every candidate.
+	 *
+	 * Short-circuit with the `dlm_pre_client_ip` filter; post-process with
+	 * `dlm_client_ip` (receives the resolved IP and the header it came from).
+	 *
+	 * @return string Empty string when no valid IP is found.
 	 */
 	public static function clientIp() {
 
-		$addr = null;
-		if ( getenv( 'HTTP_CLIENT_IP' ) ) {
-			$addr = getenv( 'HTTP_CLIENT_IP' );
-		} else if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
-			$addr = getenv( 'HTTP_X_FORWARDED_FOR' );
-		} else if ( getenv( 'HTTP_X_FORWARDED' ) ) {
-			$addr = getenv( 'HTTP_X_FORWARDED' );
-		} else if ( getenv( 'HTTP_FORWARDED_FOR' ) ) {
-			$addr = getenv( 'HTTP_FORWARDED_FOR' );
-		} else if ( getenv( 'HTTP_FORWARDED' ) ) {
-			$addr = getenv( 'HTTP_FORWARDED' );
-		} else if ( getenv( 'REMOTE_ADDR' ) ) {
-			$addr = getenv( 'REMOTE_ADDR' );
+		$pre = apply_filters( 'dlm_pre_client_ip', null );
+		if ( is_string( $pre ) && '' !== $pre ) {
+			return $pre;
 		}
 
-		/**
-		 * When the site is behind CloudFlare it returns comma separated IP addresses,
-		 * In this case, we only need the first ip address to be returned.
-		 */
-		if ( ! is_null( $addr ) && strpos( $addr, ',' ) !== false ) {
-			$addr = trim( current( preg_split( '/,/', sanitize_text_field( wp_unslash( $addr ) ) ) ) );
+		$headers = [
+			'HTTP_CF_CONNECTING_IP', // Cloudflare
+			'HTTP_TRUE_CLIENT_IP',   // Cloudflare Enterprise / Akamai
+			'HTTP_X_REAL_IP',        // Traefik / nginx — explicit client IP
+			'HTTP_X_FORWARDED_FOR',  // Standard, may be comma-separated chain
+			'HTTP_X_FORWARDED',
+			'HTTP_FORWARDED_FOR',
+			'HTTP_FORWARDED',
+			'HTTP_CLIENT_IP',
+			'REMOTE_ADDR',
+		];
+
+		$private_fallback = '';
+
+		foreach ( $headers as $header ) {
+			if ( empty( $_SERVER[ $header ] ) ) {
+				continue;
+			}
+			$raw = sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) );
+
+			// Leftmost entry in a forwarded chain is the original client.
+			foreach ( array_map( 'trim', explode( ',', $raw ) ) as $candidate ) {
+				if ( '' === $candidate ) {
+					continue;
+				}
+				// Prefer the first public IP — skips k8s pod IPs, LAN hops, etc.
+				if ( filter_var( $candidate, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+					return apply_filters( 'dlm_client_ip', $candidate, $header );
+				}
+				// Remember the first private-but-valid IP in case no public IP is found.
+				if ( '' === $private_fallback && filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
+					$private_fallback = $candidate;
+				}
+			}
 		}
 
-		return $addr;
-
+		return apply_filters( 'dlm_client_ip', $private_fallback, 'fallback' );
 	}
 
 	/**
