@@ -51,7 +51,7 @@ export default defineConfig({
         assetsDir: '',
         emptyOutDir: true,
 
-        rollupOptions: {
+        rolldownOptions: {
             input: 'admin/main.js',
             output: {
                 entryFileNames: 'scripts.js',
