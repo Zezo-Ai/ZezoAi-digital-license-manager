@@ -75,13 +75,18 @@ class Assets {
 	public function register() {
 		$version   = defined( 'DLM_PLUGIN_VERSION' ) ? DLM_PLUGIN_VERSION : '1.0.0';
 		$asset_url = defined( 'DLM_PLUGIN_URL' ) ? DLM_PLUGIN_URL . 'assets/admin/' : '';
+		$asset_dir = defined( 'DLM_PLUGIN_DIR' ) ? DLM_PLUGIN_DIR . 'assets/admin/' : '';
+		$js_path   = $asset_dir . 'scripts.js';
+		$css_path  = $asset_dir . 'styles.css';
+		$js_ver    = ( defined( 'DLM_DEVELOPMENT' ) && DLM_DEVELOPMENT && file_exists( $js_path ) )  ? (string) filemtime( $js_path )  : $version;
+		$css_ver   = ( defined( 'DLM_DEVELOPMENT' ) && DLM_DEVELOPMENT && file_exists( $css_path ) ) ? (string) filemtime( $css_path ) : $version;
 
 		// Register Vue admin script
 		wp_register_script(
 			self::SCRIPT_HANDLE,
 			$asset_url . 'scripts.js',
 			[],
-			$version,
+			$js_ver,
 			true
 		);
 
@@ -90,7 +95,7 @@ class Assets {
 			self::STYLE_HANDLE,
 			$asset_url . 'styles.css',
 			[],
-			$version
+			$css_ver
 		);
 	}
 
