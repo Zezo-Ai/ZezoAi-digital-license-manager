@@ -1,6 +1,6 @@
 <template>
     <div class="dlm-license-key-cell">
-        <span v-if="revealed" class="dlm-license-key dlm-font-mono">
+        <span v-if="revealed" class="dlm-license-key font-mono">
             {{ decryptedKey }}
         </span>
         <span v-else class="dlm-license-key dlm-license-key-hidden">
@@ -17,8 +17,8 @@
                 @click="revealKey"
             >
                 <svg v-if="loading" class="dlm-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="dlm-opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="dlm-opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                 </svg>
                 <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
@@ -46,7 +46,7 @@
                 :title="trans('licenses.actions.copy_key')"
                 @click="copyKey"
             >
-                <svg v-if="copied" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="dlm-text-success-600">
+                <svg v-if="copied" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-success-600">
                     <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
                 </svg>
                 <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -159,24 +159,21 @@ async function copyKey() {
 
 <style lang="scss" scoped>
 .dlm-license-key-cell {
-    @apply dlm-flex dlm-items-center dlm-gap-2;
+    @apply flex items-center gap-2;
 }
 
 .dlm-license-key-actions {
-    @apply dlm-flex dlm-items-center dlm-gap-1;
+    @apply flex items-center gap-1;
 }
 
 .dlm-key-action {
-    @apply dlm-p-1 dlm-rounded dlm-text-gray-400 hover:dlm-text-gray-600 dlm-bg-transparent dlm-border-0 dlm-cursor-pointer dlm-no-underline;
-    @apply disabled:dlm-opacity-50 disabled:dlm-cursor-not-allowed;
+    @apply p-1 rounded text-gray-400 hover:text-gray-600 bg-transparent border-0 cursor-pointer no-underline;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
     color: inherit;
 
     svg {
-        @apply dlm-w-4 dlm-h-4;
+        @apply w-4 h-4;
     }
 }
 
-.dlm-font-mono {
-    font-family: monospace;
-}
 </style>

@@ -17,7 +17,7 @@
             <div class="dlm-card-body">
                 <!-- Filters Row -->
                 <div class="dlm-filters">
-                    <div class="dlm-filter-item">
+                    <div class="filter-item">
                         <input
                             v-model="search"
                             type="text"
@@ -26,7 +26,7 @@
                             @keyup.enter="loadGenerators"
                         />
                     </div>
-                    <div class="dlm-filter-item">
+                    <div class="filter-item">
                         <select v-model="perPage" class="dlm-select" @change="loadGenerators">
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -51,7 +51,7 @@
                             <router-link :to="`/generators/${row.id}/edit`" class="dlm-action-link">
                                 {{ trans('global.actions.edit') }}
                             </router-link>
-                            <button class="dlm-action-link dlm-text-danger-600" @click="confirmDelete(row)">
+                            <button class="dlm-action-link text-danger-600" @click="confirmDelete(row)">
                                 {{ trans('global.actions.delete') }}
                             </button>
                         </div>
@@ -202,14 +202,14 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dlm-filter-item {
-    @apply dlm-flex dlm-items-center dlm-gap-2;
+    @apply flex items-center gap-2;
 }
 
 .dlm-row-actions {
-    @apply dlm-flex dlm-items-center dlm-gap-3;
+    @apply flex items-center gap-3;
 }
 
 .dlm-action-link {
-    @apply dlm-text-sm dlm-cursor-pointer dlm-bg-transparent dlm-border-0 dlm-p-0;
+    @apply text-sm cursor-pointer bg-transparent border-0 p-0;
 }
 </style>

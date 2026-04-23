@@ -12,7 +12,7 @@
                     <TextArea
                         id="license_keys"
                         v-model="form.license_keys"
-                        class="dlm-col-span-2"
+                        class="col-span-2"
                         :label="trans('licenses.import.fields.license_keys')"
                         :placeholder="trans('licenses.import.placeholders.license_keys')"
                         :hint="trans('licenses.import.hints.license_keys')"
@@ -79,27 +79,27 @@
         </form>
 
         <!-- Import Results -->
-        <div v-if="results" class="dlm-card dlm-mt-6">
+        <div v-if="results" class="dlm-card mt-6">
             <div class="dlm-card-header">
                 <h3>{{ trans('licenses.import.results.title') }}</h3>
             </div>
             <div class="dlm-card-body">
                 <div class="dlm-import-stats">
                     <div class="dlm-stat">
-                        <span class="dlm-stat-value dlm-text-success-600">{{ results.imported }}</span>
+                        <span class="dlm-stat-value text-success-600">{{ results.imported }}</span>
                         <span class="dlm-stat-label">{{ trans('licenses.import.results.imported') }}</span>
                     </div>
                     <div class="dlm-stat">
-                        <span class="dlm-stat-value dlm-text-warning-600">{{ results.skipped }}</span>
+                        <span class="dlm-stat-value text-warning-600">{{ results.skipped }}</span>
                         <span class="dlm-stat-label">{{ trans('licenses.import.results.skipped') }}</span>
                     </div>
                     <div class="dlm-stat">
-                        <span class="dlm-stat-value dlm-text-danger-600">{{ results.failed }}</span>
+                        <span class="dlm-stat-value text-danger-600">{{ results.failed }}</span>
                         <span class="dlm-stat-label">{{ trans('licenses.import.results.failed') }}</span>
                     </div>
                 </div>
 
-                <div v-if="results.errors && results.errors.length > 0" class="dlm-mt-4">
+                <div v-if="results.errors && results.errors.length > 0" class="mt-4">
                     <h4>{{ trans('licenses.import.results.errors') }}</h4>
                     <ul class="dlm-error-list">
                         <li v-for="(error, index) in results.errors" :key="index">{{ error }}</li>
@@ -171,22 +171,22 @@ async function importLicenses() {
 
 <style lang="scss" scoped>
 .dlm-import-stats {
-    @apply dlm-flex dlm-gap-8;
+    @apply flex gap-8;
 }
 
 .dlm-stat {
-    @apply dlm-text-center;
+    @apply text-center;
 
     &-value {
-        @apply dlm-block dlm-text-3xl dlm-font-bold;
+        @apply block text-3xl font-bold;
     }
 
     &-label {
-        @apply dlm-text-sm dlm-text-gray-500;
+        @apply text-sm text-gray-500;
     }
 }
 
 .dlm-error-list {
-    @apply dlm-mt-2 dlm-pl-5 dlm-text-sm dlm-text-danger-600 dlm-list-disc;
+    @apply mt-2 pl-5 text-sm text-danger-600 list-disc;
 }
 </style>
