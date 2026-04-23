@@ -17,6 +17,16 @@ jobs:
       - name: Checkout UI library
         run: git clone --depth 1 https://x-access-token:${{ secrets.UI_REPO_TOKEN }}@github.com/digital-license-manager/ui.git ../../libraries/dlm-ui
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install UI library dependencies
+        run: |
+          cd ../../libraries/dlm-ui
+          bun install --frozen-lockfile
+
       - name: Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
@@ -90,11 +100,6 @@ jobs:
 
       - name: Clean up TCPDF fonts
         run: bash scripts/clean_up.sh
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Build Gutenberg blocks
         run: |
