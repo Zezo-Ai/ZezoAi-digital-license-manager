@@ -1148,8 +1148,8 @@ class Ajax {
 	public function settings_save() {
 		$this->check_access( 'dlm_manage_settings' );
 
-		$incoming = isset( $_POST['settings'] ) ? (array) $_POST['settings'] : [];
-		$section  = isset( $_POST['section'] ) ? sanitize_text_field( $_POST['section'] ) : 'general';
+		$incoming = isset( $_POST['settings'] ) ? (array) wp_unslash( $_POST['settings'] ) : [];
+		$section  = isset( $_POST['section'] ) ? sanitize_text_field( wp_unslash( $_POST['section'] ) ) : 'general';
 
 		if ( empty( $incoming ) ) {
 			wp_send_json_error( [ 'message' => __( 'No settings provided.', 'digital-license-manager' ) ] );
