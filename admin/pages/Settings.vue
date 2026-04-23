@@ -1509,12 +1509,12 @@ onMounted(() => {
         @apply bg-gray-100 text-gray-900;
     }
 
-    &--active {
-        @apply bg-primary-50 text-primary-700;
+}
+.dlm-settings-nav-item--active {
+    @apply bg-primary-50 text-primary-700;
 
-        .dlm-settings-nav-icon {
-            @apply text-primary-600;
-        }
+    .dlm-settings-nav-icon {
+        @apply text-primary-600;
     }
 }
 

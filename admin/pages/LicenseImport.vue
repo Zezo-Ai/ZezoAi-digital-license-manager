@@ -179,13 +179,13 @@ async function importLicenses() {
 .dlm-stat {
     @apply text-center;
 
-    &-value {
-        @apply block text-3xl font-bold;
-    }
 
-    &-label {
-        @apply text-sm text-gray-500;
-    }
+}
+.dlm-stat-label {
+    @apply text-sm text-gray-500;
+}
+.dlm-stat-value {
+    @apply block text-3xl font-bold;
 }
 
 .dlm-error-list {
