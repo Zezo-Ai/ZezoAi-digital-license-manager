@@ -9,7 +9,7 @@
         <div class="dlm-card-body">
             <div class="dlm-form-grid">
                 <!-- Name -->
-                <div class="dlm-form-group dlm-col-span-2">
+                <div class="dlm-form-group col-span-2">
                     <label for="name">{{ trans('generators.fields.name') }} *</label>
                     <input
                         id="name"
@@ -22,7 +22,7 @@
                 </div>
 
                 <!-- Charset -->
-                <div class="dlm-form-group dlm-col-span-2">
+                <div class="dlm-form-group col-span-2">
                     <label for="charset">{{ trans('generators.fields.charset') }} *</label>
                     <input
                         id="charset"
@@ -131,7 +131,7 @@
                 </div>
 
                 <!-- Preview -->
-                <div class="dlm-form-group dlm-col-span-2">
+                <div class="dlm-form-group col-span-2">
                     <label>{{ trans('generators.fields.preview') }}</label>
                     <div class="dlm-license-preview">
                         <code>{{ previewKey }}</code>
@@ -279,6 +279,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dlm-license-preview {
-    @apply dlm-p-4 dlm-bg-gray-100 dlm-rounded-md dlm-font-mono dlm-text-lg dlm-text-center;
+    @apply p-4 bg-gray-100 rounded-md font-mono text-lg text-center;
 }
 </style>

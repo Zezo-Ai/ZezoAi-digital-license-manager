@@ -82,14 +82,14 @@
                     </div>
 
                     <!-- Save to database checkbox -->
-                    <div class="dlm-form-group dlm-flex dlm-items-center dlm-gap-2">
+                    <div class="dlm-form-group flex items-center gap-2">
                         <input
                             id="save"
                             v-model="form.save"
                             type="checkbox"
                             class="dlm-checkbox"
                         />
-                        <label for="save" class="dlm-m-0">{{ trans('generators.generate.fields.save') }}</label>
+                        <label for="save" class="m-0">{{ trans('generators.generate.fields.save') }}</label>
                     </div>
                 </div>
             </div>
@@ -106,10 +106,10 @@
         </form>
 
         <!-- Generated Licenses -->
-        <div v-if="generatedLicenses.length > 0" class="dlm-card dlm-mt-6">
-            <div class="dlm-card-header dlm-flex dlm-items-center dlm-justify-between">
+        <div v-if="generatedLicenses.length > 0" class="dlm-card mt-6">
+            <div class="dlm-card-header flex items-center justify-between">
                 <h3>{{ trans('generators.generate.results.title') }} ({{ generatedLicenses.length }})</h3>
-                <div class="dlm-flex dlm-gap-2">
+                <div class="flex gap-2">
                     <button class="dlm-btn dlm-btn-secondary dlm-btn-sm" @click="copyToClipboard">
                         {{ trans('generators.generate.buttons.copy') }}
                     </button>
@@ -121,7 +121,7 @@
             <div class="dlm-card-body">
                 <textarea
                     ref="licensesTextarea"
-                    class="dlm-textarea dlm-font-mono"
+                    class="dlm-textarea font-mono"
                     rows="10"
                     readonly
                     :value="generatedLicenses.join('\n')"
@@ -230,8 +230,3 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
-.dlm-font-mono {
-    font-family: monospace;
-}
-</style>

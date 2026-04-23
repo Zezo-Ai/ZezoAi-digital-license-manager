@@ -9,9 +9,9 @@
         <div class="dlm-card-body">
             <div class="dlm-form-grid">
                 <!-- License Key -->
-                <div class="dlm-form-group dlm-col-span-2">
+                <div class="dlm-form-group col-span-2">
                     <label for="license_key">{{ trans('licenses.fields.license_key') }}</label>
-                    <div class="dlm-flex dlm-gap-2">
+                    <div class="flex gap-2">
                         <input
                             id="license_key"
                             v-model="form.license_key"
@@ -145,9 +145,9 @@
     </form>
 
         <!-- Activations Panel (edit mode only) -->
-        <div v-if="isEditing" class="dlm-card dlm-mt-4">
+        <div v-if="isEditing" class="dlm-card mt-4">
             <div class="dlm-card-body">
-                <h3 class="dlm-mb-4">{{ trans('activations.title') }}</h3>
+                <h3 class="mb-4">{{ trans('activations.title') }}</h3>
 
                 <Table
                     :columns="activationColumns"
@@ -156,7 +156,7 @@
                     row-key="id"
                 >
                     <template #cell-source="{ row }">
-                        <code class="dlm-text-xs dlm-bg-gray-100 dlm-px-2 dlm-py-1 dlm-rounded">
+                        <code class="text-xs bg-gray-100 px-2 py-1 rounded">
                             {{ row.source_label }}
                         </code>
                     </template>
@@ -175,12 +175,12 @@
                         <div class="dlm-row-actions">
                             <button
                                 class="dlm-action-link"
-                                :class="row.deactivated_at ? 'dlm-text-success-600' : 'dlm-text-warning-600'"
+                                :class="row.deactivated_at ? 'text-success-600' : 'text-warning-600'"
                                 @click="toggleActivation(row)"
                             >
                                 {{ row.deactivated_at ? trans('activations.actions.enable') : trans('activations.actions.disable') }}
                             </button>
-                            <button class="dlm-action-link dlm-text-danger-600" @click="confirmDeleteActivation(row)">
+                            <button class="dlm-action-link text-danger-600" @click="confirmDeleteActivation(row)">
                                 {{ trans('activations.actions.delete') }}
                             </button>
                         </div>
@@ -502,10 +502,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dlm-row-actions {
-    @apply dlm-flex dlm-items-center dlm-gap-3;
+    @apply flex items-center gap-3;
 }
 
 .dlm-action-link {
-    @apply dlm-text-sm dlm-cursor-pointer dlm-bg-transparent dlm-border-0 dlm-p-0;
+    @apply text-sm cursor-pointer bg-transparent border-0 p-0;
 }
 </style>

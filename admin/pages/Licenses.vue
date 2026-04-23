@@ -16,7 +16,7 @@
         <div class="dlm-card">
             <div class="dlm-card-body">
                 <!-- Status Filters -->
-                <div class="dlm-status-filters dlm-mb-4">
+                <div class="dlm-status-filters mb-4">
                     <button
                         v-for="status in statusFilters"
                         :key="status.value"
@@ -30,7 +30,7 @@
 
                 <!-- Filters Row -->
                 <div class="dlm-filters">
-                    <div class="dlm-filter-item">
+                    <div class="filter-item">
                         <input
                             v-model="search"
                             type="text"
@@ -39,7 +39,7 @@
                             @keyup.enter="loadLicenses"
                         />
                     </div>
-                    <div class="dlm-filter-item">
+                    <div class="filter-item">
                         <select v-model="perPage" class="dlm-select" @change="loadLicenses">
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -47,7 +47,7 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <div class="dlm-filter-item dlm-ml-auto">
+                    <div class="filter-item ml-auto">
                         <select v-model="bulkAction" class="dlm-select">
                             <option value="">{{ trans('global.labels.bulk_actions') }}</option>
                             <option value="activate">{{ trans('licenses.actions.activate') }}</option>
@@ -86,11 +86,11 @@
                     <template #cell-product_id="{ row }">
                         <a v-if="row.product_url" :href="row.product_url" target="_blank">{{ row.product_name }}</a>
                         <span v-else-if="row.product_name">{{ row.product_name }}</span>
-                        <span v-else class="dlm-text-gray-400">&mdash;</span>
+                        <span v-else class="text-gray-400">&mdash;</span>
                     </template>
                     <template #cell-user_id="{ row }">
                         <span v-if="row.user_email">{{ row.user_email }}</span>
-                        <span v-else class="dlm-text-gray-400">&mdash;</span>
+                        <span v-else class="text-gray-400">&mdash;</span>
                     </template>
                     <template #cell-order_id="{ row }">
                         <div v-if="row.order_id" class="dlm-order-cell">
@@ -105,21 +105,21 @@
                                 <span v-else>{{ row.subscription.label }}</span>
                             </div>
                         </div>
-                        <span v-else class="dlm-text-gray-400">&mdash;</span>
+                        <span v-else class="text-gray-400">&mdash;</span>
                     </template>
                     <template #cell-activations="{ row }">
                         {{ row.activations_count || 0 }} / {{ row.activations_limit || '&infin;' }}
                     </template>
                     <template #cell-expires_at="{ row }">
                         <span v-if="row.expires_at">{{ formatDate(row.expires_at) }}</span>
-                        <span v-else class="dlm-text-gray-400">{{ trans('licenses.labels.never') }}</span>
+                        <span v-else class="text-gray-400">{{ trans('licenses.labels.never') }}</span>
                     </template>
                     <template #cell-actions="{ row }">
                         <div class="dlm-row-actions">
                             <router-link :to="`/licenses/${row.id}/edit`" class="dlm-action-link">
                                 {{ trans('global.actions.edit') }}
                             </router-link>
-                            <button class="dlm-action-link dlm-text-danger-600" @click="confirmDelete(row)">
+                            <button class="dlm-action-link text-danger-600" @click="confirmDelete(row)">
                                 {{ trans('global.actions.delete') }}
                             </button>
                         </div>
@@ -346,50 +346,50 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dlm-status-filters {
-    @apply dlm-flex dlm-flex-wrap dlm-gap-2 dlm-border-b dlm-border-gray-200 dlm-pb-3;
+    @apply flex flex-wrap gap-2 border-b border-gray-200 pb-3;
 }
 
 .dlm-status-filter {
-    @apply dlm-px-3 dlm-py-1 dlm-text-sm dlm-text-gray-600 dlm-bg-transparent dlm-border-0 dlm-cursor-pointer;
-    @apply hover:dlm-text-primary-600;
+    @apply px-3 py-1 text-sm text-gray-600 bg-transparent border-0 cursor-pointer;
+    @apply hover:text-primary-600;
 
     &.dlm-active {
-        @apply dlm-text-primary-600 dlm-font-medium;
+        @apply text-primary-600 font-medium;
     }
 
     .dlm-count {
-        @apply dlm-text-gray-400;
+        @apply text-gray-400;
     }
 }
 
 .dlm-filter-item {
-    @apply dlm-flex dlm-items-center dlm-gap-2;
+    @apply flex items-center gap-2;
 }
 
 .dlm-row-actions {
-    @apply dlm-flex dlm-items-center dlm-gap-3;
+    @apply flex items-center gap-3;
 }
 
 .dlm-action-link {
-    @apply dlm-text-sm dlm-cursor-pointer dlm-bg-transparent dlm-border-0 dlm-p-0;
+    @apply text-sm cursor-pointer bg-transparent border-0 p-0;
 }
 
 .dlm-order-cell {
-    @apply dlm-flex dlm-flex-col dlm-gap-1;
+    @apply flex flex-col gap-1;
 }
 
 .dlm-order-line {
-    @apply dlm-flex dlm-items-center dlm-gap-1;
+    @apply flex items-center gap-1;
 
     .dashicons {
         font-size: 14px;
         width: 14px;
         height: 14px;
-        @apply dlm-text-gray-400;
+        @apply text-gray-400;
     }
 }
 
 .dlm-order-sub {
-    @apply dlm-text-xs dlm-text-gray-500;
+    @apply text-xs text-gray-500;
 }
 </style>
