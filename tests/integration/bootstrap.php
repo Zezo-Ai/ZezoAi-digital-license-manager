@@ -26,12 +26,40 @@
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
+/*
+ * Prefer the wp-phpunit/wp-phpunit Composer package.
+ *
+ * It ships the WordPress test library as a normal dev dependency, so `composer install` is the
+ * only setup step - no svn checkout into a temp directory, and the version is pinned alongside
+ * everything else. bin/install-wp-tests.sh still works: set WP_TESTS_DIR to use it instead.
+ */
+if ( ! $_tests_dir ) {
+	$_wp_phpunit_dir = dirname( __DIR__, 2 ) . '/vendor/wp-phpunit/wp-phpunit';
+
+	if ( file_exists( $_wp_phpunit_dir . '/includes/functions.php' ) ) {
+		$_tests_dir = $_wp_phpunit_dir;
+
+		// The package loads whichever config this points at.
+		if ( ! getenv( 'WP_PHPUNIT__TESTS_CONFIG' ) ) {
+			putenv( 'WP_PHPUNIT__TESTS_CONFIG=' . dirname( __DIR__ ) . '/wp-tests-config.php' );
+		}
+	}
+}
+
 if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
 if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
-	echo "Could not find $_tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo 'Could not find the WordPress test library.' . PHP_EOL // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	     . PHP_EOL
+	     . 'Looked in: ' . $_tests_dir . PHP_EOL // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	     . PHP_EOL
+	     . 'Fix it with either:' . PHP_EOL
+	     . '  composer install                  (installs wp-phpunit/wp-phpunit - recommended)' . PHP_EOL
+	     . '  bin/install-wp-tests.sh <db> <user> <pass> [db-host]   (legacy, needs svn)' . PHP_EOL
+	     . PHP_EOL
+	     . 'From the devenv root, `make test-free` runs this suite inside the container.' . PHP_EOL;
 	exit( 1 );
 }
 
@@ -46,6 +74,46 @@ if ( PHP_VERSION_ID >= 80000 && file_exists( $_tests_dir . '/includes/phpunit7/M
 
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
+
+/**
+ * Locates a companion plugin needed by the test suite.
+ *
+ * WP_PLUGIN_DIR is checked first and deliberately: in a development environment the plugin
+ * under test is typically symlinked into wp-content/plugins from outside the WordPress tree,
+ * so resolving siblings with realpath() lands in the checkout directory rather than beside
+ * the other installed plugins.
+ *
+ * @param string $relative_path e.g. "woocommerce/woocommerce.php".
+ *
+ * @return string|false Absolute path, or false when not installed.
+ */
+function dlm_tests_locate_plugin( $relative_path ) {
+
+	$candidates = [];
+
+	if ( defined( 'WP_PLUGIN_DIR' ) ) {
+		$candidates[] = WP_PLUGIN_DIR . '/' . $relative_path;
+	}
+
+	if ( defined( 'ABSPATH' ) ) {
+		$candidates[] = ABSPATH . 'wp-content/plugins/' . $relative_path;
+	}
+
+	// Legacy layout: sibling of the plugin under test.
+	$sibling = realpath( dirname( __DIR__, 2 ) . '/..' );
+
+	if ( $sibling ) {
+		$candidates[] = $sibling . '/' . $relative_path;
+	}
+
+	foreach ( $candidates as $candidate ) {
+		if ( file_exists( $candidate ) ) {
+			return $candidate;
+		}
+	}
+
+	return false;
+}
 
 /**
  * Manually load the plugin being tested.
@@ -63,18 +131,24 @@ function _manually_load_plugin() {
 
 	tests_add_filter( 'dlm_mock_is_plugin_active', '__return_true' );
 
-	// Required files for the plugin
+	// Companion plugins the suite exercises.
 	$required = [
-		realpath( $_plugin_dir . '..' ) . '/woocommerce/woocommerce.php',
+		'woocommerce/woocommerce.php',
 	];
-	foreach ( $required as $item ) {
-		if ( file_exists( $item ) ) {
-			echo 'Loaded: '.$item . PHP_EOL;
-			require_once $item;
-		} else {
-			echo "Could not find " . plugin_basename( $item ) . " plugin which is required for unit tests.";
+
+	foreach ( $required as $relative_path ) {
+		$item = dlm_tests_locate_plugin( $relative_path );
+
+		if ( ! $item ) {
+			echo PHP_EOL // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			     . 'Could not find ' . $relative_path . ', which the test suite requires.' . PHP_EOL // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			     . 'Install it into wp-content/plugins, e.g.:' . PHP_EOL
+			     . '  make wpcli CMD="plugin install woocommerce"' . PHP_EOL
+			     . PHP_EOL;
 			exit( 1 );
 		}
+
+		require_once $item;
 	}
 
 	// Set a default currency to be used for the multi-currency tests because the default

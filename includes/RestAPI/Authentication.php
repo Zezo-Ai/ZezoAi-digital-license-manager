@@ -90,25 +90,25 @@ class Authentication {
 	 */
 	protected function isRequestToRestApi() {
 
-		$requestUri = HttpHelper::requestUri();
+		$route = $this->getRequestedRestRoute();
 
-		if ( empty( $requestUri ) ) {
+		if ( null === $route ) {
 			return false;
 		}
 
-		$restPrefix = trailingslashit( rest_get_url_prefix() );
-
-		// Exclude webhook endpoints - they use their own signature verification
-		if ( false !== strpos( $requestUri, $restPrefix . 'dlm/v1/webhooks/' ) ) {
+		// Exclude webhook endpoints - they use their own signature verification.
+		// Anchored to the start of the route: a webhook path appearing anywhere
+		// else in the URI (a query argument, say) must not disable authentication.
+		if ( 0 === strpos( $route, '/dlm/v1/webhooks/' ) ) {
 			return false;
 		}
 
 		// Allow extensions to exclude specific endpoints from authentication
-		if ( apply_filters( 'dlm_rest_api_skip_authentication', false, $requestUri ) ) {
+		if ( apply_filters( 'dlm_rest_api_skip_authentication', false, HttpHelper::requestUri(), $route ) ) {
 			return false;
 		}
 
-		if ( false !== strpos( $requestUri, $restPrefix . 'dlm/' ) ) {
+		if ( 0 === strpos( $route, '/dlm/' ) ) {
 			return true;
 		}
 
@@ -117,12 +117,55 @@ class Authentication {
 		 * @url https://docs.codeverve.com/digital-license-manager/migration/migrate-from-license-manager-for-woocommerce/
 		 */
 		if ( apply_filters( 'dlm_compatibility_layer_for_lmfwc', false ) ) {
-			if ( false !== strpos( $requestUri, $restPrefix . 'lmfwc/' ) ) {
+			if ( 0 === strpos( $route, '/lmfwc/' ) ) {
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Resolves the REST route being requested, normalised to a leading slash.
+	 *
+	 * Only the route decides which endpoint runs, so only the route may decide
+	 * whether authentication applies. Matching against the raw REQUEST_URI is
+	 * unsafe: it carries the query string, so any value an attacker controls
+	 * ends up in the string being tested.
+	 *
+	 * @return string|null The route (e.g. "/dlm/v1/licenses"), or null when this
+	 *                     is not a REST request.
+	 */
+	protected function getRequestedRestRoute() {
+
+		// Plain permalinks: /?rest_route=/dlm/v1/licenses
+		if ( isset( $_GET['rest_route'] ) ) {
+			$route = sanitize_text_field( wp_unslash( $_GET['rest_route'] ) );
+
+			return '' === $route ? null : '/' . ltrim( $route, '/' );
+		}
+
+		$requestUri = HttpHelper::requestUri();
+
+		if ( empty( $requestUri ) ) {
+			return null;
+		}
+
+		// Drop the query string - it is caller-controlled and says nothing about the route.
+		$path = wp_parse_url( $requestUri, PHP_URL_PATH );
+
+		if ( empty( $path ) ) {
+			return null;
+		}
+
+		$needle   = '/' . trailingslashit( rest_get_url_prefix() );
+		$position = strpos( $path, $needle );
+
+		if ( false === $position ) {
+			return null;
+		}
+
+		return '/' . ltrim( substr( $path, $position + strlen( $needle ) ), '/' );
 	}
 
 	/**
@@ -263,7 +306,20 @@ class Authentication {
 	private function checkPermissions( $method ) {
 
 		if ( ! $this->consumer ) {
-			return false;
+
+			// No API consumer resolved. A cookie-authenticated user is still legitimate -
+			// the per-endpoint capability checks in validateRequest() govern what they may
+			// do - but an entirely unauthenticated caller must be refused here rather than
+			// falling through to the permission callback, which allows everything.
+			if ( ! is_user_logged_in() ) {
+				return $this->responseError(
+					'authentication_error',
+					__( 'Authentication is required to access this endpoint.', 'digital-license-manager' ),
+					array( 'status' => 401 )
+				);
+			}
+
+			return true;
 		}
 
 		$permissions = $this->consumer->permissions;
@@ -357,6 +413,11 @@ class Authentication {
 	 * @return mixed
 	 */
 	public function checkUserPermissions( $result, $server, $request ) {
+
+		// rest_pre_dispatch fires for every REST route on the site. Only govern our own.
+		if ( ! $this->isRequestToRestApi() ) {
+			return $result;
+		}
 
 		$allowed = $this->checkPermissions( $request->get_method() );
 		if ( is_wp_error( $allowed ) ) {

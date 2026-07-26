@@ -4,12 +4,16 @@ class DLM_Helpers_TestCase extends WP_UnitTestCase {
 
 	public function test_license_helpers() {
 
+		// Relative to now: activation refuses an expired license, so a hardcoded date turns
+		// this test red the moment it passes.
+		$expires_at = gmdate( 'Y-m-d H:i:s', strtotime( '+1 year' ) );
+
 		// Create licenses
 		$result = dlm_create_license( 'BBBB-CCCC-FFFF-EEEE', [
 			'product_id'        => 1,
 			'order_id'          => 1,
 			'user_id'           => 1,
-			'expires_at'        => '2024-10-15 11:00:00',
+			'expires_at'        => $expires_at,
 			'source'            => 1,
 			'activations_limit' => 2,
 			'status'            => 2,
@@ -19,7 +23,7 @@ class DLM_Helpers_TestCase extends WP_UnitTestCase {
 			'product_id'        => 1,
 			'order_id'          => 1,
 			'user_id'           => 1,
-			'expires_at'        => '2024-10-15 11:00:00',
+			'expires_at'        => $expires_at,
 			'source'            => 1,
 			'activations_limit' => 2,
 			'status'            => 2,
@@ -65,16 +69,18 @@ class DLM_Helpers_TestCase extends WP_UnitTestCase {
 		// License meta
 		// TODO: Add tests
 
+		// Delete activation. This has to come before the license is deleted: deleting a
+		// license cascades to its activations and meta (LicensesService::delete()), so
+		// afterwards there would be no activation row left to delete.
+		$result = dlm_delete_activation($result2->getToken());
+		$this->assertTrue( $result );
+
 		// Delete license
 		$result = dlm_delete_license( 'AAAA-BBBB-CCCC-DDDD' );
 		$this->assertTrue( $result );
 
 		$result = dlm_get_licenses([]);
 		$this->assertCount(1, $result);
-
-		// Delete activation
-		$result = dlm_delete_activation($result2->getToken());
-		$this->assertTrue( $result );
 
 	}
 }

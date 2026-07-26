@@ -81,13 +81,24 @@ class SanitizeHelper {
 		}
 
 		$dot_count = substr_count( $value, '.' );
+
 		if ( $dot_count === 1 ) {
-			$value = doubleval( $value );
+			$converted = doubleval( $value );
 		} else if ( $dot_count === 0 ) {
-			$value = intval( $value );
+			$converted = intval( $value );
+		} else {
+			return $value;
 		}
 
-		return $value;
+		/*
+		 * Only narrow to a number when the string survives the round trip.
+		 *
+		 * This runs over user-supplied complex data - billing addresses, meta - where
+		 * all-digit strings are common and are not quantities. intval( '01234' ) is 1234,
+		 * so a postcode, phone number or VAT identifier with a leading zero would be
+		 * silently corrupted on write, with no way to recover the original.
+		 */
+		return (string) $converted === $value ? $converted : $value;
 	}
 
 	/**

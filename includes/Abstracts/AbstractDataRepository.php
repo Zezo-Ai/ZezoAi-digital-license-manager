@@ -298,11 +298,24 @@ class AbstractDataRepository implements DataRepositoryInterface {
 		$old_objects = $this->findAllBy( $where, $this->primaryKey, 'ASC' );
 		$updated     = $this->updateWhere( $where, $data );
 
-		if ( $updated ) {
-			$total_rows  = count( $old_objects );
-			$new_objects = $this->findAllBy( $where, $this->primaryKey, 'ASC' );
-			for ( $i = 0; $i < $total_rows; $i ++ ) {
-				do_action( 'dlm_object_updated', $new_objects[ $i ], $old_objects[ $i ], $this->dataTable, $this->dataModel );
+		if ( $updated && ! empty( $old_objects ) ) {
+			foreach ( $old_objects as $old_object ) {
+
+				/*
+				 * Re-read each row by primary key rather than re-running $where.
+				 *
+				 * The update frequently changes the very column $where matches on - e.g.
+				 * updateBy( ['permissions' => 'read_write'], ['permissions' => 'read'] ) - and
+				 * once it has, nothing matches $where any more. Pairing the old rows against
+				 * that empty result set indexed past the end of the array.
+				 */
+				$new_object = $this->find( $old_object->get( $this->primaryKey ) );
+
+				if ( ! $new_object ) {
+					continue;
+				}
+
+				do_action( 'dlm_object_updated', $new_object, $old_object, $this->dataTable, $this->dataModel );
 			}
 		}
 
