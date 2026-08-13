@@ -42,6 +42,37 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/*
+ * Digital License Manager PRO 1.x bundles its own copy of this plugin's core and boots it
+ * before this file loads (the PRO plugin sorts first in active_plugins). In that state the
+ * DLM_* constants already point into the PRO vendor directory, so continuing here would
+ * require a vendor/autoload.php that does not exist there and would mix two incompatible
+ * class trees. Stand down completely and let the bundled core keep running until PRO is
+ * updated to 2.0, which no longer bundles the core. The '2.0.0-alpha' floor keeps PRO 2.0
+ * pre-releases (alpha/beta/rc) working normally.
+ */
+if ( defined( 'DLM_PRO_VERSION' ) && version_compare( DLM_PRO_VERSION, '2.0.0-alpha', '<' ) ) {
+	if ( ! defined( 'DLM_STANDBY' ) ) {
+		define( 'DLM_STANDBY', true );
+	}
+	$dlm_standby_notice = function () {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+		echo '<div class="notice notice-warning"><p>';
+		printf(
+			/* translators: 1: this plugin's major version, 2: installed Digital License Manager PRO version. */
+			esc_html__( 'Digital License Manager %1$s is installed but not yet active: Digital License Manager PRO %2$s runs its own bundled copy of the older core. Update Digital License Manager PRO to version 2.0 or newer to switch to the new version.', 'digital-license-manager' ),
+			'2.0',
+			esc_html( DLM_PRO_VERSION )
+		);
+		echo '</p></div>';
+	};
+	add_action( 'admin_notices', $dlm_standby_notice );
+	add_action( 'network_admin_notices', $dlm_standby_notice );
+	return;
+}
+
 if ( ! defined( 'DLM_PLUGIN_VERSION' ) ) {
 	define( 'DLM_PLUGIN_VERSION', '2.0.0-rc.6' );
 }
