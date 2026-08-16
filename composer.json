@@ -1,7 +1,7 @@
 {
   "name": "gdarko/digital-license-manager",
   "description": "Efficiently sell and manage software license keys on WordPress. Works standalone or integrates with WooCommerce for selling licenses.",
-  "version": "2.0.0-rc.8",
+  "version": "2.0.0",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "keywords": [
