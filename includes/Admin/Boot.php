@@ -131,10 +131,15 @@ class Boot {
 	 * @return string
 	 */
 	protected function get_menu_icon() {
-		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">'
-		       . '<path d="M7 11V6a5 5 0 0 1 10 0v2h-2.5V6a2.5 2.5 0 0 0-5 0v5H7z"/>'
-		       . '<path fill-rule="evenodd" d="M6 11h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2zM12 14.2A1.8 1.8 0 0 0 10.7 17.3L12 21 13.3 17.3A1.8 1.8 0 0 1 12 14.2z"/>'
-		       . '</svg>';
+		$icon_path = DLM_ABSPATH . 'assets/img/logo.svg';
+		if ( ! is_readable( $icon_path ) ) {
+			return 'dashicons-admin-network';
+		}
+
+		$svg = file_get_contents( $icon_path );
+		if ( false === $svg ) {
+			return 'dashicons-admin-network';
+		}
 
 		return 'data:image/svg+xml;base64,' . base64_encode( $svg );
 	}

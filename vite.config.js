@@ -71,6 +71,6 @@ export default defineConfig({
             '@': resolve(__dirname, 'admin'),
             'vue': 'vue/dist/vue.esm-bundler.js',
         },
-        dedupe: ['vue', 'pinia', '@vuepic/vue-datepicker'],
+        dedupe: ['vue', 'vue-router', 'pinia', '@vuepic/vue-datepicker'],
     }
 })

@@ -18,6 +18,7 @@ if (mountEl) {
         restUrl: window.DLMAdmin?.restUrl,
         adminUrl: window.DLMAdmin?.adminUrl,
         pluginUrl: window.DLMAdmin?.pluginUrl,
+        workspace: window.DLMAdmin?.workspace,
     })
 
     const app = createApp(App)

@@ -35,6 +35,7 @@
                             v-model="search"
                             type="text"
                             class="dlm-input"
+                            :aria-label="trans('global.placeholders.search')"
                             :placeholder="trans('global.placeholders.search')"
                             @keyup.enter="loadLicenses"
                         />
@@ -47,7 +48,7 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <div class="filter-item ml-auto">
+                    <div v-if="selectedIds.length > 0" class="filter-item ml-auto dlm-bulk-actions">
                         <select v-model="bulkAction" class="dlm-select">
                             <option value="">{{ trans('global.labels.bulk_actions') }}</option>
                             <option value="activate">{{ trans('licenses.actions.activate') }}</option>
@@ -69,6 +70,7 @@
                 <Table
                     :columns="columns"
                     :rows="licenses"
+                    primary-field="license_key"
                     :loading="loading"
                     :selectable="true"
                     :selected="selectedIds"
@@ -115,14 +117,13 @@
                         <span v-else class="text-gray-400">{{ trans('licenses.labels.never') }}</span>
                     </template>
                     <template #cell-actions="{ row }">
-                        <div class="dlm-row-actions">
-                            <router-link :to="`/licenses/${row.id}/edit`" class="dlm-action-link">
-                                {{ trans('global.actions.edit') }}
-                            </router-link>
-                            <button class="dlm-action-link text-danger-600" @click="confirmDelete(row)">
-                                {{ trans('global.actions.delete') }}
-                            </button>
-                        </div>
+                        <ActionMenu
+                            :items="[
+                                { id: 'edit', label: trans('global.actions.edit'), to: `/licenses/${row.id}/edit` },
+                                { id: 'delete', label: trans('global.actions.delete'), danger: true },
+                            ]"
+                            @select="action => action === 'delete' && confirmDelete(row)"
+                        />
                     </template>
                 </Table>
 
@@ -166,6 +167,7 @@ import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
 import Status from '@digital-license-manager/ui/components/Status.vue'
+import ActionMenu from '@digital-license-manager/ui/components/ActionMenu.vue'
 import LicenseKey from '../components/LicenseKey.vue'
 
 const alertStore = useAlertStore()

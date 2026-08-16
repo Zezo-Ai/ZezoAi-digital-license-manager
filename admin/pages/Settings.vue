@@ -8,6 +8,15 @@
         <div class="dlm-settings-layout">
             <!-- Vertical Nav Sidebar -->
             <nav class="dlm-settings-nav">
+                <label class="dlm-visually-hidden" for="dlm-settings-section-select">{{ trans('settings.title') }}</label>
+                <select
+                    id="dlm-settings-section-select"
+                    class="dlm-settings-nav-select dlm-select"
+                    :value="activeTab"
+                    @change="changeTab($event.target.value)"
+                >
+                    <option v-for="tab in computedTabs" :key="tab.id" :value="tab.id">{{ tab.label }}</option>
+                </select>
                 <ul class="dlm-settings-nav-list">
                     <li v-for="tab in computedTabs" :key="tab.id">
                         <button
@@ -42,6 +51,38 @@
                                         <h3 v-if="section.name && sectionCount(activeTabData) > 1">
                                             {{ section.name }}
                                         </h3>
+
+                                        <div v-if="isAppearanceSection(sectionKey, section)" class="dlm-palette-preset">
+                                            <div class="dlm-palette-preset__copy">
+                                                <span class="dlm-palette-preset__eyebrow">{{ trans('settings.appearance_preset.eyebrow') }}</span>
+                                                <h4>{{ trans('settings.appearance_preset.title') }}</h4>
+                                                <p>{{ trans('settings.appearance_preset.description') }}</p>
+                                                <div class="dlm-palette-preset__actions">
+                                                    <button
+                                                        type="button"
+                                                        class="dlm-btn dlm-btn-secondary"
+                                                        :disabled="isDlm2Palette && !palettePrevious"
+                                                        @click="applyDlm2Palette"
+                                                    >
+                                                        {{ isDlm2Palette ? trans('settings.appearance_preset.selected') : trans('settings.appearance_preset.apply') }}
+                                                    </button>
+                                                    <button
+                                                        v-if="palettePrevious"
+                                                        type="button"
+                                                        class="dlm-btn dlm-btn-link"
+                                                        @click="restorePreviousPalette"
+                                                    >
+                                                        {{ trans('settings.appearance_preset.restore') }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="dlm-palette-preview" :style="appearancePreviewStyle">
+                                                <span class="dlm-palette-preview__label">{{ trans('settings.appearance_preset.preview_label') }}</span>
+                                                <strong>{{ trans('settings.appearance_preset.preview_title') }}</strong>
+                                                <p>{{ trans('settings.appearance_preset.preview_body') }}</p>
+                                                <span class="dlm-palette-preview__button">{{ trans('settings.appearance_preset.preview_cta') }}</span>
+                                            </div>
+                                        </div>
 
                                         <div
                                             v-for="field in section.fields"
@@ -198,29 +239,35 @@
 
                                             <!-- Order statuses (multi-checkbox table) -->
                                             <template v-else-if="field.type === 'order_statuses'">
-                                                <label>{{ field.title }}</label>
-                                                <table class="dlm-order-statuses-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>{{ trans('global.labels.status') }}</th>
-                                                            <th>{{ trans('global.labels.send') }}</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr v-for="(statusLabel, statusSlug) in field.options" :key="statusSlug">
-                                                            <td>{{ statusLabel }}</td>
-                                                            <td>
-                                                                <input
-                                                                    type="checkbox"
-                                                                    class="dlm-checkbox"
-                                                                    :checked="isOrderStatusChecked(field.id, statusSlug)"
-                                                                    @change="toggleOrderStatus(field.id, statusSlug, $event)"
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                                <div :id="`${field.id}-label`" class="dlm-order-statuses-label">
+                                                    {{ field.title }}
+                                                </div>
+                                                <div
+                                                    class="dlm-order-statuses-field"
+                                                    role="group"
+                                                    :aria-labelledby="`${field.id}-label`"
+                                                >
+                                                    <p v-if="field.label" class="dlm-order-statuses-intro" v-html="field.label"></p>
+                                                    <div class="dlm-order-statuses-grid">
+                                                        <label
+                                                            v-for="(statusLabel, statusSlug) in field.options"
+                                                            :key="statusSlug"
+                                                            :for="`${field.id}-${statusSlug}`"
+                                                            class="dlm-order-status-option"
+                                                            :class="{ 'is-selected': isOrderStatusChecked(field.id, statusSlug) }"
+                                                        >
+                                                            <span class="dlm-order-status-option__name">{{ statusLabel }}</span>
+                                                            <input
+                                                                :id="`${field.id}-${statusSlug}`"
+                                                                type="checkbox"
+                                                                class="dlm-checkbox"
+                                                                :checked="isOrderStatusChecked(field.id, statusSlug)"
+                                                                @change="toggleOrderStatus(field.id, statusSlug, $event)"
+                                                            />
+                                                        </label>
+                                                    </div>
+                                                    <p v-if="field.explain" class="dlm-form-hint" v-html="field.explain"></p>
+                                                </div>
                                             </template>
 
                                             <!-- Items Table -->
@@ -976,6 +1023,39 @@ const activeTabData = computed(() => {
     return findTabData(activeTab.value)
 })
 
+const dlm2Palette = Object.freeze({
+    color_brand: '#147d82',
+    color_text: '#17242f',
+    color_border: '#dce3e0',
+})
+const palettePrevious = ref(null)
+
+const isDlm2Palette = computed(() => Object.entries(dlm2Palette).every(([key, value]) => {
+    return String(settingsValues[key] || '').toLowerCase() === value
+}))
+
+const appearancePreviewStyle = computed(() => ({
+    '--dlm-preview-brand': settingsValues.color_brand || dlm2Palette.color_brand,
+    '--dlm-preview-text': settingsValues.color_text || dlm2Palette.color_text,
+    '--dlm-preview-border': settingsValues.color_border || dlm2Palette.color_border,
+}))
+
+function isAppearanceSection(sectionKey, section) {
+    return sectionKey === 'appearance' || section?.fields?.some(field => field.id === 'color_brand')
+}
+
+function applyDlm2Palette() {
+    if (!palettePrevious.value) {
+        palettePrevious.value = Object.fromEntries(Object.keys(dlm2Palette).map(key => [key, settingsValues[key] || '']))
+    }
+    Object.assign(settingsValues, dlm2Palette)
+}
+
+function restorePreviousPalette() {
+    if (palettePrevious.value) Object.assign(settingsValues, palettePrevious.value)
+    palettePrevious.value = null
+}
+
 // Count non-empty sections in a tab
 function sectionCount(tab) {
     if (!tab || !tab.sections) return 0
@@ -1163,6 +1243,7 @@ async function saveSettings() {
 
         if (json.success) {
             alertStore.success(json.data.message)
+            palettePrevious.value = null
         } else {
             alertStore.error(json.data?.message || trans('global.errors.network'))
         }
@@ -1616,22 +1697,83 @@ onMounted(() => {
     padding: 24px 28px;
 }
 
-/* Order statuses table */
-.dlm-order-statuses-table {
-    @apply w-full text-sm;
-    max-width: 560px;
+/* Order status delivery selector */
+.dlm-settings-section .dlm-form-group:has(.dlm-order-statuses-field) {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 0 24px;
+    align-items: start;
+}
 
-    th {
-        @apply text-left p-2 border-b border-gray-200 font-medium text-gray-600;
-    }
+.dlm-order-statuses-label {
+    padding-top: 7px;
+    color: var(--dlm-admin-ink, #17242f);
+    font-size: 14px;
+    font-weight: 600;
+}
 
-    td {
-        @apply p-2 border-b border-gray-100;
-    }
+.dlm-order-statuses-field {
+    width: 100%;
+    max-width: 680px;
+    min-width: 0;
+}
 
-    tr:nth-child(even) {
-        @apply bg-gray-50;
-    }
+.dlm-order-statuses-intro {
+    margin: 0 0 12px;
+    color: var(--dlm-admin-ink, #17242f);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.dlm-order-statuses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 8px;
+}
+
+.dlm-order-status-option {
+    display: flex !important;
+    min-height: 46px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 !important;
+    padding: 10px 12px;
+    color: var(--dlm-admin-ink, #17242f);
+    font-size: 13px;
+    font-weight: 500;
+    background: #fff;
+    border: 1px solid var(--dlm-admin-border, #dce3e0);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.dlm-order-status-option:hover {
+    background: #f8faf9;
+    border-color: #b9cfcb;
+}
+
+.dlm-order-status-option:focus-within {
+    outline: 2px solid var(--dlm-admin-focus, #147d82);
+    outline-offset: 2px;
+}
+
+.dlm-order-status-option.is-selected {
+    color: #0f696d;
+    font-weight: 650;
+    background: #edf8f7;
+    border-color: #8fc5c3;
+    box-shadow: inset 3px 0 0 var(--dlm-admin-primary, #147d82);
+}
+
+.dlm-order-status-option .dlm-checkbox {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.dlm-order-statuses-field .dlm-form-hint {
+    margin: 10px 0 0;
 }
 
 /* Color picker field */
@@ -1721,7 +1863,7 @@ onMounted(() => {
 .dlm-credentials-box {
     @apply rounded-lg overflow-hidden;
     border: 1px solid #fbbf24;
-    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    background: #fffbeb;
 }
 
 .dlm-credentials-header {
@@ -2020,6 +2162,95 @@ onMounted(() => {
     }
 }
 
+.dlm-settings-nav-select {
+    display: none !important;
+}
+
+.dlm-palette-preset {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .72fr);
+    gap: 24px;
+    margin: 0 0 28px;
+    padding: 20px;
+    background: #f8faf9;
+    border: 1px solid var(--dlm-admin-border);
+    border-radius: var(--dlm-admin-radius-panel);
+}
+
+.dlm-palette-preset__eyebrow {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--dlm-admin-primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.dlm-palette-preset__copy h4 {
+    margin: 0 0 7px !important;
+    color: var(--dlm-admin-ink);
+    font-size: 16px;
+}
+
+.dlm-palette-preset__copy p {
+    max-width: 520px;
+    margin: 0;
+    color: var(--dlm-admin-muted);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.dlm-palette-preset__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 17px;
+}
+
+.dlm-palette-preview {
+    align-self: stretch;
+    padding: 17px;
+    color: var(--dlm-preview-text);
+    background: #fff;
+    border: 1px solid var(--dlm-preview-border);
+    border-radius: 9px;
+}
+
+.dlm-palette-preview__label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--dlm-preview-brand);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.dlm-palette-preview strong {
+    display: block;
+    font-size: 15px;
+}
+
+.dlm-palette-preview p {
+    margin: 5px 0 14px;
+    color: color-mix(in srgb, var(--dlm-preview-text) 62%, #fff);
+    font-size: 12px;
+}
+
+.dlm-palette-preview__button {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    padding: 0 13px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 650;
+    background: var(--dlm-preview-brand);
+    border-radius: 5px;
+}
+
 /* Tool progress bar */
 .dlm-tool-progress {
     @apply mt-3 mb-3;
@@ -2063,23 +2294,33 @@ onMounted(() => {
     }
 
     .dlm-settings-nav-list {
-        @apply flex overflow-x-auto gap-1 pb-2;
-        position: static;
+        display: none;
+    }
 
-        li {
-            @apply shrink-0;
-        }
+    .dlm-settings-nav-select {
+        display: block !important;
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .dlm-palette-preset {
+        grid-template-columns: 1fr;
+        padding: 16px;
     }
 
     .dlm-settings-section {
         padding: 16px 20px;
 
         .dlm-form-group {
-            &:has(.dlm-input), &:has(.dlm-image-upload-field), &:has(.dlm-switch) {
+            &:has(.dlm-input), &:has(.dlm-image-upload-field), &:has(.dlm-switch), &:has(.dlm-order-statuses-field) {
                 grid-template-columns: 1fr;
                 gap: 4px 0;
             }
         }
+    }
+
+    .dlm-order-statuses-grid {
+        grid-template-columns: 1fr;
     }
 
     .dlm-api-key-form-fields {
@@ -2097,7 +2338,7 @@ onMounted(() => {
     width: 32px;
     height: 32px;
     border: 3px solid #e5e7eb;
-    border-top-color: #4DB8C4;
+    border-top-color: #147d82;
     border-radius: 50%;
     animation: dlm-spin 0.8s linear infinite;
 }

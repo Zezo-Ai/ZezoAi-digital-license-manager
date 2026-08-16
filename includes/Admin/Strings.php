@@ -347,6 +347,18 @@ return [
 			'configure' => __( 'Configure', 'digital-license-manager' ),
 			'done'      => __( 'Done', 'digital-license-manager' ),
 		],
+		'appearance_preset' => [
+			'eyebrow'       => __( 'DLM 2.0', 'digital-license-manager' ),
+			'title'         => __( 'A calmer, more focused storefront', 'digital-license-manager' ),
+			'description'   => __( 'Preview the new teal palette here. Your storefront changes only after you save.', 'digital-license-manager' ),
+			'apply'         => __( 'Preview DLM 2.0 palette', 'digital-license-manager' ),
+			'restore'       => __( 'Restore previous colors', 'digital-license-manager' ),
+			'selected'      => __( 'DLM 2.0 palette selected', 'digital-license-manager' ),
+			'preview_label' => __( 'Checkout preview', 'digital-license-manager' ),
+			'preview_title' => __( 'Complete your purchase', 'digital-license-manager' ),
+			'preview_body'  => __( 'Secure checkout with immediate license delivery.', 'digital-license-manager' ),
+			'preview_cta'   => __( 'Continue', 'digital-license-manager' ),
+		],
 		'tabs'  => [
 			'general'  => __( 'General', 'digital-license-manager' ),
 			'rest_api' => __( 'REST API', 'digital-license-manager' ),

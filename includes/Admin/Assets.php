@@ -75,7 +75,7 @@ class Assets {
 	public function register() {
 		$version   = defined( 'DLM_PLUGIN_VERSION' ) ? DLM_PLUGIN_VERSION : '1.0.0';
 		$asset_url = defined( 'DLM_PLUGIN_URL' ) ? DLM_PLUGIN_URL . 'assets/admin/' : '';
-		$asset_dir = defined( 'DLM_PLUGIN_DIR' ) ? DLM_PLUGIN_DIR . 'assets/admin/' : '';
+		$asset_dir = defined( 'DLM_ABSPATH' ) ? DLM_ABSPATH . 'assets/admin/' : '';
 		$js_path   = $asset_dir . 'scripts.js';
 		$css_path  = $asset_dir . 'styles.css';
 		$js_ver    = ( defined( 'DLM_DEVELOPMENT' ) && DLM_DEVELOPMENT && file_exists( $js_path ) )  ? (string) filemtime( $js_path )  : $version;
@@ -161,6 +161,7 @@ class Assets {
 
 		return apply_filters( 'dlm_admin_localized_data', [
 			'i18n'          => $strings,
+			'workspace'     => Workspace::get_data( 'licenses' ),
 			'nonce'         => wp_create_nonce( 'dlm_admin' ),
 			'dropdownNonce' => wp_create_nonce( 'dlm_dropdown_search' ),
 			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),

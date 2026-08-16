@@ -152,6 +152,7 @@
                 <Table
                     :columns="activationColumns"
                     :rows="activations"
+                    primary-field="label"
                     :loading="activationsLoading"
                     row-key="id"
                 >

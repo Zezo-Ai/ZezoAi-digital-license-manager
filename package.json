@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:brand": "bash scripts/build-brand-assets.sh",
     "dev": "vite build --watch --mode development",
     "build": "vite build",
     "prod": "vite build --mode production"

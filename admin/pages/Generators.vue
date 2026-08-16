@@ -22,6 +22,7 @@
                             v-model="search"
                             type="text"
                             class="dlm-input"
+                            :aria-label="trans('global.placeholders.search')"
                             :placeholder="trans('global.placeholders.search')"
                             @keyup.enter="loadGenerators"
                         />
@@ -39,6 +40,7 @@
                 <Table
                     :columns="columns"
                     :rows="generators"
+                    primary-field="name"
                     :loading="loading"
                     row-key="id"
                     @sort="handleSort"
@@ -47,14 +49,13 @@
                         {{ row.times_activated_max || '&infin;' }}
                     </template>
                     <template #cell-actions="{ row }">
-                        <div class="dlm-row-actions">
-                            <router-link :to="`/generators/${row.id}/edit`" class="dlm-action-link">
-                                {{ trans('global.actions.edit') }}
-                            </router-link>
-                            <button class="dlm-action-link text-danger-600" @click="confirmDelete(row)">
-                                {{ trans('global.actions.delete') }}
-                            </button>
-                        </div>
+                        <ActionMenu
+                            :items="[
+                                { id: 'edit', label: trans('global.actions.edit'), to: `/generators/${row.id}/edit` },
+                                { id: 'delete', label: trans('global.actions.delete'), danger: true },
+                            ]"
+                            @select="action => action === 'delete' && confirmDelete(row)"
+                        />
                     </template>
                 </Table>
 
@@ -97,6 +98,7 @@ import * as generatorsService from '../services/generators'
 import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
+import ActionMenu from '@digital-license-manager/ui/components/ActionMenu.vue'
 
 const alertStore = useAlertStore()
 

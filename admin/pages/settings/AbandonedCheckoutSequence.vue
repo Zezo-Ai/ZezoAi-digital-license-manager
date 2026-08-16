@@ -258,8 +258,8 @@ function insertTag(index, key) {
     border-color: #cbd5e1;
 }
 .dlm-acs-row--open {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 1px #2563eb inset;
+    border-color: #147d82;
+    box-shadow: 0 0 0 1px #147d82 inset;
 }
 .dlm-acs-row--disabled .dlm-acs-row-main {
     opacity: 0.55;
@@ -288,8 +288,8 @@ function insertTag(index, key) {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: #eef2ff;
-    color: #1d4ed8;
+    background: #eaf6f5;
+    color: #0f6266;
     font-size: 11px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -312,9 +312,9 @@ function insertTag(index, key) {
     cursor: pointer;
 }
 .dlm-acs-arrow:hover:not(:disabled) {
-    background: #eef2ff;
-    border-color: #c7d2fe;
-    color: #1d4ed8;
+    background: #eaf6f5;
+    border-color: #a9dad7;
+    color: #0f6266;
 }
 .dlm-acs-arrow:disabled {
     opacity: 0.4;
@@ -369,8 +369,8 @@ function insertTag(index, key) {
 .dlm-acs-delay-value:focus,
 .dlm-acs-delay-unit:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+    border-color: #147d82;
+    box-shadow: 0 0 0 2px rgba(20, 125, 130, 0.18);
 }
 
 .dlm-acs-row-actions {
@@ -435,7 +435,7 @@ function insertTag(index, key) {
 }
 .dlm-acs-tag-chip {
     background: #eef2ff;
-    color: #1d4ed8;
+    color: #0f6266;
     border: 1px solid #c7d2fe;
     border-radius: 999px;
     padding: 2px 8px;
@@ -461,8 +461,8 @@ function insertTag(index, key) {
 }
 .dlm-acs-body:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+    border-color: #147d82;
+    box-shadow: 0 0 0 2px rgba(20, 125, 130, 0.18);
 }
 .dlm-acs-body-hint {
     margin: 6px 0 0;
@@ -486,8 +486,8 @@ function insertTag(index, key) {
     cursor: pointer;
 }
 .dlm-acs-btn-add:hover {
-    border-color: #2563eb;
-    color: #1d4ed8;
+    border-color: #147d82;
+    color: #0f6266;
     background: #eef2ff;
 }
 
@@ -520,7 +520,7 @@ function insertTag(index, key) {
 }
 .dlm-acs-tags-help code {
     background: #eef2ff;
-    color: #1d4ed8;
+    color: #0f6266;
     padding: 1px 6px;
     border-radius: 3px;
     font-size: 11px;

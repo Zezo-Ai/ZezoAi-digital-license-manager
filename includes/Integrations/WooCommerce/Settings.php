@@ -58,8 +58,8 @@ class Settings {
 							'priority' => 15,
 							'callback' => array( $this, 'fieldLicenseKeyDeliveryOptions' ),
 							'args'     => array(
-								'label'   => __( "Enable this option to safe guard the data on plugin removal/uninstallation.", 'digital-license-manager' ),
-								'explain' => __( "If enabled your data will NOT be removed once this plugin is uninstalled. This is usually prefered option in case you want to use the plugin again in future.", 'digital-license-manager' ),
+								'label'   => __( 'Generate and deliver license keys when an order enters one of these WooCommerce statuses.', 'digital-license-manager' ),
+								'explain' => __( 'Processing and Completed are recommended for most stores. Licenses are generated only once per order.', 'digital-license-manager' ),
 							)
 						),
 						array(

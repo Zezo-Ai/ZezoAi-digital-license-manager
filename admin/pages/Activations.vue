@@ -40,7 +40,7 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <div class="filter-item ml-auto">
+                    <div v-if="selectedIds.length > 0" class="filter-item ml-auto dlm-bulk-actions">
                         <select v-model="bulkAction" class="dlm-select">
                             <option value="">{{ trans('global.labels.bulk_actions') }}</option>
                             <option value="enable">{{ trans('activations.actions.enable') }}</option>
@@ -61,6 +61,7 @@
                 <Table
                     :columns="columns"
                     :rows="activations"
+                    primary-field="license_key"
                     :loading="loading"
                     :selectable="true"
                     :selected="selectedIds"
@@ -89,18 +90,13 @@
                         {{ formatDate(row.created_at) }}
                     </template>
                     <template #cell-actions="{ row }">
-                        <div class="dlm-row-actions">
-                            <button
-                                class="dlm-action-link"
-                                :class="row.deactivated_at ? 'text-success-600' : 'text-warning-600'"
-                                @click="toggleActivation(row)"
-                            >
-                                {{ row.deactivated_at ? trans('activations.actions.enable') : trans('activations.actions.disable') }}
-                            </button>
-                            <button class="dlm-action-link text-danger-600" @click="confirmDelete(row)">
-                                {{ trans('global.actions.delete') }}
-                            </button>
-                        </div>
+                        <ActionMenu
+                            :items="[
+                                { id: 'toggle', label: row.deactivated_at ? trans('activations.actions.enable') : trans('activations.actions.disable') },
+                                { id: 'delete', label: trans('global.actions.delete'), danger: true },
+                            ]"
+                            @select="action => action === 'toggle' ? toggleActivation(row) : action === 'delete' && confirmDelete(row)"
+                        />
                     </template>
                 </Table>
 
@@ -144,6 +140,7 @@ import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
 import LicenseKey from '../components/LicenseKey.vue'
+import ActionMenu from '@digital-license-manager/ui/components/ActionMenu.vue'
 
 const alertStore = useAlertStore()
 
