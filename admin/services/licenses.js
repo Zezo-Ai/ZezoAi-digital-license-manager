@@ -81,12 +81,3 @@ export async function generateKey() {
 export async function importLicenses(data) {
     return ajaxPost('dlm_admin_licenses_import', data)
 }
-
-/**
- * Export licenses.
- * @param {Object} params - Export parameters
- * @returns {Promise<Response>}
- */
-export async function exportLicenses(params = {}) {
-    return ajaxGet('dlm_admin_licenses_export', params)
-}

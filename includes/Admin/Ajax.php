@@ -75,7 +75,6 @@ class Ajax {
 		add_action( 'wp_ajax_dlm_admin_licenses_show_key', [ $this, 'licenses_show_key' ] );
 		add_action( 'wp_ajax_dlm_admin_licenses_generate_key', [ $this, 'licenses_generate_key' ] );
 		add_action( 'wp_ajax_dlm_admin_licenses_import', [ $this, 'licenses_import' ] );
-		add_action( 'wp_ajax_dlm_admin_licenses_export', [ $this, 'licenses_export' ] );
 
 		// Generators
 		add_action( 'wp_ajax_dlm_admin_generators_query', [ $this, 'generators_query' ] );
@@ -378,20 +377,6 @@ class Ajax {
 				}
 				$message = sprintf( __( '%d license(s) deleted.', 'digital-license-manager' ), $count );
 				break;
-
-			case 'export':
-				$rows = [];
-				foreach ( $ids as $id ) {
-					$license = Licenses::instance()->find( $id );
-					if ( $license ) {
-						$rows[] = $this->format_license( $license, true );
-						$count++;
-					}
-				}
-				wp_send_json_success( [
-					'message' => sprintf( __( '%d license(s) exported.', 'digital-license-manager' ), $count ),
-					'records' => $rows,
-				] );
 
 			default:
 				wp_send_json_error( [ 'message' => __( 'Unknown action.', 'digital-license-manager' ) ] );
@@ -1810,34 +1795,6 @@ class Ajax {
 			'delivered' => $licenses_repo->count( [ 'status' => LicenseStatus::DELIVERED ] ),
 			'disabled'  => $licenses_repo->count( [ 'status' => LicenseStatus::DISABLED ] ),
 		];
-	}
-
-	/**
-	 * Export licenses as a downloadable CSV.
-	 *
-	 * @return void
-	 */
-	public function licenses_export() {
-		$this->check_access();
-
-		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : [];
-
-		if ( empty( $ids ) ) {
-			wp_send_json_error( [ 'message' => __( 'No licenses selected.', 'digital-license-manager' ) ] );
-		}
-
-		$rows = [];
-		foreach ( $ids as $id ) {
-			$license = Licenses::instance()->find( $id );
-			if ( $license ) {
-				$rows[] = $this->format_license( $license, true );
-			}
-		}
-
-		wp_send_json_success( [
-			'message' => sprintf( __( '%d license(s) exported.', 'digital-license-manager' ), count( $rows ) ),
-			'records' => $rows,
-		] );
 	}
 
 	/**

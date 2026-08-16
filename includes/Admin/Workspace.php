@@ -141,7 +141,6 @@ class Workspace {
 				'sectionNavigation' => __( 'Section navigation', 'digital-license-manager' ),
 				'documentation'     => __( 'Documentation', 'digital-license-manager' ),
 				'support'           => __( 'Support', 'digital-license-manager' ),
-				'description'       => __( 'Licensing operations, commerce, and software delivery', 'digital-license-manager' ),
 			],
 		];
 	}

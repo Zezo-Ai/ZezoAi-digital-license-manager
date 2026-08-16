@@ -183,6 +183,21 @@ return [
 				'title'   => __( 'Delete License', 'digital-license-manager' ),
 				'message' => __( 'Are you sure you want to delete this license? This action cannot be undone.', 'digital-license-manager' ),
 			],
+			'export' => [
+				'title'                => __( 'Export licenses', 'digital-license-manager' ),
+				'scope'                => __( 'Export scope', 'digital-license-manager' ),
+				'selected'             => __( 'Selected licenses (%d)', 'digital-license-manager' ),
+				'selected_description' => __( 'Only the licenses currently selected in the table.', 'digital-license-manager' ),
+				'filtered'             => __( 'All matching licenses (%d)', 'digital-license-manager' ),
+				'filtered_description' => __( 'Every license matching the applied status and search filters across all pages.', 'digital-license-manager' ),
+				'columns'              => __( 'Columns', 'digital-license-manager' ),
+				'select_all'           => __( 'Select all', 'digital-license-manager' ),
+				'clear_all'            => __( 'Clear all', 'digital-license-manager' ),
+				'no_columns'           => __( 'Select at least one column to export.', 'digital-license-manager' ),
+				'sensitive_notice'     => __( 'This CSV contains full license keys. Store and share it securely.', 'digital-license-manager' ),
+				'download'             => __( 'Export CSV', 'digital-license-manager' ),
+				'preparing'            => __( 'Preparing export...', 'digital-license-manager' ),
+			],
 		],
 		'import' => [
 			'fields' => [

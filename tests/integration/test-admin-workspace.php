@@ -55,6 +55,7 @@ class DLM_Admin_Workspace_TestCase extends WP_UnitTestCase {
 		$this->assertNotEmpty( $data['brand']['markUrl'] );
 		$this->assertArrayHasKey( 'documentation', $data['resources'] );
 		$this->assertSame( 'Workspace', $data['labels']['workspace'] );
+		$this->assertArrayNotHasKey( 'description', $data['labels'] );
 	}
 
 	public function test_development_admin_assets_use_file_modification_times() {
@@ -76,6 +77,30 @@ class DLM_Admin_Workspace_TestCase extends WP_UnitTestCase {
 			(string) filemtime( DLM_ABSPATH . 'assets/admin/styles.css' ),
 			(string) wp_styles()->registered[ Assets::STYLE_HANDLE ]->ver
 		);
+	}
+
+	public function test_license_export_config_is_capability_aware() {
+		$user = wp_get_current_user();
+		$user->set_role( 'subscriber' );
+		$user->add_cap( 'dlm_read_licenses' );
+		$user->add_cap( 'dlm_export_licenses' );
+
+		$method = new ReflectionMethod( Assets::class, 'get_localized_data' );
+		$method->setAccessible( true );
+		$data = $method->invoke( Assets::instance() );
+
+		$this->assertTrue( $data['config']['licenseExport']['enabled'] );
+		$this->assertSame( admin_url( 'admin-post.php' ), $data['config']['licenseExport']['url'] );
+		$this->assertNotEmpty( $data['config']['licenseExport']['nonce'] );
+		$this->assertCount( 13, $data['config']['licenseExport']['columns'] );
+
+		$user->remove_cap( 'dlm_export_licenses' );
+		$data = $method->invoke( Assets::instance() );
+
+		$this->assertFalse( $data['config']['licenseExport']['enabled'] );
+		$this->assertSame( '', $data['config']['licenseExport']['url'] );
+		$this->assertSame( '', $data['config']['licenseExport']['nonce'] );
+		$this->assertSame( [], $data['config']['licenseExport']['columns'] );
 	}
 
 	public function test_workspace_brand_is_filterable_and_sanitized() {

@@ -158,6 +158,7 @@ class Assets {
 	 */
 	protected function get_localized_data() {
 		$strings = include __DIR__ . '/Strings.php';
+		$can_export_licenses = current_user_can( 'dlm_export_licenses' );
 
 		return apply_filters( 'dlm_admin_localized_data', [
 			'i18n'          => $strings,
@@ -173,6 +174,12 @@ class Assets {
 				'dateFormat'        => get_option( 'date_format', 'Y-m-d' ),
 				'timeFormat'        => get_option( 'time_format', 'H:i' ),
 				'activationSources' => ActivationSource::all(),
+				'licenseExport'     => [
+					'enabled' => $can_export_licenses,
+					'url'     => $can_export_licenses ? admin_url( 'admin-post.php' ) : '',
+					'nonce'   => $can_export_licenses ? wp_create_nonce( 'dlm_export_licenses' ) : '',
+					'columns' => $can_export_licenses ? LicenseCsvExporter::get_column_choices() : [],
+				],
 			],
 		] );
 	}

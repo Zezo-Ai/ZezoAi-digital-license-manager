@@ -10,6 +10,15 @@
                 <router-link to="/licenses/import" class="dlm-btn dlm-btn-secondary">
                     {{ trans('licenses.buttons.import') }}
                 </router-link>
+                <button
+                    v-if="canExport"
+                    type="button"
+                    class="dlm-btn dlm-btn-secondary"
+                    :disabled="loading || !exportAvailable"
+                    @click="openExportModal()"
+                >
+                    {{ trans('licenses.buttons.export') }}
+                </button>
             </div>
         </div>
 
@@ -37,7 +46,7 @@
                             class="dlm-input"
                             :aria-label="trans('global.placeholders.search')"
                             :placeholder="trans('global.placeholders.search')"
-                            @keyup.enter="loadLicenses"
+                            @keyup.enter="applySearch"
                         />
                     </div>
                     <div class="filter-item">
@@ -54,7 +63,7 @@
                             <option value="activate">{{ trans('licenses.actions.activate') }}</option>
                             <option value="deactivate">{{ trans('licenses.actions.deactivate') }}</option>
                             <option value="delete">{{ trans('licenses.actions.delete') }}</option>
-                            <option value="export">{{ trans('licenses.actions.export') }}</option>
+                            <option v-if="canExport" value="export">{{ trans('licenses.actions.export') }}</option>
                         </select>
                         <button
                             class="dlm-btn dlm-btn-secondary dlm-btn-sm"
@@ -155,6 +164,110 @@
                 </button>
             </template>
         </Modal>
+
+        <!-- License Export Modal -->
+        <Modal
+            :show="showExportModal"
+            :title="trans('licenses.modals.export.title')"
+            size="lg"
+            @close="closeExportModal"
+        >
+            <form
+                id="dlm-license-export-form"
+                class="dlm-export-form"
+                method="post"
+                :action="exportConfig.url"
+                @submit="handleExportSubmit"
+            >
+                <input type="hidden" name="action" value="dlm_licenses_export" />
+                <input type="hidden" name="_wpnonce" :value="exportConfig.nonce" />
+                <input type="hidden" name="search" :value="appliedQuery.search" />
+                <input type="hidden" name="status" :value="appliedQuery.status" />
+                <input type="hidden" name="orderby" :value="appliedQuery.orderby" />
+                <input type="hidden" name="order" :value="appliedQuery.order" />
+                <input
+                    v-for="id in exportScope === 'selected' ? selectedIds : []"
+                    :key="`export-license-${id}`"
+                    type="hidden"
+                    name="ids[]"
+                    :value="id"
+                />
+
+                <fieldset class="dlm-export-fieldset">
+                    <legend>{{ trans('licenses.modals.export.scope') }}</legend>
+                    <div class="dlm-export-scope-options">
+                        <label v-if="selectedIds.length" :class="['dlm-export-scope-option', { 'is-selected': exportScope === 'selected' }]">
+                            <input v-model="exportScope" type="radio" name="scope" value="selected" />
+                            <span>
+                                <strong>{{ replaceCount(trans('licenses.modals.export.selected'), selectedIds.length) }}</strong>
+                                <small>{{ trans('licenses.modals.export.selected_description') }}</small>
+                            </span>
+                        </label>
+                        <label :class="['dlm-export-scope-option', { 'is-selected': exportScope === 'filtered', 'is-disabled': pagination.total === 0 }]">
+                            <input
+                                v-model="exportScope"
+                                type="radio"
+                                name="scope"
+                                value="filtered"
+                                :disabled="pagination.total === 0"
+                            />
+                            <span>
+                                <strong>{{ replaceCount(trans('licenses.modals.export.filtered'), pagination.total) }}</strong>
+                                <small>{{ trans('licenses.modals.export.filtered_description') }}</small>
+                            </span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="dlm-export-fieldset">
+                    <legend>{{ trans('licenses.modals.export.columns') }}</legend>
+                    <div class="dlm-export-columns-actions">
+                        <button type="button" @click="selectAllExportColumns">
+                            {{ trans('licenses.modals.export.select_all') }}
+                        </button>
+                        <span aria-hidden="true">·</span>
+                        <button type="button" @click="clearExportColumns">
+                            {{ trans('licenses.modals.export.clear_all') }}
+                        </button>
+                    </div>
+
+                    <div class="dlm-export-columns">
+                        <label v-for="column in exportConfig.columns" :key="column.key" class="dlm-export-column">
+                            <input
+                                v-model="exportColumns"
+                                type="checkbox"
+                                name="columns[]"
+                                :value="column.key"
+                                class="dlm-checkbox"
+                            />
+                            <span>{{ column.label }}</span>
+                        </label>
+                    </div>
+                    <p v-if="exportColumns.length === 0" class="dlm-export-error" role="alert">
+                        {{ trans('licenses.modals.export.no_columns') }}
+                    </p>
+                </fieldset>
+
+                <div v-if="exportsFullLicenseKeys" class="dlm-export-sensitive-notice">
+                    <span class="dashicons dashicons-lock" aria-hidden="true"></span>
+                    <span>{{ trans('licenses.modals.export.sensitive_notice') }}</span>
+                </div>
+            </form>
+
+            <template #footer>
+                <button type="button" class="dlm-btn dlm-btn-secondary" :disabled="exportSubmitting" @click="closeExportModal">
+                    {{ trans('global.buttons.cancel') }}
+                </button>
+                <button
+                    type="submit"
+                    form="dlm-license-export-form"
+                    class="dlm-btn dlm-btn-primary"
+                    :disabled="exportSubmitting || exportColumns.length === 0 || !exportScopeAvailable"
+                >
+                    {{ exportSubmitting ? trans('licenses.modals.export.preparing') : trans('licenses.modals.export.download') }}
+                </button>
+            </template>
+        </Modal>
     </div>
 </template>
 
@@ -171,6 +284,12 @@ import ActionMenu from '@digital-license-manager/ui/components/ActionMenu.vue'
 import LicenseKey from '../components/LicenseKey.vue'
 
 const alertStore = useAlertStore()
+const exportConfig = window.DLMAdmin?.config?.licenseExport || {
+    enabled: false,
+    url: '',
+    nonce: '',
+    columns: [],
+}
 
 // State
 const loading = ref(true)
@@ -185,11 +304,22 @@ const sortOrder = ref('desc')
 const showDeleteModal = ref(false)
 const licenseToDelete = ref(null)
 const deleting = ref(false)
+const showExportModal = ref(false)
+const exportScope = ref('filtered')
+const exportColumns = ref([])
+const exportSubmitting = ref(false)
 
 const pagination = reactive({
     currentPage: 1,
     totalPages: 1,
     total: 0,
+})
+
+const appliedQuery = reactive({
+    search: '',
+    status: '',
+    orderby: 'id',
+    order: 'desc',
 })
 
 const statusFilters = ref([
@@ -213,19 +343,28 @@ const columns = computed(() => [
     { key: 'actions', label: '', sortable: false, width: '100px' },
 ])
 
+const canExport = computed(() => Boolean(exportConfig.enabled && exportConfig.url && exportConfig.nonce))
+const exportAvailable = computed(() => pagination.total > 0 || selectedIds.value.length > 0)
+const exportScopeAvailable = computed(() => (
+    exportScope.value === 'selected' ? selectedIds.value.length > 0 : pagination.total > 0
+))
+const exportsFullLicenseKeys = computed(() => exportColumns.value.includes('license_key'))
+
 // Methods
 async function loadLicenses() {
     loading.value = true
 
+    const requestQuery = {
+        page: pagination.currentPage,
+        per_page: perPage.value,
+        search: search.value,
+        status: currentStatus.value !== 'all' ? currentStatus.value : '',
+        orderby: sortBy.value,
+        order: sortOrder.value,
+    }
+
     try {
-        const response = await licensesService.query({
-            page: pagination.currentPage,
-            per_page: perPage.value,
-            search: search.value,
-            status: currentStatus.value !== 'all' ? currentStatus.value : '',
-            orderby: sortBy.value,
-            order: sortOrder.value,
-        })
+        const response = await licensesService.query(requestQuery)
 
         const json = await response.json()
 
@@ -234,6 +373,12 @@ async function loadLicenses() {
             pagination.currentPage = json.data.pagination.current_page
             pagination.totalPages = json.data.pagination.total_pages
             pagination.total = json.data.pagination.total
+            Object.assign(appliedQuery, {
+                search: requestQuery.search,
+                status: requestQuery.status,
+                orderby: requestQuery.orderby,
+                order: requestQuery.order,
+            })
 
             // Update status counts
             if (json.data.counts) {
@@ -249,6 +394,11 @@ async function loadLicenses() {
     } finally {
         loading.value = false
     }
+}
+
+function applySearch() {
+    pagination.currentPage = 1
+    loadLicenses()
 }
 
 function setStatus(status) {
@@ -316,6 +466,12 @@ async function deleteLicense() {
 async function applyBulkAction() {
     if (!bulkAction.value || selectedIds.value.length === 0) return
 
+    if (bulkAction.value === 'export') {
+        openExportModal('selected')
+        bulkAction.value = ''
+        return
+    }
+
     try {
         const response = await licensesService.bulkAction(bulkAction.value, selectedIds.value)
         const json = await response.json()
@@ -331,6 +487,45 @@ async function applyBulkAction() {
     } catch (error) {
         alertStore.error(trans('global.errors.network'))
     }
+}
+
+function openExportModal(preferredScope = '') {
+    exportScope.value = preferredScope === 'selected' && selectedIds.value.length
+        ? 'selected'
+        : (selectedIds.value.length ? 'selected' : 'filtered')
+    exportColumns.value = exportConfig.columns.map(column => column.key)
+    exportSubmitting.value = false
+    showExportModal.value = true
+}
+
+function closeExportModal() {
+    if (exportSubmitting.value) return
+    showExportModal.value = false
+}
+
+function selectAllExportColumns() {
+    exportColumns.value = exportConfig.columns.map(column => column.key)
+}
+
+function clearExportColumns() {
+    exportColumns.value = []
+}
+
+function handleExportSubmit(event) {
+    if (!exportScopeAvailable.value || exportColumns.value.length === 0) {
+        event.preventDefault()
+        return
+    }
+
+    exportSubmitting.value = true
+    window.setTimeout(() => {
+        showExportModal.value = false
+        exportSubmitting.value = false
+    }, 750)
+}
+
+function replaceCount(message, count) {
+    return message.replace('%d', String(count))
 }
 
 function formatDate(dateString) {
@@ -395,5 +590,165 @@ onMounted(() => {
 
 .dlm-order-sub {
     @apply text-xs text-gray-500;
+}
+
+.dlm-export-form {
+    display: grid;
+    gap: 22px;
+}
+
+.dlm-export-fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.dlm-export-fieldset > legend {
+    margin-bottom: 10px;
+    color: var(--dlm-admin-ink);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.dlm-export-scope-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.dlm-export-scope-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px;
+    background: #fff;
+    border: 1px solid var(--dlm-admin-border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.dlm-export-scope-option:only-child {
+    grid-column: 1 / -1;
+}
+
+.dlm-export-scope-option.is-selected {
+    background: #f2fbfa;
+    border-color: var(--dlm-admin-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--dlm-admin-primary) 20%, transparent);
+}
+
+.dlm-export-scope-option.is-disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.dlm-export-scope-option input {
+    margin-top: 2px;
+}
+
+.dlm-export-scope-option span {
+    display: grid;
+    gap: 3px;
+}
+
+.dlm-export-scope-option strong {
+    color: var(--dlm-admin-ink);
+    font-size: 12px;
+}
+
+.dlm-export-scope-option small {
+    color: var(--dlm-admin-muted);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.dlm-export-columns-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    margin: -25px 0 10px;
+    color: var(--dlm-admin-muted);
+}
+
+.dlm-export-columns-actions button {
+    padding: 0;
+    color: var(--dlm-admin-primary);
+    font-size: 11px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.dlm-export-columns-actions button:hover {
+    color: var(--dlm-admin-primary-hover);
+    text-decoration: underline;
+}
+
+.dlm-export-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
+    border: 1px solid var(--dlm-admin-border);
+    border-radius: 8px;
+}
+
+.dlm-export-column {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    color: var(--dlm-admin-ink);
+    font-size: 12px;
+    border-bottom: 1px solid #edf1ef;
+    cursor: pointer;
+}
+
+.dlm-export-column:nth-child(odd) {
+    border-right: 1px solid #edf1ef;
+}
+
+.dlm-export-column:last-child {
+    border-bottom: 0;
+}
+
+.dlm-export-error {
+    margin: 8px 0 0;
+    color: #b42318;
+    font-size: 11px;
+}
+
+.dlm-export-sensitive-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 11px 12px;
+    color: #8a4b08;
+    font-size: 11px;
+    line-height: 1.45;
+    background: #fffaeb;
+    border: 1px solid #fedf89;
+    border-radius: 8px;
+}
+
+.dlm-export-sensitive-notice .dashicons {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+    font-size: 17px;
+}
+
+@media (max-width: 600px) {
+    .dlm-export-scope-options,
+    .dlm-export-columns {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dlm-export-column:nth-child(odd) {
+        border-right: 0;
+    }
+
 }
 </style>
