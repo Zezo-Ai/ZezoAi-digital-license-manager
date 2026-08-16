@@ -209,10 +209,23 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 == Changelog ==
 
 = 2.0.0 =
-*Release date - 01 Mar 2026*
+*Release date - 17 Aug 2026*
 
-* Modern 2026 UI
-* Fixed various bugs in the codebase
+* Completely redesigned admin interface: new Vue-based apps for Licenses, Generators, Activations and Settings with a modern workspace and branding
+* Add secure license CSV exports
+* Add database repair tool under Settings → Tools
+* Improve plugin loading speed
+* Hide unrelated WordPress admin notices on Digital License Manager pages
+* REST API: fix authentication routing and allow customizing the authentication logic via filter
+* Fix fractional amounts being truncated when stored
+* Improve client IP detection behind proxies
+* Compatibility: when Digital License Manager PRO 1.x with a bundled core is active, this version stays in standby until PRO is updated to 2.0
+* Test with WordPress 7.1 and WooCommerce 10.6
+
+= 1.8.5 =
+*Release date - 13 Aug 2026*
+
+* Declare compatibility with WordPress 7.1
 
 = 1.8.4 =
 *Release date - 03 Feb 2026*
@@ -676,3 +689,6 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 * Everything is new
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+Major release with a completely redesigned admin interface. If you use Digital License Manager PRO, update it to 2.0 as well — PRO 1.x keeps running its bundled core until then.

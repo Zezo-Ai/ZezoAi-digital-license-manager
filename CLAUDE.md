@@ -15,6 +15,14 @@ Bumps go in **four** places:
 
 Deploys to WordPress.org via the standard 10up action: rewrites `trunk/` and creates `tags/<version>/`. Also uploads a ZIP to the GitHub Release.
 
+**Stable-tag blind spot:** the CI check extracts only `X.Y.Z` from `Stable tag`, so a stale
+`2.0.0-rc.N` value *passes* validation on a `v2.0.0` tag — and WordPress.org then advertises the
+RC as the stable version. Verify the `Stable tag` bump by hand; CI will not catch it.
+
+**Changelog:** before a stable tag, write a real `== Changelog ==` entry in `readme.txt` with the
+actual release date, and update `== Upgrade Notice ==` for major versions. Pre-releases (RC/beta)
+do not get changelog entries. CI does not check any of this.
+
 ### Release Candidate — e.g. `v2.0.0-rc.1`, `v2.0.0-rc.2`
 
 Bumps go in **three** places — `readme.txt`'s `Stable tag` is NOT touched:
