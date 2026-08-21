@@ -32,7 +32,25 @@
 class DLM_Orders_TestCase extends WP_UnitTestCase {
 
 	/**
-	 * A single example test.
+	 * Ordered license links should target the Vue admin edit route.
+	 */
+	public function test_ordered_license_html_links_to_admin_edit_route() {
+
+		$license = $this->createMock( \IdeoLogix\DigitalLicenseManager\Database\Models\License::class );
+		$license->method( 'getId' )->willReturn( 123 );
+		$license->method( 'getDecryptedLicenseKey' )->willReturn( 'TEST-LICENSE-KEY' );
+
+		$html = \IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Orders::getOrderedLicensesHtml(
+			[ $license ],
+			new WC_Order_Item_Product()
+		);
+
+		$this->assertStringContainsString( admin_url( 'admin.php?page=dlm-licenses#/licenses/123/edit' ), $html );
+		$this->assertStringNotContainsString( 'action=edit&id=123', $html );
+	}
+
+	/**
+	 * Licenses should be generated and rendered below their WooCommerce order item.
 	 */
 	public function test_order_process() {
 
@@ -67,5 +85,32 @@ class DLM_Orders_TestCase extends WP_UnitTestCase {
 
 		$this->assertIsArray( $licenses );
 		$this->assertGreaterThanOrEqual( 1, count( $licenses ) );
+		$this->assertNotFalse( has_action( 'woocommerce_after_order_itemmeta' ) );
+
+		$order_items = $order->get_items( 'line_item' );
+		$order_item  = reset( $order_items );
+
+		$this->assertInstanceOf( WC_Order_Item_Product::class, $order_item );
+
+		$order_service = new \IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Services\OrdersService();
+		$item_licenses = $order_service->getOrderItemLicensesRaw( $order_item );
+
+		$this->assertCount( count( $licenses ), $item_licenses );
+
+		$license     = reset( $item_licenses );
+		$license_key = $license->getDecryptedLicenseKey();
+
+		$this->assertIsString( $license_key );
+
+		ob_start();
+		do_action( 'woocommerce_after_order_itemmeta', $order_item->get_id(), $order_item, $product );
+		$html = ob_get_clean();
+
+		$this->assertStringContainsString( 'dlm-license-list', $html );
+		$this->assertStringContainsString( $license_key, $html );
+		$this->assertStringContainsString(
+			admin_url( sprintf( 'admin.php?page=dlm-licenses#/licenses/%d/edit', $license->getId() ) ),
+			$html
+		);
 	}
 }

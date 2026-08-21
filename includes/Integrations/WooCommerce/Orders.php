@@ -26,6 +26,7 @@
 
 namespace IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce;
 
+use IdeoLogix\DigitalLicenseManager\Admin\Boot as AdminBoot;
 use IdeoLogix\DigitalLicenseManager\Core\Services\GeneratorsService;
 use IdeoLogix\DigitalLicenseManager\Database\Models\Generator;
 use IdeoLogix\DigitalLicenseManager\Database\Models\License;
@@ -34,7 +35,6 @@ use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePlatform;
 use IdeoLogix\DigitalLicenseManager\Enums\LicenseSource;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePrivateStatus;
-use IdeoLogix\DigitalLicenseManager\Enums\PageSlug;
 use IdeoLogix\DigitalLicenseManager\Integrations\WooCommerce\Services\OrdersService;
 use IdeoLogix\DigitalLicenseManager\ListTables\Licenses as LicensesListTable;
 use IdeoLogix\DigitalLicenseManager\Settings;
@@ -760,7 +760,7 @@ class Orders {
 		$html = sprintf( '<p>%s:</p>', __( 'The following licenses have been generated for this order item', 'digital-license-manager' ) );
 		$html .= '<ul class="dlm-license-list">';
 		foreach ( $licenses as $license ) {
-			$url = admin_url( sprintf( 'admin.php?page=%s&action=edit&id=%d', PageSlug::LICENSES, $license->getId() ) );
+			$url = admin_url( sprintf( 'admin.php?page=%s#/licenses/%d/edit', AdminBoot::PAGE_SLUG, $license->getId() ) );
 			if ( ! $hide_keys ) {
 				$decrypted = $license->getDecryptedLicenseKey();
 				$decrypted = is_wp_error( $decrypted ) ? 'ERROR' : $decrypted;

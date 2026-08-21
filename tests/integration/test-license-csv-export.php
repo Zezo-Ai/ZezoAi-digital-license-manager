@@ -94,6 +94,61 @@ class DLM_License_Csv_Export_TestCase extends WP_UnitTestCase {
 		$this->assertSame( 'SEARCH-EXPORT-KEY', $rows[1][1] );
 	}
 
+	public function test_filtered_export_combines_product_order_and_customer_filters() {
+		$match = $this->create_license(
+			'ASSIGNMENT-FILTER-0001',
+			LicensePrivateStatus::DELIVERED,
+			1,
+			[ 'product_id' => 501, 'order_id' => 601, 'user_id' => 701 ]
+		);
+		$this->create_license(
+			'ASSIGNMENT-FILTER-0002',
+			LicensePrivateStatus::DELIVERED,
+			1,
+			[ 'product_id' => 501, 'order_id' => 602, 'user_id' => 702 ]
+		);
+		$this->create_license(
+			'ASSIGNMENT-FILTER-0003',
+			LicensePrivateStatus::DELIVERED,
+			1,
+			[ 'product_id' => 502, 'order_id' => 601, 'user_id' => 702 ]
+		);
+		$this->create_license(
+			'ASSIGNMENT-FILTER-0004',
+			LicensePrivateStatus::DELIVERED,
+			1,
+			[ 'product_id' => 502, 'order_id' => 602, 'user_id' => 701 ]
+		);
+
+		$exporter = new LicenseCsvExporter();
+
+		$product_args = $exporter->prepare_args( [ 'product_id' => 501 ] );
+		$order_args   = $exporter->prepare_args( [ 'order_id' => 601 ] );
+		$user_args    = $exporter->prepare_args( [ 'user_id' => 701 ] );
+
+		$this->assertSame( 2, $exporter->count_records( $product_args ) );
+		$this->assertSame( 2, $exporter->count_records( $order_args ) );
+		$this->assertSame( 2, $exporter->count_records( $user_args ) );
+
+		$combined_args = $exporter->prepare_args(
+			[
+				'scope'      => 'filtered',
+				'status'     => 'delivered',
+				'product_id' => 501,
+				'order_id'   => 601,
+				'user_id'    => 701,
+				'columns'    => [ 'id', 'product_id', 'order_id', 'user_id' ],
+			]
+		);
+
+		$this->assertSame( 1, $exporter->count_records( $combined_args ) );
+
+		$rows = $this->export_rows( $exporter, $combined_args );
+		$this->assertSame( [ 'id', 'product_id', 'order_id', 'user_id' ], $rows[0] );
+		$this->assertSame( [ (string) $match->getId(), '501', '601', '701' ], $rows[1] );
+		$this->assertCount( 2, $rows );
+	}
+
 	public function test_export_rejects_invalid_scope_and_empty_columns() {
 		$exporter = new LicenseCsvExporter();
 
@@ -129,17 +184,20 @@ class DLM_License_Csv_Export_TestCase extends WP_UnitTestCase {
 		return $row;
 	}
 
-	private function create_license( $key, $status, $created_by = 1 ) {
+	private function create_license( $key, $status, $created_by = 1, $assignments = [] ) {
 		$license = Licenses::instance()->create(
-			[
-				'license_key'       => CryptoHelper::encrypt( $key ),
-				'hash'              => CryptoHelper::hash( $key ),
-				'status'            => $status,
-				'source'            => LicenseSource::API,
-				'activations_limit' => 5,
-				'valid_for'         => 365,
-				'created_by'        => $created_by,
-			]
+			array_merge(
+				[
+					'license_key'       => CryptoHelper::encrypt( $key ),
+					'hash'              => CryptoHelper::hash( $key ),
+					'status'            => $status,
+					'source'            => LicenseSource::API,
+					'activations_limit' => 5,
+					'valid_for'         => 365,
+					'created_by'        => $created_by,
+				],
+				$assignments
+			)
 		);
 
 		$this->assertNotFalse( $license );

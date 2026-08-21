@@ -171,10 +171,18 @@ class Assets {
 			'pluginUrl' => defined( 'DLM_PLUGIN_URL' ) ? DLM_PLUGIN_URL : '',
 			'version'   => defined( 'DLM_PLUGIN_VERSION' ) ? DLM_PLUGIN_VERSION : '1.0.0',
 			'config'    => [
-				'dateFormat'        => get_option( 'date_format', 'Y-m-d' ),
-				'timeFormat'        => get_option( 'time_format', 'H:i' ),
-				'activationSources' => ActivationSource::all(),
-				'licenseExport'     => [
+				'dateFormat'          => get_option( 'date_format', 'Y-m-d' ),
+				'timeFormat'          => get_option( 'time_format', 'H:i' ),
+				'activationSources'   => ActivationSource::all(),
+				'licenseCapabilities' => [
+					'create'     => current_user_can( 'dlm_create_licenses' ),
+					'edit'       => current_user_can( 'dlm_edit_licenses' ),
+					'delete'     => current_user_can( 'dlm_delete_licenses' ),
+					'activate'   => current_user_can( 'dlm_activate_licenses' ),
+					'deactivate' => current_user_can( 'dlm_deactivate_licenses' ),
+					'export'     => $can_export_licenses,
+				],
+				'licenseExport'       => [
 					'enabled' => $can_export_licenses,
 					'url'     => $can_export_licenses ? admin_url( 'admin-post.php' ) : '',
 					'nonce'   => $can_export_licenses ? wp_create_nonce( 'dlm_export_licenses' ) : '',

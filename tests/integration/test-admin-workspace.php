@@ -93,6 +93,24 @@ class DLM_Admin_Workspace_TestCase extends WP_UnitTestCase {
 		$this->assertSame( admin_url( 'admin-post.php' ), $data['config']['licenseExport']['url'] );
 		$this->assertNotEmpty( $data['config']['licenseExport']['nonce'] );
 		$this->assertCount( 13, $data['config']['licenseExport']['columns'] );
+		$this->assertSame(
+			[
+				'create'     => false,
+				'edit'       => false,
+				'delete'     => false,
+				'activate'   => false,
+				'deactivate' => false,
+				'export'     => true,
+			],
+			$data['config']['licenseCapabilities']
+		);
+
+		foreach ( [ 'create', 'edit', 'delete', 'activate', 'deactivate' ] as $action ) {
+			$user->add_cap( 'dlm_' . $action . '_licenses' );
+		}
+		$data = $method->invoke( Assets::instance() );
+
+		$this->assertNotContains( false, $data['config']['licenseCapabilities'], true );
 
 		$user->remove_cap( 'dlm_export_licenses' );
 		$data = $method->invoke( Assets::instance() );
@@ -101,6 +119,7 @@ class DLM_Admin_Workspace_TestCase extends WP_UnitTestCase {
 		$this->assertSame( '', $data['config']['licenseExport']['url'] );
 		$this->assertSame( '', $data['config']['licenseExport']['nonce'] );
 		$this->assertSame( [], $data['config']['licenseExport']['columns'] );
+		$this->assertFalse( $data['config']['licenseCapabilities']['export'] );
 	}
 
 	public function test_workspace_brand_is_filterable_and_sanitized() {

@@ -4,10 +4,10 @@
         <div class="dlm-page-header">
             <h1>{{ trans('licenses.title') }}</h1>
             <div class="dlm-page-actions">
-                <router-link to="/licenses/add" class="dlm-btn dlm-btn-primary">
+                <router-link v-if="canCreate" to="/licenses/add" class="dlm-btn dlm-btn-primary">
                     {{ trans('global.buttons.add_new') }}
                 </router-link>
-                <router-link to="/licenses/import" class="dlm-btn dlm-btn-secondary">
+                <router-link v-if="canCreate" to="/licenses/import" class="dlm-btn dlm-btn-secondary">
                     {{ trans('licenses.buttons.import') }}
                 </router-link>
                 <button
@@ -37,20 +37,64 @@
                     </button>
                 </div>
 
-                <!-- Filters Row -->
-                <div class="dlm-filters">
-                    <div class="filter-item">
+                <!-- License Filters -->
+                <div class="dlm-license-filters">
+                    <div class="dlm-license-filter">
+                        <label for="license-search" class="dlm-filter-label">
+                            {{ trans('licenses.fields.license_key') }}
+                        </label>
                         <input
+                            id="license-search"
                             v-model="search"
                             type="text"
                             class="dlm-input"
-                            :aria-label="trans('global.placeholders.search')"
-                            :placeholder="trans('global.placeholders.search')"
+                            :placeholder="trans('licenses.filters.license_key_placeholder')"
                             @keyup.enter="applySearch"
                         />
                     </div>
+                    <AsyncSelect
+                        id="license-product-filter"
+                        class="dlm-license-filter"
+                        :model-value="productId"
+                        search-action="dlm_admin_search_products"
+                        :label="trans('licenses.fields.product')"
+                        :placeholder="trans('licenses.placeholders.product')"
+                        @update:model-value="setProductFilter"
+                    />
+                    <AsyncSelect
+                        id="license-order-filter"
+                        class="dlm-license-filter"
+                        :model-value="orderId"
+                        search-action="dlm_admin_search_orders"
+                        :label="trans('licenses.fields.order')"
+                        :placeholder="trans('licenses.placeholders.order')"
+                        @update:model-value="setOrderFilter"
+                    />
+                    <AsyncSelect
+                        id="license-customer-filter"
+                        class="dlm-license-filter"
+                        :model-value="userId"
+                        search-action="dlm_admin_search_users"
+                        :label="trans('licenses.filters.customer')"
+                        :placeholder="trans('licenses.filters.customer_placeholder')"
+                        @update:model-value="setUserFilter"
+                    />
+                    <div class="dlm-filter-clear">
+                        <button
+                            v-if="hasActiveFilters"
+                            type="button"
+                            class="dlm-btn dlm-btn-secondary dlm-btn-sm"
+                            @click="clearFilters"
+                        >
+                            {{ trans('licenses.filters.clear') }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- List Controls -->
+                <div class="dlm-filters">
                     <div class="filter-item">
-                        <select v-model="perPage" class="dlm-select" @change="loadLicenses">
+                        <select v-model="perPage" class="dlm-select" @change="applyFilters">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -60,9 +104,9 @@
                     <div v-if="selectedIds.length > 0" class="filter-item ml-auto dlm-bulk-actions">
                         <select v-model="bulkAction" class="dlm-select">
                             <option value="">{{ trans('global.labels.bulk_actions') }}</option>
-                            <option value="activate">{{ trans('licenses.actions.activate') }}</option>
-                            <option value="deactivate">{{ trans('licenses.actions.deactivate') }}</option>
-                            <option value="delete">{{ trans('licenses.actions.delete') }}</option>
+                            <option v-if="canActivate" value="activate">{{ trans('licenses.actions.activate') }}</option>
+                            <option v-if="canDeactivate" value="deactivate">{{ trans('licenses.actions.deactivate') }}</option>
+                            <option v-if="canDelete" value="delete">{{ trans('licenses.actions.delete') }}</option>
                             <option v-if="canExport" value="export">{{ trans('licenses.actions.export') }}</option>
                         </select>
                         <button
@@ -81,7 +125,7 @@
                     :rows="licenses"
                     primary-field="license_key"
                     :loading="loading"
-                    :selectable="true"
+                    :selectable="hasBulkActions"
                     :selected="selectedIds"
                     row-key="id"
                     @select="handleSelect"
@@ -126,13 +170,23 @@
                         <span v-else class="text-gray-400">{{ trans('licenses.labels.never') }}</span>
                     </template>
                     <template #cell-actions="{ row }">
-                        <ActionMenu
-                            :items="[
-                                { id: 'edit', label: trans('global.actions.edit'), to: `/licenses/${row.id}/edit` },
-                                { id: 'delete', label: trans('global.actions.delete'), danger: true },
-                            ]"
-                            @select="action => action === 'delete' && confirmDelete(row)"
-                        />
+                        <div class="dlm-row-actions">
+                            <router-link
+                                v-if="canEdit"
+                                :to="`/licenses/${row.id}/edit`"
+                                class="dlm-action-link text-primary-600"
+                            >
+                                {{ trans('global.actions.edit') }}
+                            </router-link>
+                            <button
+                                v-if="canDelete"
+                                type="button"
+                                class="dlm-action-link text-danger-600"
+                                @click="confirmDelete(row)"
+                            >
+                                {{ trans('global.actions.delete') }}
+                            </button>
+                        </div>
                     </template>
                 </Table>
 
@@ -183,6 +237,9 @@
                 <input type="hidden" name="_wpnonce" :value="exportConfig.nonce" />
                 <input type="hidden" name="search" :value="appliedQuery.search" />
                 <input type="hidden" name="status" :value="appliedQuery.status" />
+                <input type="hidden" name="product_id" :value="appliedQuery.product_id" />
+                <input type="hidden" name="order_id" :value="appliedQuery.order_id" />
+                <input type="hidden" name="user_id" :value="appliedQuery.user_id" />
                 <input type="hidden" name="orderby" :value="appliedQuery.orderby" />
                 <input type="hidden" name="order" :value="appliedQuery.order" />
                 <input
@@ -280,7 +337,7 @@ import Table from '@digital-license-manager/ui/components/Table.vue'
 import Pager from '@digital-license-manager/ui/components/Pager.vue'
 import Modal from '@digital-license-manager/ui/components/Modal.vue'
 import Status from '@digital-license-manager/ui/components/Status.vue'
-import ActionMenu from '@digital-license-manager/ui/components/ActionMenu.vue'
+import AsyncSelect from '@digital-license-manager/ui/components/input/AsyncSelect.vue'
 import LicenseKey from '../components/LicenseKey.vue'
 
 const alertStore = useAlertStore()
@@ -290,6 +347,7 @@ const exportConfig = window.DLMAdmin?.config?.licenseExport || {
     nonce: '',
     columns: [],
 }
+const capabilityConfig = window.DLMAdmin?.config?.licenseCapabilities || {}
 
 // State
 const loading = ref(true)
@@ -297,6 +355,9 @@ const licenses = ref([])
 const search = ref('')
 const perPage = ref(25)
 const currentStatus = ref('all')
+const productId = ref(null)
+const orderId = ref(null)
+const userId = ref(null)
 const bulkAction = ref('')
 const selectedIds = ref([])
 const sortBy = ref('id')
@@ -318,6 +379,9 @@ const pagination = reactive({
 const appliedQuery = reactive({
     search: '',
     status: '',
+    product_id: 0,
+    order_id: 0,
+    user_id: 0,
     orderby: 'id',
     order: 'desc',
 })
@@ -331,27 +395,50 @@ const statusFilters = ref([
     { value: 'disabled', label: trans('licenses.statuses.disabled'), count: 0 },
 ])
 
-const columns = computed(() => [
-    { key: 'id', label: trans('licenses.columns.id'), sortable: true, width: '80px' },
-    { key: 'license_key', label: trans('licenses.columns.license_key'), sortable: false },
-    { key: 'product_id', label: trans('licenses.columns.product'), sortable: true },
-    { key: 'user_id', label: trans('licenses.columns.user'), sortable: true },
-    { key: 'order_id', label: trans('licenses.columns.order'), sortable: true },
-    { key: 'status', label: trans('licenses.columns.status'), sortable: true, width: '120px' },
-    { key: 'activations', label: trans('licenses.columns.activations'), sortable: false, width: '120px' },
-    { key: 'expires_at', label: trans('licenses.columns.expires_at'), sortable: true, width: '150px' },
-    { key: 'actions', label: '', sortable: false, width: '100px' },
-])
+const canCreate = computed(() => Boolean(capabilityConfig.create))
+const canEdit = computed(() => Boolean(capabilityConfig.edit))
+const canDelete = computed(() => Boolean(capabilityConfig.delete))
+const canActivate = computed(() => Boolean(capabilityConfig.activate))
+const canDeactivate = computed(() => Boolean(capabilityConfig.deactivate))
+const canExport = computed(() => Boolean(capabilityConfig.export && exportConfig.enabled && exportConfig.url && exportConfig.nonce))
+const hasBulkActions = computed(() => canActivate.value || canDeactivate.value || canDelete.value || canExport.value)
+const hasActiveFilters = computed(() => Boolean(
+    search.value ||
+    currentStatus.value !== 'all' ||
+    productId.value ||
+    orderId.value ||
+    userId.value
+))
 
-const canExport = computed(() => Boolean(exportConfig.enabled && exportConfig.url && exportConfig.nonce))
+const columns = computed(() => {
+    const tableColumns = [
+        { key: 'id', label: trans('licenses.columns.id'), sortable: true, width: '80px' },
+        { key: 'license_key', label: trans('licenses.columns.license_key'), sortable: false },
+        { key: 'product_id', label: trans('licenses.columns.product'), sortable: true },
+        { key: 'user_id', label: trans('licenses.columns.user'), sortable: true },
+        { key: 'order_id', label: trans('licenses.columns.order'), sortable: true },
+        { key: 'status', label: trans('licenses.columns.status'), sortable: true, width: '120px' },
+        { key: 'activations', label: trans('licenses.columns.activations'), sortable: false, width: '120px' },
+        { key: 'expires_at', label: trans('licenses.columns.expires_at'), sortable: true, width: '150px' },
+    ]
+
+    if (canEdit.value || canDelete.value) {
+        tableColumns.push({ key: 'actions', label: trans('global.labels.actions'), sortable: false, width: '130px' })
+    }
+
+    return tableColumns
+})
+
 const exportAvailable = computed(() => pagination.total > 0 || selectedIds.value.length > 0)
 const exportScopeAvailable = computed(() => (
     exportScope.value === 'selected' ? selectedIds.value.length > 0 : pagination.total > 0
 ))
 const exportsFullLicenseKeys = computed(() => exportColumns.value.includes('license_key'))
+let latestRequestId = 0
 
 // Methods
 async function loadLicenses() {
+    const requestId = ++latestRequestId
     loading.value = true
 
     const requestQuery = {
@@ -359,6 +446,9 @@ async function loadLicenses() {
         per_page: perPage.value,
         search: search.value,
         status: currentStatus.value !== 'all' ? currentStatus.value : '',
+        product_id: productId.value || 0,
+        order_id: orderId.value || 0,
+        user_id: userId.value || 0,
         orderby: sortBy.value,
         order: sortOrder.value,
     }
@@ -367,6 +457,7 @@ async function loadLicenses() {
         const response = await licensesService.query(requestQuery)
 
         const json = await response.json()
+        if (requestId !== latestRequestId) return
 
         if (json.success) {
             licenses.value = json.data.records
@@ -376,6 +467,9 @@ async function loadLicenses() {
             Object.assign(appliedQuery, {
                 search: requestQuery.search,
                 status: requestQuery.status,
+                product_id: requestQuery.product_id,
+                order_id: requestQuery.order_id,
+                user_id: requestQuery.user_id,
                 orderby: requestQuery.orderby,
                 order: requestQuery.order,
             })
@@ -390,21 +484,54 @@ async function loadLicenses() {
             alertStore.error(json.data.message)
         }
     } catch (error) {
-        alertStore.error(trans('global.errors.network'))
+        if (requestId === latestRequestId) {
+            alertStore.error(trans('global.errors.network'))
+        }
     } finally {
-        loading.value = false
+        if (requestId === latestRequestId) {
+            loading.value = false
+        }
     }
 }
 
-function applySearch() {
+function applyFilters() {
     pagination.currentPage = 1
+    selectedIds.value = []
+    bulkAction.value = ''
     loadLicenses()
+}
+
+function applySearch() {
+    applyFilters()
 }
 
 function setStatus(status) {
     currentStatus.value = status
-    pagination.currentPage = 1
-    loadLicenses()
+    applyFilters()
+}
+
+function setProductFilter(value) {
+    productId.value = value ? Number(value) : null
+    applyFilters()
+}
+
+function setOrderFilter(value) {
+    orderId.value = value ? Number(value) : null
+    applyFilters()
+}
+
+function setUserFilter(value) {
+    userId.value = value ? Number(value) : null
+    applyFilters()
+}
+
+function clearFilters() {
+    search.value = ''
+    currentStatus.value = 'all'
+    productId.value = null
+    orderId.value = null
+    userId.value = null
+    applyFilters()
 }
 
 function goToPage(page) {
@@ -452,6 +579,8 @@ async function deleteLicense() {
         if (json.success) {
             alertStore.success(json.data.message)
             showDeleteModal.value = false
+            selectedIds.value = selectedIds.value.filter(id => id !== licenseToDelete.value.id)
+            licenseToDelete.value = null
             loadLicenses()
         } else {
             alertStore.error(json.data.message)
@@ -561,12 +690,26 @@ onMounted(() => {
     }
 }
 
-.dlm-filter-item {
-    @apply flex items-center gap-2;
+.dlm-license-filters {
+    @apply grid gap-3 mb-4;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.dlm-license-filter {
+    min-width: 0;
+}
+
+.dlm-filter-label {
+    @apply block mb-1 text-sm font-medium text-gray-700;
+}
+
+.dlm-filter-clear {
+    @apply flex items-end;
+    min-height: 62px;
 }
 
 .dlm-row-actions {
-    @apply flex items-center gap-3;
+    @apply flex items-center gap-3 whitespace-nowrap;
 }
 
 .dlm-action-link {

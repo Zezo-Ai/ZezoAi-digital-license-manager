@@ -123,6 +123,12 @@ return [
 			'activations_limit' => __( 'Activations Limit', 'digital-license-manager' ),
 			'source'            => __( 'Source', 'digital-license-manager' ),
 		],
+		'filters' => [
+			'customer'               => __( 'Customer', 'digital-license-manager' ),
+			'customer_placeholder'   => __( 'Search for a customer...', 'digital-license-manager' ),
+			'license_key_placeholder' => __( 'Search by exact license key...', 'digital-license-manager' ),
+			'clear'                  => __( 'Clear filters', 'digital-license-manager' ),
+		],
 		'placeholders' => [
 			'license_key'       => __( 'Enter or generate a license key', 'digital-license-manager' ),
 			'product'           => __( 'Search for a product...', 'digital-license-manager' ),

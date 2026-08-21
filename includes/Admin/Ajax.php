@@ -163,27 +163,17 @@ class Ajax {
 	public function licenses_query() {
 		$this->check_access();
 
-		$page     = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1;
-		$per_page = isset( $_GET['per_page'] ) ? absint( $_GET['per_page'] ) : 25;
-		$search   = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : '';
-		$status   = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
-		$orderby  = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
-		$order    = isset( $_GET['order'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) : 'DESC';
+		$page       = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1;
+		$per_page   = isset( $_GET['per_page'] ) ? absint( $_GET['per_page'] ) : 25;
+		$search     = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : '';
+		$status     = isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '';
+		$product_id = isset( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
+		$order_id   = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+		$user_id    = isset( $_GET['user_id'] ) ? absint( $_GET['user_id'] ) : 0;
+		$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
+		$order      = isset( $_GET['order'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) : 'DESC';
 
-		// Build query
-		$query = [];
-
-		if ( ! empty( $status ) ) {
-			$status_value = $this->status_from_slug( $status );
-			if ( $status_value ) {
-				$query['status'] = $status_value;
-			}
-		}
-
-		// License key search: hash the search term and match against the hash column
-		if ( ! empty( $search ) ) {
-			$query['hash'] = CryptoHelper::hash( $search );
-		}
+		$query = LicenseQuery::build( compact( 'search', 'status', 'product_id', 'order_id', 'user_id' ) );
 
 		// Get licenses
 		$licenses_repo = Licenses::instance();
@@ -252,9 +242,9 @@ class Ajax {
 	 * @return void
 	 */
 	public function licenses_store() {
-		$this->check_access();
+		$id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
+		$this->check_access( $id ? 'dlm_edit_licenses' : 'dlm_create_licenses' );
 
-		$id          = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
 		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 
 		// Generate if empty
@@ -318,7 +308,7 @@ class Ajax {
 	 * @return void
 	 */
 	public function licenses_delete() {
-		$this->check_access();
+		$this->check_access( 'dlm_delete_licenses' );
 
 		$id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
 
@@ -341,13 +331,22 @@ class Ajax {
 	 * @return void
 	 */
 	public function licenses_bulk_action() {
-		$this->check_access();
+		$action       = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
+		$ids          = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : [];
+		$capabilities = [
+			'activate'   => 'dlm_activate_licenses',
+			'deactivate' => 'dlm_deactivate_licenses',
+			'delete'     => 'dlm_delete_licenses',
+		];
 
-		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
-		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : [];
+		$this->check_access( isset( $capabilities[ $action ] ) ? $capabilities[ $action ] : 'dlm_read_licenses' );
 
 		if ( empty( $action ) || empty( $ids ) ) {
 			wp_send_json_error( [ 'message' => __( 'Invalid request.', 'digital-license-manager' ) ] );
+		}
+
+		if ( ! isset( $capabilities[ $action ] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unknown action.', 'digital-license-manager' ) ] );
 		}
 
 		$count = 0;
@@ -377,9 +376,6 @@ class Ajax {
 				}
 				$message = sprintf( __( '%d license(s) deleted.', 'digital-license-manager' ), $count );
 				break;
-
-			default:
-				wp_send_json_error( [ 'message' => __( 'Unknown action.', 'digital-license-manager' ) ] );
 		}
 
 		wp_send_json_success( [ 'message' => $message ] );
@@ -429,7 +425,7 @@ class Ajax {
 	 * @return void
 	 */
 	public function licenses_import() {
-		$this->check_access();
+		$this->check_access( 'dlm_create_licenses' );
 
 		$license_keys = isset( $_POST['license_keys'] ) ? sanitize_textarea_field( wp_unslash( $_POST['license_keys'] ) ) : '';
 		$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : null;
@@ -1269,14 +1265,15 @@ class Ajax {
 
 		$results = [];
 
-		if ( function_exists( 'wc_get_products' ) ) {
-			$products = wc_get_products( [
-				'limit'  => 20,
-				's'      => $search,
-				'status' => 'publish',
-			] );
+		if ( function_exists( 'wc_get_product' ) && class_exists( '\\WC_Data_Store' ) ) {
+			$product_ids = \WC_Data_Store::load( 'product' )->search_products( $search, '', true, true, 20 );
 
-			foreach ( $products as $product ) {
+			foreach ( $product_ids as $product_id ) {
+				$product = wc_get_product( $product_id );
+				if ( ! $product ) {
+					continue;
+				}
+
 				$results[] = [
 					'value' => $product->get_id(),
 					'label' => sprintf( '#%d - %s', $product->get_id(), html_entity_decode( $product->get_name() ) ),

@@ -78,13 +78,16 @@ class Licenses {
 		$exporter = new LicenseCsvExporter();
 		$args     = $exporter->prepare_args(
 			[
-				'scope'   => isset( $_POST['scope'] ) ? sanitize_key( wp_unslash( $_POST['scope'] ) ) : '',
-				'ids'     => isset( $_POST['ids'] ) ? array_map( 'absint', (array) wp_unslash( $_POST['ids'] ) ) : [],
-				'columns' => isset( $_POST['columns'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['columns'] ) ) : [],
-				'search'  => isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '',
-				'status'  => isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : '',
-				'orderby' => isset( $_POST['orderby'] ) ? sanitize_key( wp_unslash( $_POST['orderby'] ) ) : 'id',
-				'order'   => isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'desc',
+				'scope'      => isset( $_POST['scope'] ) ? sanitize_key( wp_unslash( $_POST['scope'] ) ) : '',
+				'ids'        => isset( $_POST['ids'] ) ? array_map( 'absint', (array) wp_unslash( $_POST['ids'] ) ) : [],
+				'columns'    => isset( $_POST['columns'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['columns'] ) ) : [],
+				'search'     => isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '',
+				'status'     => isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : '',
+				'product_id' => isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0,
+				'order_id'   => isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0,
+				'user_id'    => isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0,
+				'orderby'    => isset( $_POST['orderby'] ) ? sanitize_key( wp_unslash( $_POST['orderby'] ) ) : 'id',
+				'order'      => isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'desc',
 			]
 		);
 

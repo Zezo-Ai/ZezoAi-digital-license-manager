@@ -28,7 +28,6 @@ namespace IdeoLogix\DigitalLicenseManager\Admin;
 
 use IdeoLogix\DigitalLicenseManager\Database\Repositories\Licenses;
 use IdeoLogix\DigitalLicenseManager\Enums\LicensePrivateStatus;
-use IdeoLogix\DigitalLicenseManager\Utils\CryptoHelper;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -132,13 +131,16 @@ class LicenseCsvExporter {
 		$args = wp_parse_args(
 			$args,
 			[
-				'scope'   => 'filtered',
-				'ids'     => [],
-				'columns' => array_keys( self::get_columns() ),
-				'search'  => '',
-				'status'  => '',
-				'orderby' => 'id',
-				'order'   => 'DESC',
+				'scope'      => 'filtered',
+				'ids'        => [],
+				'columns'    => array_keys( self::get_columns() ),
+				'search'     => '',
+				'status'     => '',
+				'product_id' => 0,
+				'order_id'   => 0,
+				'user_id'    => 0,
+				'orderby'    => 'id',
+				'order'      => 'DESC',
 			]
 		);
 
@@ -183,13 +185,16 @@ class LicenseCsvExporter {
 		}
 
 		return [
-			'scope'   => $scope,
-			'ids'     => $ids,
-			'columns' => $columns,
-			'search'  => sanitize_text_field( $args['search'] ),
-			'status'  => $status,
-			'orderby' => $orderby,
-			'order'   => $order,
+			'scope'      => $scope,
+			'ids'        => $ids,
+			'columns'    => $columns,
+			'search'     => sanitize_text_field( $args['search'] ),
+			'status'     => $status,
+			'product_id' => absint( $args['product_id'] ),
+			'order_id'   => absint( $args['order_id'] ),
+			'user_id'    => absint( $args['user_id'] ),
+			'orderby'    => $orderby,
+			'order'      => $order,
 		];
 	}
 
@@ -266,17 +271,7 @@ class LicenseCsvExporter {
 	 * @return array
 	 */
 	protected function build_query( $args ) {
-		$query = [];
-
-		if ( '' !== $args['status'] ) {
-			$query['status'] = LicensePrivateStatus::$values[ $args['status'] ];
-		}
-
-		if ( '' !== $args['search'] ) {
-			$query['hash'] = CryptoHelper::hash( $args['search'] );
-		}
-
-		return $query;
+		return LicenseQuery::build( $args );
 	}
 
 	/**
