@@ -4,7 +4,7 @@ Tags: license key, license manager, software license, serial key, woocommerce
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to: 7.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -207,6 +207,15 @@ Yes, you can do this by going to Settings > Tools > "Generate Licenses For Past 
 23. License check form displayed by using block or shortcode
 
 == Changelog ==
+
+= 2.0.1 =
+*Release date - 21 Aug 2026*
+
+* Restore license keys on WooCommerce order admin pages
+* Restore product, order and customer filters on the Licenses screen
+* Restore visible Edit and Delete actions on the Licenses screen
+* Fix a fatal error caused by a removed admin page-slug class
+* Enforce license-specific permissions for create, edit, delete, import and bulk actions
 
 = 2.0.0 =
 *Release date - 17 Aug 2026*
